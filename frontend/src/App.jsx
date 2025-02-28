@@ -4,12 +4,13 @@ import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-route
 import WelcomePage from './pages/WelcomePage.jsx'
 import NotFound from './pages/NotFound.jsx'
 import LoginRegisterPage from './pages/LoginRegisterPage.jsx'
-import AboutPage from './pages/participant/AboutPage.jsx'
+import HomePage from './pages/participant/HomePage.jsx'
 import CompetitionPage from './pages/participant/CompetitionPage.jsx'
 import HelpPage from './pages/participant/HelpPage.jsx'
 import Dashboard from './pages/admin/Dashboard.jsx'
 import CompManagement from './pages/admin/CompManagement.jsx'
 import TicketManagement from './pages/admin/TicketManagement.jsx'
+import Navbar from './components/Navbar.jsx';
 
 function App() {
   // const [page, setPage] = useState("Welcome");
@@ -19,12 +20,12 @@ function App() {
   return (
     <div className="App">
         <Router>
-            {/* <Navbar page={page} setPage={setPage}/> */}
+            <Navbar />
             <Routes>
                 <Route path='/' element={<WelcomePage/>}></Route>
                 <Route path='/login' element={ <LoginRegisterPage/> }></Route>
 
-                <Route path='/userabout' element={ <AboutPage/> }></Route>
+                <Route path='/userhome' element={ <HomePage/> }></Route>
                 <Route path='/usercomp' element={ <CompetitionPage/> }></Route>
                 <Route path='/userhelp' element={ <HelpPage/> }></Route>
 
