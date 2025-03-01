@@ -33,3 +33,11 @@
 .color-component-red{
   background-color:#DD3833;
 }
+
+.red-navbar{
+  background-color: #CB0105;
+}
+
+.red-hover:hover{
+  background-color: #ffc6c669;
+}
