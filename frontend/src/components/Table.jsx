@@ -1,12 +1,16 @@
 import React from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSortUp, faSortDown } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 
 
 function Table({columns, data}) { 
     const [sortedData, setSortedData] = useState(data);
     const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+
+    useEffect(() => {
+      console.log("Table received data:", data); // Check if data updates here
+    }, [data]);
 
     const handleSort = (column) => {
         const columnKey = column.replace(/\s+/g, '_').toLowerCase(); 
@@ -28,13 +32,13 @@ function Table({columns, data}) {
 
   return (
     <div className="overflow-x-auto w-full p-4">
-      <table className="min-w-full table-fixed bg-white shadow-md rounded-lg overflow-hidden" >
+      <table className="min-w-full table-fixed bg-white shadow-md rounded-lg overflow-hidden">
         <thead className="bg-gray-100">
           <tr>
           {columns.map((col, index) => (
               <th
                 key={index}
-                className="text-sm px-4 py-3 text-left text-gray-600 font-poppins cursor-pointer"
+                className="text-sm px-4 py-3 text-left text-gray-600 font-poppins cursor-pointer w-[200px]"
                 onClick={() => handleSort(col)}
               >
                 {col}
