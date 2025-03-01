@@ -11,6 +11,7 @@ import Dashboard from './pages/admin/Dashboard.jsx'
 import CompManagement from './pages/admin/CompManagement.jsx'
 import TicketManagement from './pages/admin/TicketManagement.jsx'
 import Navbar from './components/Navbar.jsx';
+import Footer from './components/Footer.jsx';
 
 function App() {
   // const [page, setPage] = useState("Welcome");
@@ -35,6 +36,7 @@ function App() {
 
                 <Route path='/*' element={<NotFound/>}></Route>
             </Routes>
+            <Footer />
         </Router>
     </div>
   )

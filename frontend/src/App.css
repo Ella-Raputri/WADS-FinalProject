@@ -3,7 +3,6 @@
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
 }
 
 .font-poppins{
@@ -32,4 +31,12 @@
 
 .color-component-red{
   background-color:#DD3833;
+}
+
+.red-navbar{
+  background-color: #CB0105;
+}
+
+.red-hover:hover{
+  background-color: #ffc6c669;
 }
