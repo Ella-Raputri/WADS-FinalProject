@@ -38,14 +38,32 @@ const HelpPage = () => {
   ];
 
   return (
-    <div className="w-full min-h-screen p-4 mt-15">
+    <>
+    <h1 className='mt-20 font-medium text-3xl font-kanit p-5 pb-3'>
+      Frequently Asked Questions (FAQ)
+    </h1>
+    <div className=' p-5 pt-3 max-w-2xl font-poppins font-medium'>
       <AccordionFAQ></AccordionFAQ>
-      <h2 className="text-xl font-semibold text-gray-700 mb-4">Help Page</h2>
+    </div>
+
+    <h1 className='mt-10 font-medium text-3xl font-kanit p-5 pb-0'>
+      Help Tickets
+    </h1>
+    <div className='inline-flex'>
+      <h3>Showing all ticker</h3>
+
+      <div>
+        <div className='bg-amber-300'>dd</div>
+      </div>
+    </div>
+
+    <div className="w-full min-h-screen p-4 pl-0">
       <Table columns={cols} data={data} />
       
       {/* Now the FontAwesome icon will work */}
       <h1>Enjoy your coffee! <FontAwesomeIcon icon={faCoffee} className="text-brown-500 text-2xl" /></h1>
     </div>
+    </>
   );
 };
 
