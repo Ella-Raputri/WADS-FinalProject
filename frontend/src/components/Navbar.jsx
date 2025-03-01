@@ -1,14 +1,34 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Bars3Icon, ChevronLeftIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 const Navbar = () => {
   const [userRole, setUserRole] = useState('participant'); // null (guest), 'participant', 'admin'
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  if (location.pathname === '/login') {
+    return (
+      <Link
+        to="/"
+        className="fixed top-4 left-4 flex items-center justify-center 
+                 w-10 h-10 rounded-full bg-white color-text-red 
+                 hover:!bg-neutral-100 shadow-lg border-1 border-neutral-300"
+      >
+        <ChevronLeftIcon className="h-5" />
+      </Link>
+    );
+  }
+
+  const logOut = () => {
+    setUserRole(null);
+    navigate('/');
+  }
 
   const navigation = userRole === 'admin' ? [
     { name: 'Dashboard', href: '/admindashboard' },
-    { name: 'Competition Management', href: '/admincomp' },
+    { name: 'Competition', href: '/admincomp' },
     { name: 'Ticket', href: '/adminticket' },
   ] : userRole === 'participant' ? [
     { name: 'Home', href: '/userhome' },
@@ -21,14 +41,16 @@ const Navbar = () => {
   ];
 
   return (
-    <Disclosure as="nav" className="bg-white shadow-md fixed top-0 left-0 w-full z-50">
+    <Disclosure as="nav" className={`shadow-md fixed top-0 left-0 w-full 
+      z-50 ${userRole === 'admin'? 'red-navbar' : 'bg-white'}`}>
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
             <div className="relative flex h-16 items-center justify-between">
               <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
 
-                <DisclosureButton className="p-2 z-52 text-neutral-600 hover:bg-neutral-100 hover:text-black">
+                <DisclosureButton className={`p-2 z-52 ${userRole === 'admin'? 'text-white red-hover' 
+                : 'bg-white text-neutral-600 hover:bg-neutral-100 hover:text-black'}`}>
                   <span className="sr-only">Open main menu</span>
                   {open ? (
                     <XMarkIcon className="block size-7" />
@@ -43,7 +65,8 @@ const Navbar = () => {
                 <div className="absolute inset-x-0 flex justify-center sm:static sm:justify-start">
                   <div className="flex items-center space-x-1">
                     <img src="src/assets/logo_nmc.png" alt="Logo" className="h-8 w-8" />
-                    <span className="text-black mt-1 font-raleway text-2xl font-extrabold ml-0.5">NMC</span>
+                    <span className={`${userRole === 'admin' ? 'text-white' : 'text-black'}
+                                        mt-1 font-raleway text-2xl font-extrabold ml-0.5`}>NMC</span>
                   </div>
                 </div>
 
@@ -52,8 +75,10 @@ const Navbar = () => {
                     <Link
                       key={item.name}
                       to={item.href}
-                      className="text-neutral-600 hover:bg-neutral-100 hover:text-black hover:rounded-sm px-3 py-2 
-                      text-md mt-1 font-medium font-poppins"
+                      className={`${userRole === 'admin' ? 'text-white red-hover' : 'bg-white text-neutral-600 hover:bg-neutral-100 hover:text-black'} 
+                      hover:rounded-sm px-3 py-2 text-md mt-1 font-medium font-poppins 
+                      ${location.pathname === item.href ? 'underline decoration-2 font-bold' : ''}`
+                    }
                     >
                       {item.name}
                     </Link>
@@ -64,16 +89,17 @@ const Navbar = () => {
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto">
                 {userRole ? (
                   <button
-                    onClick={() => setUserRole(null)}
-                    className="color-component-red rounded-md
-                     hover:!bg-red-700 text-white px-4 py-2 "
+                    onClick={logOut}
+                    className={`px-4 py-2 font-medium rounded-md ${userRole === 'admin'? 'bg-white text-red-700 hover:bg-neutral-100' 
+                      : 'hover:!bg-red-700 text-white color-component-red'}
+                     `}
                   >
                     Logout
                   </button>
                 ) : (
                   <Link
                     to="/login"
-                    className="color-component-red rounded-md
+                    className="color-component-red font-medium rounded-md
                      hover:!bg-red-700 text-white px-4 py-2 "
                   >
                     Login
@@ -90,8 +116,10 @@ const Navbar = () => {
                   key={item.name}
                   as={Link}
                   to={item.href}
-                  className="block text-neutral-600 hover:bg-neutral-100 hover:text-black hover:rounded-sm
-                   px-3 py-2 rounded-md text-base font-medium"
+                  className={`block ${userRole === 'admin'? 'text-white red-hover' 
+                : 'bg-white text-neutral-600 hover:bg-neutral-100 hover:text-black'} 
+                  hover:rounded-sm ${location.pathname === item.href ? 'underline decoration-2 font-bold' : ''}
+    px-3 py-2 rounded-md text-base font-medium`}
                 >
                   {item.name}
                 </DisclosureButton>
