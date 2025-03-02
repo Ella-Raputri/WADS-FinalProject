@@ -18,13 +18,21 @@ const CompetitionPage = ({}) => {
     }
 ]);
 
-  return (  
+  if (competitions.length !== 0){ 
+    return(
       <div className="pb-10">
           {competitions.map((competition, index) => (
             <CompetitionInfo competition={competition} key={index} isFirst={index===0} />
       ))}
       </div>
-  );
+    );
+  } else {
+    return(
+      <div className="w-[100%] h-[92vh] flex justify-center items-center">
+        <p className='justify-self-center font-poppins self-center text-[#818181]'>-- No Upcoming Competitions --</p>
+      </div>
+    );
+  }
 }
 
 
