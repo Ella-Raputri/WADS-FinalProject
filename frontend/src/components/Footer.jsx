@@ -3,7 +3,7 @@ import { HiOutlineMail } from "react-icons/hi";
 
 const Footer = () => {
   return (
-    <footer className="mt-10 font-poppins w-full red-navbar text-white py-4">
+    <footer className="mt-10 md:mt-5 font-poppins w-full red-navbar text-white py-4">
       <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between px-6">
 
         <div className="text-center sm:text-left">
@@ -20,7 +20,7 @@ const Footer = () => {
             <FaInstagram className="w-6 h-6" />
           </a>
           <a
-            href="mailto:nmc2024.bnmc@gmail.com"
+            href="mailto:ellarworkingfolder@gmail.com"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-gray-300"

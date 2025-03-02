@@ -22,6 +22,7 @@ const WelcomePage = () => {
           ))}
         </div>
       </main>
+      
     </div>
 
   )

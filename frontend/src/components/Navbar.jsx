@@ -4,7 +4,7 @@ import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react
 import { Bars3Icon, ChevronLeftIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 const Navbar = () => {
-  const [userRole, setUserRole] = useState('participant'); // null (guest), 'participant', 'admin'
+  const [userRole, setUserRole] = useState(null); // null (guest), 'participant', 'admin'
   const location = useLocation();
   const navigate = useNavigate();
 
