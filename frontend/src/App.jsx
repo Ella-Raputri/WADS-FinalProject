@@ -12,6 +12,7 @@ import CompManagement from './pages/admin/CompManagement.jsx'
 import TicketManagement from './pages/admin/TicketManagement.jsx'
 import Navbar from './components/Navbar.jsx';
 import Footer from './components/Footer.jsx';
+import NewTicket from './pages/participant/NewTicket.jsx';
 
 function App() {
   // const [page, setPage] = useState("Welcome");
@@ -29,6 +30,7 @@ function App() {
                 <Route path='/userhome' element={ <HomePage/> }></Route>
                 <Route path='/usercomp' element={ <CompetitionPage/> }></Route>
                 <Route path='/userhelp' element={ <HelpPage/> }></Route>
+                <Route path='/usernewticket' element={<NewTicket/> }></Route>
 
                 <Route path='/admindashboard' element={ <Dashboard/> }></Route>
                 <Route path='/admincomp' element={ <CompManagement/> }></Route>
