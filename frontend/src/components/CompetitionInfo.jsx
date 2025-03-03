@@ -20,10 +20,12 @@ export const CompetitionInfo = ({competition, isFirst}) => {
                 }}>Register</button>
             </div>
     </div>
+    { isOpen && 
     <CompetitionPopUp competition={currentlyDisplayingCompetition} isOpen={isOpen} onClose={() => {
         setIsOpen(false);
         setcurrentlyDisplayingCompetition(null);
         }}></CompetitionPopUp>
+    }
     </>
     );
 }
