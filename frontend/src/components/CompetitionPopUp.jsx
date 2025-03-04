@@ -1,9 +1,20 @@
 import Modal from "react-modal";
+import { useEffect } from "react";
 
 export const CompetitionPopUp = ({competition, isOpen, onClose}) => {
     let requirement_arr = competition.rules.split("\n");
+
+    useEffect(() => {
+        if (isOpen){
+            document.body.style.overflow="hidden";
+        } 
+        return () => {
+            document.body.style.overflow="auto";
+        }
+    }, [isOpen])
+
     return (
-        <Modal competition={competition} isOpen={isOpen} onRequestClose={onClose} className="w-[80%] h-[80vh] bg-white mx-auto shadow-xl relative overflow-y-auto scrollbar-thin rounded-[10px]" overlayClassName="flex justify-center items-center inset-0 fixed z-1000 bg-[rgba(0,0,0,0.5)]">
+        <Modal competition={competition} isOpen={isOpen} onRequestClose={onClose} className="w-[80%] h-[80vh] bg-white mx-auto shadow-xl relative overflow-y-auto scrollbar-thin rounded-[10px]" overlayClassName="flex justify-center items-center inset-0 fixed z-1000 bg-[rgba(0,0,0,0.5)] overflow-hidden">
             <div className="top-0 sticky pt-1 bg-white">
                 <p className="font-kanit text-[1.5rem] mt-[1.5em] ml-[2em]">{competition.title}</p>
                 <p className="font-poppins ml-[4em] text-[0.8rem]">Price: {competition.price} / Person</p>
