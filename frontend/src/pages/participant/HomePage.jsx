@@ -65,7 +65,7 @@ const HomePage = () => {
       </div>
       <div className='bg-[#F4F4F4] w-[100%] h-[80vh] mt-[4em] flex justify-center items-center'>
         <div className={`bg-[#FFFFFF] w-[80%] md:w-[70%] h-[80%] shadow-xl rounded-[20px] ${sortedCompetitions.length > 0 ? "overflow-y-auto overflow-hidden" : "flex justify-center items-center relative"}`}>
-          <p className={`font-kanit font-medium text-[1.4rem] mt-[2em] md:ml-[3em] text-center md:text-left ${sortedCompetitions.length > 0 ? "" : "md:absolute md:top-0 md:left-0"}`}>Schedule</p>
+          <p className={`font-kanit font-medium text-[1.4rem] mt-[2em] sm:ml-[3em] text-center sm:text-left ${sortedCompetitions.length > 0 ? "" : "md:absolute md:top-0 md:left-0"}`}>Schedule</p>
           {sortedCompetitions.length > 0 ? sortedCompetitions.map((competition) => (
             <SecheduleList competition={competition} />
           )) : (
