@@ -4,7 +4,7 @@ import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react
 import { Bars3Icon, ChevronLeftIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 const Navbar = () => {
-  const [userRole, setUserRole] = useState(null); // null (guest), 'participant', 'admin'
+  const [userRole, setUserRole] = useState('participant'); // null (guest), 'participant', 'admin'
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -77,7 +77,8 @@ const Navbar = () => {
                       to={item.href}
                       className={`${userRole === 'admin' ? 'text-white red-hover' : 'bg-white text-neutral-600 hover:bg-neutral-100 hover:text-black'} 
                       hover:rounded-sm px-3 py-2 text-md mt-1 font-medium font-poppins 
-                      ${location.pathname === item.href ? 'underline decoration-2 font-bold' : ''}`
+                      ${location.pathname === item.href ? 'underline decoration-2 font-bold' : ''}
+                      ${(location.pathname=='/usernewticket' && item.href==='/userhelp')?  'underline decoration-2 font-bold' : ''}`
                     }
                     >
                       {item.name}

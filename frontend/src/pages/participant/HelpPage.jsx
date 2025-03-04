@@ -4,6 +4,7 @@ import Pagination from '../../components/Pagination';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"; 
 import { faFilter } from "@fortawesome/free-solid-svg-icons"; 
 import AccordionFAQ from '../../components/AccordionFAQ';
+import { useNavigate } from 'react-router-dom';
 
 const HelpPage = () => {
   const cols = ["SUBJECT", "CREATED AT", "UPDATED AT", "PRIORITY", "STATUS"];
@@ -102,74 +103,47 @@ const HelpPage = () => {
     console.log(currentPage)
   }, [currentPage]); 
 
-  const handlePrev = () => {
-    if (currentPage > 1) {
-      setCurrentPage((prev) => prev - 1);
-    }
-  };
-
-  const handleNext = () => {
-    if (currentPage < totalPage) {
-      setCurrentPage((prev) => prev + 1);
-    }
-  };
+  const navigate = useNavigate();
 
 
   return (
     <>
-      <h1 className='mt-20 font-medium text-3xl font-kanit p-5 pb-3'>
+      <h1 className='mt-20 font-medium text-center text-3xl font-kanit p-5 pb-3'>
         Frequently Asked Questions (FAQ)
       </h1>
-      <div className='p-5 pt-3 max-w-2xl font-poppins font-medium'>
+      <div className="flex flex-col items-center justify-center p-5 pt-3 max-w-2xl font-poppins font-medium mx-auto">
         <AccordionFAQ />
       </div>
 
-      <h1 className='mt-10 font-medium text-3xl font-kanit p-5 pb-0'>
+
+      <h1 className='md:ml-20 mt-12 font-medium text-3xl font-kanit p-5 pb-0'>
         Help Tickets
       </h1>
 
 
-      <div className="pl-5 pr-8 pt-2 pb-0 flex justify-between items-center font-poppins">
+      <div className="pl-5 pr-8 pt-2 pb-0 md:ml-20 flex justify-between items-center font-poppins">
         <h3>Showing {(currentPage - 1) * itemsPerPage + 1} - {Math.min(currentPage * itemsPerPage, totalResult)} of {totalResult} results</h3>
-        <div className="flex gap-5">
+        <div className="mr-10 flex gap-5">
           <button className="border border-gray-400 px-3 py-2 rounded-xl hover:bg-gray-100 hover:cursor-pointer">
             <FontAwesomeIcon icon={faFilter} />
           </button>
-          <button className="font-semibold px-8 py-2 rounded-2xl bg-red-700 text-white hover:bg-red-800 hover:cursor-pointer">
+          <button className="font-semibold px-8 py-2 rounded-2xl bg-red-700 text-white hover:bg-red-800 hover:cursor-pointer"
+          onClick={() => navigate('/usernewticket')}>
             NEW TICKET
           </button>
         </div>
       </div>
 
-      <div className="w-full min-h-screen p-4 pt-0 pl-0">
+      <div className="md:ml-20 w-full mb-30 p-4 pt-0 pl-0">
         {currentData.length > 0 ? (
           <Table key={tracker} columns={cols} data={currentData} />
         ) : (
           <div className="text-center font-semibold text-gray-500 p-5">No data available</div>
         )}
 
-      <div className="flex justify-end mt-2 mr-3 font-poppins">
+      <div className="flex justify-end mt-2 text-xs md:text-sm md:mr-35 font-poppins">
         <Pagination currentPage={currentPage} totalPages={totalPage} onPageChange={setCurrentPage}/>
       </div>
-      
-
-        {/* <div className="flex justify-end mr-5 gap-4 mt-5">
-          <button
-            onClick={handlePrev}
-            disabled={currentPage === 1}
-            className={`px-4 py-2 rounded-lg ${currentPage === 1 ? 'bg-gray-300 cursor-not-allowed' : 'bg-gray-800 text-white hover:bg-gray-700'}`}
-          >
-            Previous
-          </button>
-          <span className="text-lg font-medium">Page {currentPage} of {totalPage}</span>
-          <button
-            onClick={handleNext}
-            disabled={currentPage === totalPage}
-            className={`px-4 py-2 rounded-lg ${currentPage === totalPage ? 'bg-gray-300 cursor-not-allowed' : 'bg-gray-800 text-white hover:bg-gray-700'}`}
-          >
-            Next
-          </button>
-        </div> */}
       </div>
     </>
   );
