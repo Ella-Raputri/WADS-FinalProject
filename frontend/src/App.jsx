@@ -13,6 +13,7 @@ import TicketManagement from './pages/admin/TicketManagement.jsx'
 import Navbar from './components/Navbar.jsx';
 import Footer from './components/Footer.jsx';
 import NewTicket from './pages/participant/NewTicket.jsx';
+import ScrollToTop from './components/ScrolltoTop.jsx';
 
 function App() {
   // const [page, setPage] = useState("Welcome");
@@ -22,6 +23,7 @@ function App() {
   return (
     <div className="App">
         <Router>
+        <ScrollToTop/>
             <Navbar />
             <Routes>
                 <Route path='/' element={<WelcomePage/>}></Route>
