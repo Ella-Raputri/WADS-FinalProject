@@ -16,10 +16,11 @@ export const CompetitionPopUp = ({competition, isOpen, onClose}) => {
             <p className="font-poppins ml-[4em] text-[0.8rem] mt-[0.6em]">Prizepool: {competition.prizepool}</p>
             <p className="font-poppins ml-[3.5em] text-[0.9rem] font-semibold mt-[1em]">Rules / Requirements</p>
             <ul className="list-disc ml-[4em]">
-                {requirement_arr.map((line, index) => (
-                    <li className={`w-[80%] font-poppins text-[0.8rem] mt-[0.6em] ${index === (requirement_arr.length - 1) ? "pb-[2em]" : "pb-0"}`}>{line}</li>
+                {requirement_arr.map((line) => (
+                    <li className={`w-[80%] font-poppins text-[0.8rem] mt-[0.6em]`}>{line}</li>
                 ))}
             </ul>
+            <button className="w-25 h-9 mt-5 color-component-red rounded-md hover:!bg-red-700 text-white text-center block mx-auto mb-[3em]">Register</button>
         </Modal>
     );
 }
