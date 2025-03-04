@@ -3,7 +3,6 @@ import { CompetitionPopUp } from "./CompetitionPopUp";
 
 export const CompetitionInfo = ({competition, isFirst}) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [currentlyDisplayingCompetition, setcurrentlyDisplayingCompetition] = useState(null);
 
     return(
     <>
@@ -14,16 +13,14 @@ export const CompetitionInfo = ({competition, isFirst}) => {
                 <div className="text-[0.9rem] mt-1 text-[#818181] font-poppins">Category: {competition.category}</div>
                 <div className="text-[0.9rem] mt-1 text-[#000000] font-poppins">{competition.description}</div>
                 <div className="text-[0.9rem] mt-1 text-[#818181] font-poppins">Date: {competition.date}</div>
-                <button className="w-25 h-9 mt-3 color-component-red rounded-md hover:!bg-red-700 text-white" onClick={() => {
+                <button className="w-25 h-9 mt-3 color-component-red rounded-md hover:!bg-red-700 text-white cursor-pointer" onClick={() => {
                     setIsOpen(true);
-                    setcurrentlyDisplayingCompetition(competition);
                 }}>Register</button>
             </div>
     </div>
     { isOpen && 
-    <CompetitionPopUp competition={currentlyDisplayingCompetition} isOpen={isOpen} onClose={() => {
+    <CompetitionPopUp competition={competition} isRegistered={false} isOpen={isOpen} onClose={() => {
         setIsOpen(false);
-        setcurrentlyDisplayingCompetition(null);
         }}></CompetitionPopUp>
     }
     </>
