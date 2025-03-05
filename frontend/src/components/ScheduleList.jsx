@@ -29,13 +29,13 @@ export const SecheduleList = ({competition}) => {
 
     return (
         <>
-        <div className="flex w-[95%] lg:w-[90%] lg:min-h-[12vh] mx-auto mt-[3em] md:mt-[2em] sm:mt-[0.7em] mb-[1em] justify-center items-center lg:mt-[1em]">
+        <div className="flex w-[95%] lg:w-[90%] lg:min-h-[12vh] mx-auto mt-[2em] md:mt-[2em] sm:mt-[0.7em] mb-[1em] justify-center items-center lg:mt-[1em]">
             <div className="w-[20%] sm:flex-col sm:items-center sm:justify-center hidden sm:flex">
                 <p className="text-[0.7rem]">{day}</p>
                 <p className="font-medium text-[1.4rem]">{date}</p>
                 <p className="text-[0.7rem]">{month} {year}</p>
             </div>
-            <div className="w-[80%] bg-[#F4F4F4] rounded-[10px] text-[0.8rem] font-medium flex flex-col justify-center relative min-h-[15vh] lg:min-h-[22vh] pt-4 pb-4 mb-4 sm:pt-1 sm:pb-1">
+            <div className="w-[80%] bg-[#F4F4F4] rounded-[10px] text-[0.8rem] font-medium flex flex-col justify-center relative lg:min-h-[10em] lg:max-h-[200px] pt-4 pb-4 sm:pt-1 sm:pb-1 shadow">
                 <p className="ml-[2em] lg:w-[60%]">Competition Name: {competition.title}</p>
                 <p className="ml-[2em]">Category: {competition.category}</p>
                 <p className="ml-[2em]">Time: {competition.time}</p>
