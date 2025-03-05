@@ -41,31 +41,31 @@ const HomePage = () => {
   
   return (
     <>
-      <p className='font-kanit mt-[4em] ml-[2em] text-[1.7rem] font-medium'>Dashboard</p>
-      <p className='font-poppins text-[#7D7979] text-[0.9rem] ml-[3.8em]'>{new Date().toDateString()}</p>
-      <p className='font-poppins text-[0.9rem] ml-[3.8em] mt-[1em]'>Welcome Back, {userName}!</p>
+      <p className='font-kanit mt-[4em] ml-[2em] text-[1.7rem] xl:text-[2.1rem] font-medium'>Dashboard</p>
+      <p className='font-poppins text-[#7D7979] text-[0.9rem] xl:text-[1.3rem] ml-[3.8em]'>{new Date().toDateString()}</p>
+      <p className='font-poppins text-[0.9rem] xl:text-[1.3rem] ml-[3.8em] mt-[1em]'>Welcome Back, {userName}!</p>
       <div className='flex flex-col w-[80%] md:w-[60%] mx-auto mt-[2em] gap-11 font-kanit md:flex-row md: w-[60%]'>
         <div className='w-[100%] md:w-[50%] flex flex-col gap-[30px]'>
           <div className='bg-[#DD3833] h-[50%] rounded-[15px] flex flex-col items-center justify-center min-h-[150px] pt-5 pb-5'>
-            <p className='text-white font-semibold text-[1.1rem] text-center'>Competitions Participated</p>
-            <p className='text-white font-bold text-[3rem]'>{competitionsParticipated}</p>
-            <p className='text-white font-light text-[0.8rem]'>All Time</p>            
+            <p className='text-white font-semibold text-[1.1rem] xl:text-[1.5rem] text-center'>Competitions Participated</p>
+            <p className='text-white font-bold text-[3rem] xl:text-[3.4rem]'>{competitionsParticipated}</p>
+            <p className='text-white font-light text-[0.8rem] xl:text-[1.2rem]'>All Time</p>            
           </div>
           <div className='bg-[#DD3833] h-[50%] rounded-[15px] flex flex-col items-center justify-center min-h-[150px] pt-5 pb-5'>
-            <p className='text-white font-semibold text-[1.1rem] text-center'>Competitions Won</p>
-            <p className='text-white font-bold text-[3rem]'>{competitionsWon}</p>
-            <p className='text-white font-light text-[0.8rem]'>All Time</p>            
+            <p className='text-white font-semibold text-[1.1rem] text-[1.5rem] text-center'>Competitions Won</p>
+            <p className='text-white font-bold text-[3rem] text-[3.4rem]'>{competitionsWon}</p>
+            <p className='text-white font-light text-[0.8rem] text-[1.2rem]'>All Time</p>            
           </div>
         </div>
         <div className='md:w-[50%] bg-[#DD3833] rounded-[15px] flex flex-col items-center justify-center min-h-[150px]   md:min-h-[330px] pt-5 pb-5'>
-            <p className='text-white font-semibold text-[1.1rem] text-center w-[80%]'>Upcoming Registered Competitions</p>
-            <p className='text-white font-bold text-[3rem]'>{upcomingRegisteredCompetitions}</p>
-            <p className='text-white font-light text-[0.8rem]'>Competition(s)</p>            
+            <p className='text-white font-semibold text-[1.1rem] text-[1.5rem] text-center w-[80%]'>Upcoming Registered Competitions</p>
+            <p className='text-white font-bold text-[3rem] text-[3.4rem]'>{upcomingRegisteredCompetitions}</p>
+            <p className='text-white font-light text-[0.8rem] text-[1.2rem]'>Competition(s)</p>            
         </div>
       </div>
       <div className='bg-[#F4F4F4] w-[100%] h-[80vh] mt-[4em] flex justify-center items-center'>
         <div className={`bg-[#FFFFFF] w-[80%] md:w-[70%] h-[80%] shadow-xl rounded-[20px] ${sortedCompetitions.length > 0 ? "overflow-y-auto overflow-hidden" : "flex justify-center items-center relative"}`}>
-          <p className={`font-kanit font-medium text-[1.4rem] mt-[2em] sm:ml-[3em] text-center sm:text-left ${sortedCompetitions.length > 0 ? "" : "md:absolute md:top-0 md:left-0"}`}>Schedule</p>
+          <p className={`font-kanit font-medium text-[1.4rem] text-[1.8rem] mt-[2em] sm:ml-[3em] text-center sm:text-left ${sortedCompetitions.length > 0 ? "" : "md:absolute md:top-0 md:left-0"}`}>Schedule</p>
           {sortedCompetitions.length > 0 ? sortedCompetitions.map((competition) => (
             <SecheduleList competition={competition} />
           )) : (
