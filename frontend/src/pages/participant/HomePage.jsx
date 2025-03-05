@@ -44,20 +44,20 @@ const HomePage = () => {
       <p className='font-kanit mt-[4em] ml-[2em] text-[1.7rem] font-medium'>Dashboard</p>
       <p className='font-poppins text-[#7D7979] text-[0.9rem] ml-[3.8em]'>{new Date().toDateString()}</p>
       <p className='font-poppins text-[0.9rem] ml-[3.8em] mt-[1em]'>Welcome Back, {userName}!</p>
-      <div className='flex flex-col w-[80%] md:w-[60%] min-h-[60vh] h-auto mx-auto mt-[2em] gap-11 font-kanit md:flex-row md: w-[60%]'>
+      <div className='flex flex-col w-[80%] md:w-[60%] mx-auto mt-[2em] gap-11 font-kanit md:flex-row md: w-[60%]'>
         <div className='w-[100%] md:w-[50%] flex flex-col gap-[30px]'>
-          <div className='bg-[#DD3833] h-[50%] rounded-[15px] flex flex-col items-center justify-center max-h-[200px] pt-2 pb-2'>
+          <div className='bg-[#DD3833] h-[50%] rounded-[15px] flex flex-col items-center justify-center min-h-[150px] pt-5 pb-5'>
             <p className='text-white font-semibold text-[1.1rem] text-center'>Competitions Participated</p>
             <p className='text-white font-bold text-[3rem]'>{competitionsParticipated}</p>
             <p className='text-white font-light text-[0.8rem]'>All Time</p>            
           </div>
-          <div className='bg-[#DD3833] h-[50%] rounded-[15px] flex flex-col items-center justify-center max-h-[200px] pt-2 pb-2'>
+          <div className='bg-[#DD3833] h-[50%] rounded-[15px] flex flex-col items-center justify-center min-h-[150px] pt-5 pb-5'>
             <p className='text-white font-semibold text-[1.1rem] text-center'>Competitions Won</p>
             <p className='text-white font-bold text-[3rem]'>{competitionsWon}</p>
             <p className='text-white font-light text-[0.8rem]'>All Time</p>            
           </div>
         </div>
-        <div className='md:w-[50%] bg-[#DD3833] rounded-[15px] flex flex-col items-center justify-center max-h-[430px] pt-2 pb-2'>
+        <div className='md:w-[50%] bg-[#DD3833] rounded-[15px] flex flex-col items-center justify-center min-h-[150px]   md:min-h-[330px] pt-5 pb-5'>
             <p className='text-white font-semibold text-[1.1rem] text-center w-[80%]'>Upcoming Registered Competitions</p>
             <p className='text-white font-bold text-[3rem]'>{upcomingRegisteredCompetitions}</p>
             <p className='text-white font-light text-[0.8rem]'>Competition(s)</p>            
