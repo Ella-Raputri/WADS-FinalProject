@@ -13,7 +13,7 @@ export const CompetitionPopUp = ({competition, isRegistered, isOpen, onClose}) =
         } 
         return () => {
             document.body.style.overflow = "auto";
-        }
+        } 
     }, [isOpen])
 
     return (
