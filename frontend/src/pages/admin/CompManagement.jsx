@@ -1,9 +1,149 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
+import Table from '../../components/Table';
+import Pagination from '../../components/Pagination';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"; 
+import { faFilter } from "@fortawesome/free-solid-svg-icons"; 
+import { useNavigate } from 'react-router-dom';
+import SearchBar from '../../components/SearchBar';
+import FilterModal from '../../components/FilterModal';
+import SaveButton from '../../components/SaveButton';
 
 const CompManagement = () => {
-  return (
-    <div>CompManagement</div>
-  )
-}
+  const cols = ["id", "NAME", "EMAIL","PHONE NUMBER", "STATUS"];
+  const data = [
+    {id:1 ,name: "ellis", email:"ellis@gmail.com", phone_number:"123", status:"Rejected"},
+    {id:2, name: "mega", email:"mega@gmail.com", phone_number:"1343", status:"Accepted"},
+    {id:3, name: "lanluomojelek", email:"arama@gmail.com", phone_number:"144", status:"Pending"},
+    
+  ];
 
-export default CompManagement
+  const [currentPage, setCurrentPage] = useState(1);
+  const [currentData, setCurrentData] = useState([]);
+  const [tracker, setTracker] = useState(1);
+  const [openFilter, setOpenFilter] =useState(false);
+  const [filteredData, setFilteredData] = useState(data);
+  const [baseFilteredData, setBaseFilteredData] = useState(data);
+
+
+  const itemsPerPage = 10;
+  const totalResult = filteredData.length; 
+  const totalPage = Math.ceil(totalResult / itemsPerPage);
+
+  useEffect(() => {
+      console.log("Updated currentData:", currentData);
+      setTracker(Math.random);
+  }, [currentData]); 
+
+  useEffect(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = Math.min(startIndex + itemsPerPage, totalResult);
+    setCurrentData(filteredData.slice(startIndex, endIndex));
+    console.log(currentPage)
+  }, [currentPage, filteredData]); 
+
+  const navigate = useNavigate();
+
+  const handleFilter = (newFilters) => {
+    setOpenFilter(false);
+  
+    const { createdStart, createdEnd, updatedStart, updatedEnd, priority, status } = newFilters;
+  
+    const dateCreateStart = createdStart ? new Date(createdStart) : null;
+    const dateCreateEnd = createdEnd ? new Date(createdEnd) : null;
+    const dateUpdateStart = updatedStart ? new Date(updatedStart) : null;
+    const dateUpdateEnd = updatedEnd ? new Date(updatedEnd) : null;
+  
+    const filtered = data.filter(ticket => {
+      const createdAt = new Date(ticket.created_at);
+      const updatedAt = new Date(ticket.updated_at);
+  
+      const isWithinCreateRange =
+        (!dateCreateStart || createdAt >= dateCreateStart) &&
+        (!dateCreateEnd || createdAt <= dateCreateEnd);
+  
+      const isWithinUpdateRange =
+        (!dateUpdateStart || updatedAt >= dateUpdateStart) &&
+        (!dateUpdateEnd || updatedAt <= dateUpdateEnd);
+  
+      const isPriorityMatch = priority ? ticket.priority.toLowerCase() === priority : true;
+      const isStatusMatch = status ? ticket.status.toLowerCase() === status : true;
+      
+      console.log("iterating ticket:");
+      console.log(ticket);
+      console.log(priority);
+      console.log(isWithinCreateRange)
+      console.log(isWithinUpdateRange)
+      console.log(isPriorityMatch)
+      console.log(isStatusMatch)
+  
+      return isWithinCreateRange && isWithinUpdateRange && isPriorityMatch && isStatusMatch;
+    });
+  
+    setFilteredData(filtered);
+    setBaseFilteredData(filtered);
+    setCurrentPage(1); 
+  };
+
+  const handleSearch = (keywords) =>{
+    if (!keywords.trim()) {
+      setFilteredData(baseFilteredData); 
+      return;
+    }
+
+    const searched = filteredData.filter(ticket => {
+      const inName = ticket.name.toLowerCase().includes(keywords.toLowerCase());
+      const inEmail = ticket.email.toLowerCase().includes(keywords.toLowerCase());
+      return inName || inEmail;
+    });
+
+    setFilteredData(searched);
+    setCurrentPage(1);
+  };
+  
+
+  return (
+    <>
+      <h1 className='md:ml-20 mt-20 mb-3 font-medium text-4xl font-kanit p-5 pb-0'>
+        Speech Competition
+      </h1>
+
+
+      <div className="pl-5 pr-8 pt-2 pb-0 md:ml-20 flex justify-between items-center font-poppins">
+        <SearchBar onApply={handleSearch} placeholderSubject={"Search name or email..."}/>
+        <div className="sm:mr-20 md:mr-26 2xl:mr-35 flex gap-5">
+          <button className="border border-slate-200 transition duration-300 ease hover:border-slate-300 shadow-sm focus:shadow px-3 py-2 rounded-xl hover:bg-gray-100 hover:cursor-pointer"
+          onClick={() => setOpenFilter(true)}>
+            <FontAwesomeIcon icon={faFilter} />
+          </button>
+          <SaveButton data={filteredData} />
+        </div>
+      </div>
+
+      <div className="md:ml-20 mb-30 p-4 pt-0 pl-0">
+        {currentData.length > 0 ? (
+          <Table key={tracker} columns={cols} data={currentData} />
+        ) : (
+          <div className="text-center font-semibold text-gray-500 p-5">No data available</div>
+        )}
+
+      <div className="flex justify-between mt-2 text-xs md:text-sm md:mr-32 md:ml-5 font-poppins">
+        {currentData.length>0 ? 
+        (<>
+          <p className='flex-1 text-gray-500'>
+          {`Showing ${Math.min((currentPage - 1) * itemsPerPage + 1, totalResult)} - 
+              ${Math.min(currentPage * itemsPerPage, totalResult)} of ${totalResult} results`}
+          </p>
+  
+          <Pagination currentPage={currentPage} totalPages={totalPage} onPageChange={setCurrentPage}/>
+        </>)  : (<></>)
+      }
+      
+      </div>
+      </div>
+
+      {openFilter && <FilterModal isOpen={openFilter} onClose={()=>setOpenFilter(false)} onApply={handleFilter}/>}
+    </>
+  );
+};
+
+export default CompManagement;
