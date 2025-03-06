@@ -52,15 +52,15 @@ const HomePage = () => {
             <p className='text-white font-light text-[0.8rem] xl:text-[1.2rem]'>All Time</p>            
           </div>
           <div className='bg-[#DD3833] h-[50%] rounded-[15px] flex flex-col items-center justify-center min-h-[150px] pt-5 pb-5'>
-            <p className='text-white font-semibold text-[1.1rem] text-[1.5rem] text-center'>Competitions Won</p>
+            <p className='text-white font-semibold text-[1.1rem] xl:text-[1.5rem] text-center'>Competitions Won</p>
             <p className='text-white font-bold text-[3rem] text-[3.4rem]'>{competitionsWon}</p>
-            <p className='text-white font-light text-[0.8rem] text-[1.2rem]'>All Time</p>            
+            <p className='text-white font-light text-[0.8rem] xl:text-[1.2rem]'>All Time</p>            
           </div>
         </div>
         <div className='md:w-[50%] bg-[#DD3833] rounded-[15px] flex flex-col items-center justify-center min-h-[150px]   md:min-h-[330px] pt-5 pb-5'>
-            <p className='text-white font-semibold text-[1.1rem] text-[1.5rem] text-center w-[80%]'>Upcoming Registered Competitions</p>
-            <p className='text-white font-bold text-[3rem] text-[3.4rem]'>{upcomingRegisteredCompetitions}</p>
-            <p className='text-white font-light text-[0.8rem] text-[1.2rem]'>Competition(s)</p>            
+            <p className='text-white font-semibold text-[1.1rem] xl:text-[1.5rem] text-center w-[80%]'>Upcoming Registered Competitions</p>
+            <p className='text-white font-bold text-[3rem] xl:text-[3.4rem]'>{upcomingRegisteredCompetitions}</p>
+            <p className='text-white font-light text-[0.8rem] xl:text-[1.2rem]'>Competition(s)</p>            
         </div>
       </div>
       <div className='bg-[#F4F4F4] w-[100%] h-[80vh] mt-[4em] flex justify-center items-center'>

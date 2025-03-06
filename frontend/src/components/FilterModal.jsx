@@ -117,7 +117,7 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
             />
             <button
               type="button"
-              className="absolute right-2 top-3 text-gray-500 w-5 h-5"
+              className="absolute right-2 top-2 text-gray-500 w-5 h-5"
               onClick={() => createdStartRef.current?.showPicker()}
             >
               <FontAwesomeIcon icon={faCalendar} />
@@ -135,7 +135,7 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
             />
             <button
               type="button"
-              className="absolute right-2 top-3 text-gray-500 w-5 h-5"
+              className="absolute right-2 top-2 text-gray-500 w-5 h-5"
               onClick={() => createdEndRef.current?.showPicker()}
             >
               <FontAwesomeIcon icon={faCalendar} />
@@ -159,7 +159,7 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
             />
             <button
               type="button"
-              className="absolute right-2 top-3 text-gray-500 w-5 h-5"
+              className="absolute right-2 top-2 text-gray-500 w-5 h-5"
               onClick={() => updatedStartRef.current?.showPicker()}
             >
               <FontAwesomeIcon icon={faCalendar} />
@@ -177,7 +177,7 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
             />
             <button
               type="button"
-              className="absolute right-2 top-3 text-gray-500 w-5 h-5"
+              className="absolute right-2 top-2 text-gray-500 w-5 h-5"
               onClick={() => updatedEndRef.current?.showPicker()}
             >
               <FontAwesomeIcon icon={faCalendar} />
