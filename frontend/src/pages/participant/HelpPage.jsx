@@ -168,7 +168,7 @@ const HelpPage = () => {
       <div className="pl-5 pr-8 pt-2 pb-0 md:ml-20 flex justify-between items-center font-poppins">
         
         <div className="sm:mr-20 md:mr-26 2xl:mr-35 flex gap-5">
-          <button className="border border-gray-400 px-3 py-2 rounded-xl hover:bg-gray-100 hover:cursor-pointer"
+          <button className="border border-slate-200 transition duration-300 ease hover:border-slate-300 shadow-sm focus:shadow px-3 py-2 rounded-xl hover:bg-gray-100 hover:cursor-pointer"
           onClick={() => setOpenFilter(true)}>
             <FontAwesomeIcon icon={faFilter} />
           </button>

@@ -14,6 +14,7 @@ import Navbar from './components/Navbar.jsx';
 import Footer from './components/Footer.jsx';
 import NewTicket from './pages/participant/NewTicket.jsx';
 import ScrollToTop from './components/ScrolltoTop.jsx';
+import ParticipantDetails from './pages/admin/ParticipantDetails.jsx';
 
 function App() {
   // const [page, setPage] = useState("Welcome");
@@ -37,6 +38,7 @@ function App() {
                 <Route path='/admindashboard' element={ <Dashboard/> }></Route>
                 <Route path='/admincomp' element={ <CompManagement/> }></Route>
                 <Route path='/adminticket' element={ <TicketManagement /> }></Route>
+                <Route path='/adminparticipantdetails' element={<ParticipantDetails/> }></Route>
 
                 <Route path='/*' element={<NotFound/>}></Route>
             </Routes>

@@ -39,3 +39,9 @@
 .red-hover:hover{
   background-color: #ffc6c669;
 }
+
+.color-component-cream{
+  background-color: #fcf1d4;
+  margin: 0;
+  padding: 0;
+}
