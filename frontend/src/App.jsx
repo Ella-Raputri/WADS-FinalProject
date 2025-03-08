@@ -17,35 +17,34 @@ import ScrollToTop from './components/ScrolltoTop.jsx';
 import ParticipantDetails from './pages/admin/ParticipantDetails.jsx';
 
 function App() {
-  // const [page, setPage] = useState("Welcome");
-  // const [isLogin , setIsLogin] = useState(false);
-  // const [isAdmin, setIsAdmin] = useState(false);
-
   return (
-    <div className="App">
-        <Router>
-        <ScrollToTop/>
-            <Navbar />
-            <Routes>
-                <Route path='/' element={<WelcomePage/>}></Route>
-                <Route path='/login' element={ <LoginRegisterPage/> }></Route>
+    <div className="flex flex-col min-h-screen">
+      <Router>
+        <ScrollToTop />
+        <Navbar />
+        <main className="flex-1"> 
+          <Routes>
+            <Route path='/' element={<WelcomePage />} />
+            <Route path='/login' element={<LoginRegisterPage />} />
 
-                <Route path='/userhome' element={ <HomePage/> }></Route>
-                <Route path='/usercomp' element={ <CompetitionPage/> }></Route>
-                <Route path='/userhelp' element={ <HelpPage/> }></Route>
-                <Route path='/usernewticket' element={<NewTicket/> }></Route>
+            <Route path='/userhome' element={<HomePage />} />
+            <Route path='/usercomp' element={<CompetitionPage />} />
+            <Route path='/userhelp' element={<HelpPage />} />
+            <Route path='/usernewticket' element={<NewTicket />} />
 
-                <Route path='/admindashboard' element={ <Dashboard/> }></Route>
-                <Route path='/admincomp' element={ <CompManagement/> }></Route>
-                <Route path='/adminticket' element={ <TicketManagement /> }></Route>
-                <Route path='/adminparticipantdetails' element={<ParticipantDetails/> }></Route>
+            <Route path='/admindashboard' element={<Dashboard />} />
+            <Route path='/admincomp' element={<CompManagement />} />
+            <Route path='/adminticket' element={<TicketManagement />} />
+            <Route path='/adminparticipantdetails' element={<ParticipantDetails />} />
 
-                <Route path='/*' element={<NotFound/>}></Route>
-            </Routes>
-            <Footer />
-        </Router>
+            <Route path='/*' element={<NotFound />} />
+          </Routes>
+        </main>
+        <Footer />
+      </Router>
     </div>
-  )
+  );
 }
+
 
 export default App

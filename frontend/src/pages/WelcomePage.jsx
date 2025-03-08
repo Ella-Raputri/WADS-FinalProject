@@ -11,7 +11,7 @@ const WelcomePage = () => {
 
   return (
     <>
-      <section className="relative w-full flex m-0 flex-col items-center text-center py-10 h-screen overflow-hidden">
+      <section className="relative w-full flex flex-col items-center text-center py-10 overflow-hidden pb-0 mb-0">
         {/* Background Images */}
         <div className="relative w-full flex justify-center">
         <img 
@@ -99,8 +99,26 @@ const WelcomePage = () => {
       /> 
       </section>
 
-      <div className="color-component-cream -mt-5">
-        hhh
+      <div className="flex items-center justify-center min-h-screen md:min-h-[60vh] color-component-cream -translate-y-4">
+        <div className="max-w-5xl w-full flex flex-col md:flex-row items-center p-8">
+          <div className="md:w-1/2">
+            <h2 className="text-2xl font-bold mb-4 font-kanit">ABOUT US</h2>
+            <p className="text-gray-700 mb-4 font-poppins">
+              NMC (National Mandarin Competition) is one of the events held by BNMC
+              (BINUS Mandarin Club) with the goal of improving one's Chinese skills,
+              and to preserve Chinese culture.
+            </p>
+            <p className="text-gray-700 font-poppins">
+              NMC's theme “Bridging Generations With Chinese Culture” hopes that
+              NMC can be a bridge that connects people from different generations to
+              support the preservation and introduction of Chinese culture towards
+              society.
+            </p>
+          </div>
+          <div className="md:w-2/5 md:pl-8 mt-6 md:mt-0">
+            <img src="src/assets/welcome_page/architecture.png" alt="Chinese Architecture" className="w-full rounded-lg shadow-md" />
+          </div>
+        </div>
       </div>
 
       <div className="flex flex-col min-h-screen mt-70">

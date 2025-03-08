@@ -2,9 +2,9 @@ import React from 'react';
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-const ParticipantDetails = ({name, email, phonenumber}) => {
+const ParticipantDetails = () => {
     const [message, setMessage] = useState("");
     const [image, setImage] = useState(null);
     const [imageName, setImageName] = useState("");
@@ -29,6 +29,11 @@ const ParticipantDetails = ({name, email, phonenumber}) => {
     };
 
     const navigate = useNavigate();
+
+    const location = useLocation();
+    const data = location.state?.data;
+    console.log("data received: ");
+    console.log(data);
 
   return (
     <div className='mt-25 ml-4 mr-8 md:ml-20 ' >

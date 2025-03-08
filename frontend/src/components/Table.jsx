@@ -2,6 +2,7 @@ import React from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSortUp, faSortDown, faExternalLink } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 
 function Table({ columns, data }) { 
     const [sortedData, setSortedData] = useState(data);
@@ -29,12 +30,26 @@ function Table({ columns, data }) {
         setSortConfig({ key: columnKey, direction });
     };
 
+    const navigate = useNavigate();
+    const handleRowClick = (row)=>{
+        console.log("clicked");
+        if (columns.includes("SUBJECT")) {
+            navigate(`/xx/${row.id}`); 
+            return;
+        } else if (columns.includes("NAME")) {
+            navigate(`/adminparticipantdetails`, { state: { data:row } });
+            return;
+        }
+        navigate(`/notfound`);
+    }
+
     return (
         <div className="overflow-x-auto max-w-11/12 lg:max-w-full mt-3 p-4">
             <table className="md:min-w-11/12 table-fixed bg-white shadow-md rounded-lg overflow-hidden">
                 <thead className="bg-gray-100">
                     <tr>
                         {columns.map((col, index) => (
+                            col!=="id" &&(
                             <th
                                 key={index}
                                 className="text-sm px-4 py-3 text-left text-gray-600 font-poppins w-[200px]"
@@ -53,13 +68,15 @@ function Table({ columns, data }) {
                                     />
                                 </div>
                             </th>
-                        ))}
+                        )))}
+                        {console.log(columns)}
                     </tr>
                 </thead>
                 <tbody>
                     {sortedData.map((item, index) => (
                         <tr key={index} className="border-b border-gray-500 hover:bg-gray-50 ">
                             {columns.map((col, colIndex) => (
+                                col!=="id" &&(
                                 <td key={colIndex} className={`px-4 py-3 text-sm font-poppins text-gray-700 ${col === 'Subject' ? 'w-2/5' : ''}`}>
                                     {col === 'PRIORITY' && item[col.toLowerCase()] === 'Urgent' && (
                                         <div className="inline-flex mr-2 w-2.5 h-2.5 bg-red-600"></div>
@@ -77,21 +94,21 @@ function Table({ columns, data }) {
                                     {col === 'STATUS' && (
                                         <div className="flex items-center space-x-2">
                                             <div className={`font-semibold inline-flex w-24 md:w-30 rounded-2xl text-white p-1 justify-center
-                                                ${item[col.toLowerCase()] === 'Open' ? 'bg-red-400' :
-                                                item[col.toLowerCase()] === 'Closed' ? 'bg-lime-500' :
-                                                item[col.toLowerCase()] === 'In Progress' ? 'bg-amber-500' :
+                                                ${item[col.toLowerCase()] === 'Open' || item[col.toLowerCase()] === 'Rejected' ? 'bg-red-400' :
+                                                item[col.toLowerCase()] === 'Closed' || item[col.toLowerCase()] === 'Accepted' ? 'bg-lime-500' :
+                                                item[col.toLowerCase()] === 'In Progress' || item[col.toLowerCase()] === 'Pending' ? 'bg-amber-500' :
                                                 'bg-sky-400' // Resolved
                                                 }`}
                                             >
                                                 {item[col.toLowerCase()]}
                                             </div>
-                                            <FontAwesomeIcon className="text-xs md:text-sm cursor-pointer hover:text-red-600" icon={faExternalLink} />
+                                            <FontAwesomeIcon onClick={() => handleRowClick(item)} className="text-xs md:text-sm cursor-pointer hover:text-red-600" icon={faExternalLink} />
                                         </div>
                                     )}
 
                                     {col !== 'STATUS' && item[col.replace(/\s+/g, '_').toLowerCase()]}
                                 </td>
-                            ))}
+                            )))}
                         </tr>
                     ))}
                 </tbody>
