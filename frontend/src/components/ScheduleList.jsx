@@ -40,7 +40,7 @@ export const SecheduleList = ({competition}) => {
                 <p className="ml-[2em]">Category: {competition.category}</p>
                 <p className="ml-[2em]">Time: {competition.time}</p>
                 <p className={`ml-[2em]`}>Status: <p className={`inline-flex ${status === "Incoming" ? "text-[#DEC41B]" : "text-[#FF9000]"}`}>{status}</p></p>
-                <button className="lg:absolute lg:right-0 w-23 h-7 mt-2 mb-2 lg:mb-0 lg:mr-10 ml-6 color-component-red rounded-md hover:!bg-red-700 text-white cursor-pointer" onClick={() => {
+                <button className="lg:absolute lg:right-0 w-23 py-2 mt-3 lg:mb-0 lg:mr-10 ml-6 color-component-red rounded-md hover:!bg-red-700 text-white cursor-pointer" onClick={() => {
                     setIsOpen(true);
                 }}>Details</button>
             </div>

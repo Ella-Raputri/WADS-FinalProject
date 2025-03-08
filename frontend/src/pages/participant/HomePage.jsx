@@ -47,13 +47,13 @@ const HomePage = () => {
       <div className='flex flex-col w-[80%] md:w-[60%] mx-auto mt-[2em] gap-11 font-kanit md:flex-row md: w-[60%]'>
         <div className='w-[100%] md:w-[50%] flex flex-col gap-[30px]'>
           <div className='bg-[#DD3833] h-[50%] rounded-[15px] flex flex-col items-center justify-center min-h-[150px] pt-5 pb-5'>
-            <p className='text-white font-semibold text-[1.1rem] xl:text-[1.5rem] text-center'>Competitions Participated</p>
+            <p className='text-white font-semibold w-[80%] text-[1.1rem] xl:text-[1.5rem] text-center'>Competitions Participated</p>
             <p className='text-white font-bold text-[3rem] xl:text-[3.4rem]'>{competitionsParticipated}</p>
             <p className='text-white font-light text-[0.8rem] xl:text-[1.2rem]'>All Time</p>            
           </div>
           <div className='bg-[#DD3833] h-[50%] rounded-[15px] flex flex-col items-center justify-center min-h-[150px] pt-5 pb-5'>
-            <p className='text-white font-semibold text-[1.1rem] xl:text-[1.5rem] text-center'>Competitions Won</p>
-            <p className='text-white font-bold text-[3rem] text-[3.4rem]'>{competitionsWon}</p>
+            <p className='text-white font-semibold w-[80%] text-[1.1rem] xl:text-[1.5rem] text-center'>Competitions Won</p>
+            <p className='text-white font-bold text-[3rem] xl:text-[3.4rem]'>{competitionsWon}</p>
             <p className='text-white font-light text-[0.8rem] xl:text-[1.2rem]'>All Time</p>            
           </div>
         </div>
@@ -63,14 +63,16 @@ const HomePage = () => {
             <p className='text-white font-light text-[0.8rem] xl:text-[1.2rem]'>Competition(s)</p>            
         </div>
       </div>
-      <div className='bg-[#F4F4F4] w-[100%] h-[80vh] mt-[4em] flex justify-center items-center'>
-        <div className={`bg-[#FFFFFF] w-[80%] md:w-[70%] h-[80%] shadow-xl rounded-[20px] ${sortedCompetitions.length > 0 ? "overflow-y-auto overflow-hidden" : "flex justify-center items-center relative"}`}>
-          <p className={`font-kanit font-medium text-[1.4rem] text-[1.8rem] mt-[2em] sm:ml-[3em] text-center sm:text-left ${sortedCompetitions.length > 0 ? "" : "md:absolute md:top-0 md:left-0"}`}>Schedule</p>
-          {sortedCompetitions.length > 0 ? sortedCompetitions.map((competition) => (
-            <SecheduleList competition={competition} />
-          )) : (
-            <p className='font-poppins text-[#818181] '>-- No Upcoming Competitions --</p>
-          )}
+      <div className='bg-[#F4F4F4] w-[100%] mt-[4em] flex justify-center items-center relative'>
+        <div className='bg-[#FFFFFF] w-[90%] md:w-[70%] shadow-xl rounded-[20px] my-[2em]'>
+          <p className='font-kanit text-[1.4rem] xl:text-[1.8rem] font-medium sm:ml-[4em] justify-self-center pt-[2em] pb-[0.5em] sm:justify-self-start'>Schedule</p>
+          <div className={`h-[70vh] min-h-[200px] max-h-[300px] overflow-auto sm:mx-[2em] mb-5`}>
+            {sortedCompetitions.length > 0 ? sortedCompetitions.map((competition) => (
+              <SecheduleList competition={competition} />
+            )) : (
+              <p className='font-poppins text-[#818181] '>-- No Upcoming Competitions --</p>
+            )}
+          </div>
         </div>
       </div>
     </>
