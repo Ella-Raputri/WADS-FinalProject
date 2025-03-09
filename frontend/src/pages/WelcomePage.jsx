@@ -133,10 +133,10 @@ const WelcomePage = () => {
           <h1 className="text-2xl md:text-3xl font-poppins text-black font-semibold mb-15">Contact us if you have any questions!</h1>
           <div className="flex gap-6">
           <button className="arrow-button px-4 md:px-6 py-3 border-2 border-red-600 text-red-600 font-semibold text-md md:text-lg rounded-lg hover:bg-neutral-100 transition">
-            Kontak Kami <span className="arrow"></span>
+            Contact Us <span className="arrow"></span>
           </button>
           <button className="arrow-button px-4 md:px-6 py-3 bg-red-600 text-white font-semibold text-md md:text-lg rounded-lg hover:bg-red-700 transition">
-            Lihat FAQ <span className="arrow"></span>
+            See FAQ <span className="arrow"></span>
           </button>
           </div>
         </div>
