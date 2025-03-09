@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Carousel from '../components/Carousel';
 
 const WelcomePage = () => {
   const navigate = useNavigate();
@@ -99,16 +100,16 @@ const WelcomePage = () => {
       /> 
       </section>
 
-      <div className="flex items-center justify-center min-h-screen md:min-h-[60vh] color-component-cream -translate-y-4">
+      <div className="flex items-center justify-center min-h-screen md:min-h-[80vh] color-component-cream -translate-y-4">
         <div className="max-w-5xl w-full flex flex-col md:flex-row items-center p-8">
           <div className="md:w-1/2">
-            <h2 className="text-2xl font-bold mb-4 font-kanit">ABOUT US</h2>
-            <p className="text-gray-700 mb-4 font-poppins">
+            <h2 className="text-2xl lg:text-3xl font-bold mb-4 font-kanit">ABOUT US</h2>
+            <p className="text-gray-700 mb-4 font-poppins text-md lg:text-lg">
               NMC (National Mandarin Competition) is one of the events held by BNMC
               (BINUS Mandarin Club) with the goal of improving one's Chinese skills,
               and to preserve Chinese culture.
             </p>
-            <p className="text-gray-700 font-poppins">
+            <p className="text-gray-700 font-poppins text-md lg:text-lg">
               NMC's theme “Bridging Generations With Chinese Culture” hopes that
               NMC can be a bridge that connects people from different generations to
               support the preservation and introduction of Chinese culture towards
@@ -120,6 +121,12 @@ const WelcomePage = () => {
           </div>
         </div>
       </div>
+
+      <div className="flex flex-col items-center pt-30 min-h-screen w-full">
+        <h1 className="text-3xl lg:text-4xl font-bold font-kanit mb-20">Competitions</h1>
+        <Carousel />
+      </div>
+
 
       <div className="flex flex-col min-h-screen mt-70">
         <main className="flex-grow p-6">
