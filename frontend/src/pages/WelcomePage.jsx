@@ -122,8 +122,8 @@ const WelcomePage = () => {
         </div>
       </div>
 
-      <div className="flex flex-col items-center pt-30 min-h-screen w-full">
-        <h1 className="text-3xl lg:text-4xl font-bold font-kanit mb-20">Competitions</h1>
+      <div className="flex flex-col items-center pt-20 md:pt-30 min-h-screen w-full">
+        <h1 className="text-3xl lg:text-4xl font-bold font-kanit mb-8 lg:mb-12">COMPETITIONS</h1>
         <Carousel />
       </div>
 
