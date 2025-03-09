@@ -45,3 +45,26 @@
   margin: 0;
   padding: 0;
 }
+
+.arrow-button {
+  display: flex;
+  transition: all 0.3s ease;
+  font-weight: bold;
+  cursor: pointer;
+  align-items: center;
+}
+
+.arrow {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-bottom: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+  position: relative;
+  transform: rotate(-45deg);
+  margin-left: 6px;
+  transition: all 0.3s ease;
+}
+
+.arrow-button:hover .arrow {
+  transform: rotate(-45deg) translate(4px, 4px);
+}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Carousel from '../components/Carousel';
+import Tassle from '../components/Tassle';
 
 const WelcomePage = () => {
   const navigate = useNavigate();
@@ -122,32 +123,28 @@ const WelcomePage = () => {
         </div>
       </div>
 
-      <div className="flex flex-col items-center pt-20 md:pt-30 min-h-screen w-full">
+      <div className="flex flex-col items-center pt-20 md:pt-30 min-h-[80vh] md:min-h-screen w-full">
         <h1 className="text-3xl lg:text-4xl font-bold font-kanit mb-8 lg:mb-12">COMPETITIONS</h1>
         <Carousel />
       </div>
 
-
-      <div className="flex flex-col min-h-screen mt-70">
-        <main className="flex-grow p-6">
-          <h1 className="text-3xl font-bold text-center mb-6">Welcome to the Dummy Page</h1>
-          <p className="text-gray-700 text-lg text-center">
-            This page is filled with placeholder content to test the footer positioning.
-          </p>
-
-          {/* Dummy Content with Scroll */}
-          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {Array.from({ length: 9 }).map((_, index) => (
-              <div key={index} className="p-6 border rounded-lg shadow-md">
-                <h2 className="text-xl font-semibold mb-2">Section {index + 1}</h2>
-                <p className="text-gray-600">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vehicula justo at eros ultricies, nec tincidunt justo consequat.
-                </p>
-              </div>
-            ))}
+      <div className="flex flex-col items-center w-full mt-20 md:mt-10 mb-20 ">
+        <div className="rounded-xl border-5 w-3/4 lg:w-1/2 text-center min-h-80 flex flex-col items-center justify-center p-4" style={{ borderColor: "#DD3833" }}>
+          <h1 className="text-2xl md:text-3xl font-poppins text-black font-semibold mb-15">Contact us if you have any questions!</h1>
+          <div className="flex gap-6">
+          <button className="arrow-button px-4 md:px-6 py-3 border-2 border-red-600 text-red-600 font-semibold text-md md:text-lg rounded-lg hover:bg-neutral-100 transition">
+            Kontak Kami <span className="arrow"></span>
+          </button>
+          <button className="arrow-button px-4 md:px-6 py-3 bg-red-600 text-white font-semibold text-md md:text-lg rounded-lg hover:bg-red-700 transition">
+            Lihat FAQ <span className="arrow"></span>
+          </button>
           </div>
-        </main>
+        </div>
+
+        <Tassle/>
       </div>
+
+
     </>
   );
 };
