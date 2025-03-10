@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import './App.css'
-import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import WelcomePage from './pages/WelcomePage.jsx'
 import NotFound from './pages/NotFound.jsx'
 import LoginRegisterPage from './pages/LoginRegisterPage.jsx'
@@ -18,8 +18,18 @@ import ParticipantDetails from './pages/admin/ParticipantDetails.jsx';
 
 function App() {
   return (
-    <div className="flex flex-col min-h-screen">
-      <Router>
+    <Router>
+      <MainLayout />
+    </Router>
+  );
+}
+
+function MainLayout() {
+  const location = useLocation();
+  const bgColor = location.pathname.includes("admin") ? "#f7f7f7" : "white";
+
+  return (
+    <div className={`flex flex-col min-h-screen`} style={{backgroundColor:bgColor}}>
         <ScrollToTop />
         <Navbar />
         <main className="flex-1"> 
@@ -41,7 +51,6 @@ function App() {
           </Routes>
         </main>
         <Footer />
-      </Router>
     </div>
   );
 }

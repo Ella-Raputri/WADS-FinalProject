@@ -46,7 +46,7 @@ function Table({ columns, data }) {
     return (
         <div className="overflow-x-auto max-w-11/12 lg:max-w-full mt-3 p-4">
             <table className="md:min-w-11/12 table-fixed bg-white shadow-md rounded-lg overflow-hidden">
-                <thead className="bg-gray-100">
+                <thead className="bg-gray-100 border border-gray-300">
                     <tr>
                         {columns.map((col, index) => (
                             col!=="id" &&(
