@@ -5,8 +5,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilter } from "@fortawesome/free-solid-svg-icons"; 
 import { useNavigate } from 'react-router-dom';
 import SearchBar from '../../components/SearchBar';
-import FilterModal from '../../components/FilterModal';
 import SaveButton from '../../components/SaveButton';
+import FilterStatusModal from '../../components/FilterStatusModal';
 
 const CompManagement = () => {
   const cols = ["id", "NAME", "EMAIL","PHONE NUMBER", "STATUS"];
@@ -14,7 +14,7 @@ const CompManagement = () => {
     {id:1 ,name: "ellis", email:"ellis@gmail.com", phone_number:"123", status:"Rejected"},
     {id:2, name: "mega", email:"mega@gmail.com", phone_number:"1343", status:"Accepted"},
     {id:3, name: "lanluomojelek", email:"arama@gmail.com", phone_number:"144", status:"Pending"},
-    
+    {id:4 ,name: "ellis", email:"ellis@gmail.com", phone_number:"123", status:"Rejected"},
   ];
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -45,38 +45,16 @@ const CompManagement = () => {
 
   const handleFilter = (newFilters) => {
     setOpenFilter(false);
-  
-    const { createdStart, createdEnd, updatedStart, updatedEnd, priority, status } = newFilters;
-  
-    const dateCreateStart = createdStart ? new Date(createdStart) : null;
-    const dateCreateEnd = createdEnd ? new Date(createdEnd) : null;
-    const dateUpdateStart = updatedStart ? new Date(updatedStart) : null;
-    const dateUpdateEnd = updatedEnd ? new Date(updatedEnd) : null;
+    const { status } = newFilters;
   
     const filtered = data.filter(ticket => {
-      const createdAt = new Date(ticket.created_at);
-      const updatedAt = new Date(ticket.updated_at);
-  
-      const isWithinCreateRange =
-        (!dateCreateStart || createdAt >= dateCreateStart) &&
-        (!dateCreateEnd || createdAt <= dateCreateEnd);
-  
-      const isWithinUpdateRange =
-        (!dateUpdateStart || updatedAt >= dateUpdateStart) &&
-        (!dateUpdateEnd || updatedAt <= dateUpdateEnd);
-  
-      const isPriorityMatch = priority ? ticket.priority.toLowerCase() === priority : true;
       const isStatusMatch = status ? ticket.status.toLowerCase() === status : true;
       
       console.log("iterating ticket:");
       console.log(ticket);
-      console.log(priority);
-      console.log(isWithinCreateRange)
-      console.log(isWithinUpdateRange)
-      console.log(isPriorityMatch)
       console.log(isStatusMatch)
   
-      return isWithinCreateRange && isWithinUpdateRange && isPriorityMatch && isStatusMatch;
+      return isStatusMatch;
     });
   
     setFilteredData(filtered);
@@ -115,7 +93,7 @@ const CompManagement = () => {
           onClick={() => setOpenFilter(true)}>
             <FontAwesomeIcon icon={faFilter} />
           </button>
-          <SaveButton data={filteredData} />
+          <SaveButton data={filteredData} type={"participants"}/>
         </div>
       </div>
 
@@ -141,7 +119,7 @@ const CompManagement = () => {
       </div>
       </div>
 
-      {openFilter && <FilterModal isOpen={openFilter} onClose={()=>setOpenFilter(false)} onApply={handleFilter}/>}
+      {openFilter && <FilterStatusModal isOpen={openFilter} onClose={()=>setOpenFilter(false)} onApply={handleFilter}/>}
     </>
   );
 };

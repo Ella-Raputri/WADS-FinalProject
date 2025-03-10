@@ -1,6 +1,6 @@
 import React from 'react'
 
-function SaveButton({data}) {
+function SaveButton({data, type}) {
 
     const handleSaveList = () => {
         if (data.length === 0) {
@@ -20,7 +20,7 @@ function SaveButton({data}) {
       
         const link = document.createElement("a");
         link.href = url;
-        link.download = "tickets.csv";
+        link.download = type + ".csv";
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);

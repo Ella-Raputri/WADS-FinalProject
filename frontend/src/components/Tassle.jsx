@@ -9,7 +9,7 @@ export default function Tassle() {
 
       {/* Swaying Body */}
       <motion.div
-        className="w-20 lg:w-25 origin-top"
+        className="w-15 lg:w-20 origin-top -translate-y-1"
         onClick={() => setIsSwinging(!isSwinging)}
         animate={{
           rotate: isSwinging ? [0, 15, -15, 10, -10, 5, -5, 0] : 0, 
@@ -21,7 +21,7 @@ export default function Tassle() {
         }}
         style={{ transformOrigin: "top center" }}
       >
-        <img src="src/assets/welcome_page/tassle.png" alt="decoration" />
+        <img src="src/assets/welcome_page/tassle2.png" alt="decoration" />
       </motion.div>
     </div>
   );

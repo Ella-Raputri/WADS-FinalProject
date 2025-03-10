@@ -87,7 +87,7 @@ const WelcomePage = () => {
             RELEASE YOUR POTENTIAL AND CLAIM YOUR GLORY!
           </p>
           <button
-            className="mx-auto mt-6 bg-red-800 text-white font-bold py-3 px-6 rounded-lg text-sm sm:text-base xl:text-lg 2xl:text-xl hover:bg-red-700 transition"
+            className="cursor-pointer mx-auto mt-6 bg-red-800 text-white font-bold py-3 px-6 rounded-lg text-sm sm:text-base xl:text-lg 2xl:text-xl hover:bg-red-700 transition"
             onClick={goToCompete}
           >
             Join and Compete

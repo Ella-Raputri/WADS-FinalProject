@@ -183,7 +183,7 @@ const TicketManagement = () => {
           onClick={() => setOpenFilter(true)}>
             <FontAwesomeIcon icon={faFilter} />
           </button>
-          <SaveButton data={filteredData} />
+          <SaveButton data={filteredData} type={"tickets"}/>
         </div>
       </div>
 

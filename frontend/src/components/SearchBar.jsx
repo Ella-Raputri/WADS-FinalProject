@@ -37,7 +37,7 @@ function SearchBar({ onApply , placeholderSubject }) {
                     type="button"
                     onClick={handleSearching}
                 >
-                    {inputVal !== "" ? <p>✖</p> : <FontAwesomeIcon icon={faSearch} />}
+                    {inputVal !== "" ? <p className='cursor-pointer'>✖</p> : <FontAwesomeIcon icon={faSearch} />}
                 </button>
             </div>
         </div>
