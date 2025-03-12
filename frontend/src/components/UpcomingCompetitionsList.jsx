@@ -33,7 +33,6 @@ export const UpcomingCompetitionsList = ({competitions}) => {
                 <ChevronLeft size={30} onClick={() => prev()} className= {`${isBeginning ? "invisible" : "block"} cursor-pointer`} />
             </div>
             <Swiper 
-                modules={[Scrollbar]}
                 breakpoints={{
                     320: {slidesPerView: 1, spaceBetween: 200},
                     768: {slidesPerView: 2, spaceBetween: 100},
@@ -48,10 +47,10 @@ export const UpcomingCompetitionsList = ({competitions}) => {
             >
                 {competitions.map((competition, index) => (    
                     <SwiperSlide key={index} className='flex flex-col items-center'>
-                        <div className="overflow-hidden h-[20vh] max-h-[180px] w-[100%] lg:aspect-[7.5/3.5] lg:h-auto rounded-t-[10px] border">
+                        <div className="overflow-hidden h-[20vh] max-h-[180px] w-[100%] lg:aspect-[7.5/3.5] lg:h-auto border bg-white">
                             <img src="image_placeholder.jpeg" className="h-[100%] w-[100%] object-center object-cover" />
                         </div>
-                        <div className="flex flex-col text-[0.7rem] text-white text-center bg-[#DD3833] items-center p-3 flex-1 w-full">
+                        <div className="flex flex-col text-[0.7rem] text-white text-center bg-[#DD3833] items-center p-3 w-full">
                             <p>Name: {competition.title}</p>
                             <p>Category: {competition.category}</p>
                             <p>Date: {competition.date}</p>
