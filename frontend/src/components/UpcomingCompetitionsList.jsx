@@ -23,13 +23,13 @@ export const UpcomingCompetitionsList = ({competitions}) => {
 
     const updateChange = () => {
         setIsBeginning(swiperRef.current.isBeginning);
-        setIsEnd(swiperRef.current.isEnd)
+        setIsEnd(swiperRef.current.isEnd);
     }
 
     return(
         <>
         <div className="relative flex items-center justify-self-center w-[100%] my-[4em]">
-            <div className="w-[10%] xl:w-[20%] flex justify-center">
+            <div className="w-[20%] sm:w-[30%] lg:w-[10%] xl:w-[20%] flex justify-center">
                 <ChevronLeft size={30} onClick={() => prev()} className= {`${isBeginning ? "invisible" : "block"} cursor-pointer`} />
             </div>
             <Swiper 
@@ -39,14 +39,10 @@ export const UpcomingCompetitionsList = ({competitions}) => {
                     1024: {slidesPerView: 3, spaceBetween: 100},
                 }}
                 allowTouchMove={false}
-                onSwiper={(Swiper) => {
-                    swiperRef.current = Swiper;
-                    updateChange();
-                }}
-                onSlideChange={() => updateChange()}
-            >
-                {competitions.map((competition, index) => (    
-                    <SwiperSlide key={index} className='flex flex-col items-center'>
+                onSwiper={(Swiper) => {swiperRef.current = Swiper}}
+                onSlideChange={() => updateChange()}>
+                {competitions.map((competition) => (    
+                    <SwiperSlide className='flex flex-col items-center'>
                         <div className="overflow-hidden h-[20vh] max-h-[180px] w-[100%] lg:aspect-[7.5/3.5] lg:h-auto border bg-white">
                             <img src="image_placeholder.jpeg" className="h-[100%] w-[100%] object-center object-cover" />
                         </div>
@@ -58,7 +54,7 @@ export const UpcomingCompetitionsList = ({competitions}) => {
                     </SwiperSlide>
                 ))}
             </Swiper>
-            <div className="w-[10%] xl:w-[20%] flex justify-center">
+            <div className="w-[20%] sm:w-[30%] lg:w-[10%] xl:w-[20%] flex justify-center">
                 <ChevronRight size={30} onClick={() => next()} className={`${isEnd ? "invisible": "block"} cursor-pointer`} />
             </div>
         </div>
