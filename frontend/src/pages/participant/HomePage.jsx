@@ -1,13 +1,13 @@
 import React from 'react'
 import { SecheduleList } from '../../components/ScheduleList';
 import { UpcomingCompetitionsList } from '../../components/UpcomingCompetitionsList';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { UserData } from '../../components/UserData';
 
 const HomePage = () => {
   let userName = "Santoso";
-  let competitionsParticipated = 10;
-  let competitionsWon = 0;
-  let upcomingRegisteredCompetitions = 3;
-  
+
   let upcomingCompetitions = [
     {
       title: "Traditional Chinese Songs Singing 1", 
@@ -67,32 +67,36 @@ endDate: new Date(2026, 0, 15)
   
   return (
     <>
-      <p className='font-kanit mt-[4em] ml-[2em] text-[1.7rem] xl:text-[2.1rem] font-medium'>Dashboard</p>
-      <p className='font-poppins text-[#7D7979] text-[0.9rem] xl:text-[1.3rem] ml-[3.8em]'>{new Date().toDateString()}</p>
-      <p className='font-poppins text-[0.9rem] xl:text-[1.3rem] ml-[3.8em] mt-[1em]'>Welcome Back, {userName}!</p>
-      <div className='flex flex-col w-[80%] md:w-[60%] mx-auto mt-[2em] gap-11 font-kanit md:flex-row md: w-[60%]'>
-        <div className='w-[100%] md:w-[50%] flex flex-col gap-[30px]'>
-          <div className='bg-[#DD3833] h-[50%] rounded-[15px] flex flex-col items-center justify-center min-h-[150px] pt-5 pb-5'>
-            <p className='text-white font-semibold w-[80%] text-[1.1rem] xl:text-[1.5rem] text-center'>Competitions Participated</p>
-            <p className='text-white font-bold text-[3rem] xl:text-[3.4rem]'>{competitionsParticipated}</p>
-            <p className='text-white font-light text-[0.8rem] xl:text-[1.2rem]'>All Time</p>            
-          </div>
-          <div className='bg-[#DD3833] h-[50%] rounded-[15px] flex flex-col items-center justify-center min-h-[150px] pt-5 pb-5'>
-            <p className='text-white font-semibold w-[80%] text-[1.1rem] xl:text-[1.5rem] text-center'>Competitions Won</p>
-            <p className='text-white font-bold text-[3rem] xl:text-[3.4rem]'>{competitionsWon}</p>
-            <p className='text-white font-light text-[0.8rem] xl:text-[1.2rem]'>All Time</p>            
-          </div>
-        </div>
-        <div className='md:w-[50%] bg-[#DD3833] rounded-[15px] flex flex-col items-center justify-center min-h-[150px] md:min-h-[330px] pt-5 pb-5'>
-            <p className='text-white font-semibold text-[1.1rem] xl:text-[1.5rem] text-center w-[80%]'>Upcoming Registered Competitions</p>
-            <p className='text-white font-bold text-[3rem] xl:text-[3.4rem]'>{upcomingRegisteredCompetitions}</p>
-            <p className='text-white font-light text-[0.8rem] xl:text-[1.2rem]'>Competition(s)</p>            
-        </div>
+      <div className='mt-[7em] text-center sm:text-start sm:ml-[4em]'>
+        <p className='font-kanit text-[1.7rem] xl:text-[2.1rem] font-medium'>Dashboard</p>
+        <p className='font-poppins text-[#7D7979] text-[0.9rem] xl:text-[1.3rem]'>{new Date().toDateString()}</p>
+        <p className='font-poppins text-[0.9rem] xl:text-[1.3rem] mt-[1em]'>Welcome Back, {userName}!</p>
       </div>
-      <div className='bg-[#F4F4F4] w-[100%] mt-[4em] flex justify-center items-center relative'>
-        <div className='bg-[#FFFFFF] w-[90%] md:w-[70%] shadow-xl rounded-[20px] my-[3em]'>
+      <div className='flex flex-col w-[95%] sm:w-[70%] mx-auto p-[2em] sm:p-[3em] xl:max-w-[1200px] 2xl:max-w-[1800px]'>
+        <div className='flex items-center gap-[15px]'>
+            <div className='bg-gray-500 rounded-full h-fit w-fit py-3 px-4'>
+              <FontAwesomeIcon icon={faUser} className='text-gray-900 text-[1.5em]' />
+            </div>
+            <div className='flex flex-col'>
+              <p className='font-semibold font-kanit text-[1.5rem]'>Santoso</p>
+              <p className='font-poppins text-[0.9rem]'>Santoso@gmail.com</p>
+            </div>
+          </div>
+          <div className='flex flex-col'>
+              <UserData data1="Name" data2="Santoso" margin="2em" />
+              <UserData data1="Mandarin Name" data2="Xi Xi Xi"/>
+              <UserData data1="Date Of Birth" data2="2002-05-15"/>
+              <UserData data1="Gender" data2="Male"/>
+              <UserData data1="Full Address" data2="123 Main Street, Jakarta, Indonesia"/>
+              <UserData data1="Phone Number" data2="+ 62 812-3456-7890"/>
+              <UserData data1="Email" data2="Santoso@gmail.com"/>
+              <UserData data1="Institution" data2="Bina Nusantara"/>
+          </div>
+        </div>
+      <div className='bg-[#F4F4F4] w-[100%] mt-[2em] flex justify-center items-center relative'>
+        <div className='bg-[#FFFFFF] w-[90%] md:w-[70%] shadow-xl rounded-[20px] my-[3em] xl:max-w-[1200px] 2xl:max-w-[1800px]'>
           <p className='font-kanit text-[1.4rem] xl:text-[1.8rem] font-medium sm:ml-[4em] justify-self-center pt-[2em] pb-[0.5em] sm:justify-self-start'>Schedule</p>
-          <div className={`h-[70vh] min-h-[200px] max-h-[300px] overflow-auto sm:mx-[2em] mb-5`}>
+          <div className={`h-[70vh] min-h-[200px] max-h-[300px] xl:max-h-[500px] overflow-auto sm:mx-[2em] mb-5`}>
             {sortedCompetitions.length > 0 ? sortedCompetitions.map((competition) => (
               <SecheduleList competition={competition} />
             )) : (

@@ -1,6 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Scrollbar } from "swiper/modules";
 import { SwiperSlide, Swiper } from "swiper/react";
 import { useRef } from "react";
 
@@ -28,8 +27,8 @@ export const UpcomingCompetitionsList = ({competitions}) => {
 
     return(
         <>
-        <div className="relative flex items-center justify-self-center w-[100%] my-[4em]">
-            <div className="w-[20%] sm:w-[30%] lg:w-[10%] xl:w-[20%] flex justify-center">
+        <div className="relative flex items-center justify-self-center w-[100%] my-[4em] xl:max-w-[1200px] 2xl:max-w-[1800px]">
+            <div className="w-[20%] sm:w-[30%] lg:w-[10%] flex justify-center">
                 <ChevronLeft size={30} onClick={() => prev()} className= {`${isBeginning ? "invisible" : "block"} cursor-pointer`} />
             </div>
             <Swiper 
@@ -54,7 +53,7 @@ export const UpcomingCompetitionsList = ({competitions}) => {
                     </SwiperSlide>
                 ))}
             </Swiper>
-            <div className="w-[20%] sm:w-[30%] lg:w-[10%] xl:w-[20%] flex justify-center">
+            <div className="w-[20%] sm:w-[30%] lg:w-[10%] flex justify-center">
                 <ChevronRight size={30} onClick={() => next()} className={`${isEnd ? "invisible": "block"} cursor-pointer`} />
             </div>
         </div>
