@@ -74,26 +74,26 @@ endDate: new Date(2026, 0, 15)
       </div>
       <div className='flex flex-col w-[95%] sm:w-[70%] mx-auto p-[2em] sm:p-[3em] xl:max-w-[1200px] 2xl:max-w-[1800px]'>
         <div className='flex items-center gap-[15px]'>
-            <div className='bg-gray-500 rounded-full h-fit w-fit py-3 px-4'>
-              <FontAwesomeIcon icon={faUser} className='text-gray-900 text-[1.5em]' />
-            </div>
-            <div className='flex flex-col'>
-              <p className='font-semibold font-kanit text-[1.5rem]'>Santoso</p>
-              <p className='font-poppins text-[0.9rem]'>Santoso@gmail.com</p>
-            </div>
+          <div className='bg-gray-500 rounded-full h-fit w-fit py-3 px-4'>
+            <FontAwesomeIcon icon={faUser} className='text-gray-900 text-[1.5em]' />
           </div>
           <div className='flex flex-col'>
-              <UserData data1="Name" data2="Santoso" margin="2em" />
-              <UserData data1="Mandarin Name" data2="Xi Xi Xi"/>
-              <UserData data1="Date Of Birth" data2="2002-05-15"/>
-              <UserData data1="Gender" data2="Male"/>
-              <UserData data1="Full Address" data2="123 Main Street, Jakarta, Indonesia"/>
-              <UserData data1="Phone Number" data2="+ 62 812-3456-7890"/>
-              <UserData data1="Email" data2="Santoso@gmail.com"/>
-              <UserData data1="Institution" data2="Bina Nusantara"/>
+            <p className='font-semibold font-kanit text-[1.5rem]'>Santoso</p>
+            <p className='font-poppins text-[0.9rem]'>Santoso@gmail.com</p>
           </div>
         </div>
-      <div className='bg-[#F4F4F4] w-[100%] mt-[2em] flex justify-center items-center relative'>
+        <div className='flex flex-col'>
+            <UserData data1="Name" data2="Santoso" margin="2em" />
+            <UserData data1="Mandarin Name" data2="Xi Xi Xi"/>
+            <UserData data1="Date Of Birth" data2="2002-05-15"/>
+            <UserData data1="Gender" data2="Male"/>
+            <UserData data1="Full Address" data2="123 Main Street, Jakarta, Indonesia"/>
+            <UserData data1="Phone Number" data2="+ 62 812-3456-7890"/>
+            <UserData data1="Email" data2="Santoso@gmail.com"/>
+            <UserData data1="Institution" data2="Bina Nusantara"/>
+        </div>
+      </div>
+      <div className='bg-[#F4F4F4] w-[100%] mt-[1 em] flex justify-center items-center relative'>
         <div className='bg-[#FFFFFF] w-[90%] md:w-[70%] shadow-xl rounded-[20px] my-[3em] xl:max-w-[1200px] 2xl:max-w-[1800px]'>
           <p className='font-kanit text-[1.4rem] xl:text-[1.8rem] font-medium sm:ml-[4em] justify-self-center pt-[2em] pb-[0.5em] sm:justify-self-start'>Schedule</p>
           <div className={`h-[70vh] min-h-[200px] max-h-[300px] xl:max-h-[500px] overflow-auto sm:mx-[2em] mb-5`}>
