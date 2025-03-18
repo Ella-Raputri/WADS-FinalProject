@@ -15,6 +15,7 @@ import Footer from './components/Footer.jsx';
 import NewTicket from './pages/participant/NewTicket.jsx';
 import ScrollToTop from './components/ScrolltoTop.jsx';
 import ParticipantDetails from './pages/admin/ParticipantDetails.jsx';
+import TicketDetails from './pages/participant/TicketDetails.jsx';
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function MainLayout() {
             <Route path='/usercomp' element={<CompetitionPage />} />
             <Route path='/userhelp' element={<HelpPage />} />
             <Route path='/usernewticket' element={<NewTicket />} />
+            <Route path='/userticketdetails' element={<TicketDetails />} />
 
             <Route path='/admindashboard' element={<Dashboard />} />
             <Route path='/admincomp' element={<CompManagement />} />
