@@ -1,139 +1,97 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button } from "@/components/ui/button"
+import ChatBox from "@/components/Chatbox";
 
 const TicketDetails = () => {
-  const [subject, setSubject] = useState("");
-  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState([
+    {
+      subject: "Response to Website Down",
+      message:
+        "Hello A. Thank you for the information. We will investigate and inform you soon for the latest info.",
+      timestamp: "2025-02-21 11:00",
+      status: "in-progress",
+      sender: "admin",
+    },
+    {
+      subject: "Resolve for Website Down",
+      message:
+        "Hello A. We have fixed our issue. You can try the competition page again. Do not hesitate if you have any problem. Thank you. aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa asdh uwq 8i2ydshuwuhfde ",
+      timestamp: "2025-02-21 11:31",
+      status: "resolved",
+      sender: "admin",
+    },
+    {
+      subject: "Thank you",
+      message: "Thank you.",
+      timestamp: "2025-02-21 11:35",
+      status: "closed",
+      sender: "user",
+    },
+  ]);
+
+  const navigate = useNavigate();
+
 
   return (
-    <div className="max-w-2xl mt-25 mx-auto bg-white rounded-md shadow-md p-4">
-      {/* Header */}
-      <div className="flex justify-between mb-4">
-        <button className="btn btn-sm btn-circle">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
-        <button className="btn btn-sm btn-error text-white">Close the ticket</button>
+    <div className="mt-25 ml-4 mr-8 md:ml-20 ">
+      <div className='flex'>
+          <button className="border border-gray-600 w-10 h-10 flex items-center justify-center rounded-full hover:cursor-pointer hover:bg-gray-100"
+          onClick={() => navigate('/userhelp')}>
+              <FontAwesomeIcon icon={faChevronLeft} />
+          </button>
       </div>
 
-      {/* Initial Ticket */}
-      <div className="border rounded-md p-4 mb-4">
-        <div className="flex justify-between mb-2">
-          <div className="font-semibold text-gray-500">SUBJECT</div>
-          <div className="flex items-center gap-2">
-            <span className="bg-red-300 text-white text-xs px-2 py-1 rounded-full">Open</span>
-            <span className="text-red-500 flex items-center">
-              <span className="h-2 w-2 bg-red-500 rounded-full mr-1"></span>
-              Urgent
-            </span>
+
+      <div className="max-w-6xl mt-2 mx-auto p-6 bg-white rounded-lg shadow-lg">
+      <div className="border-b pb-4 mb-4 flex justify-between">
+        <div>
+          <h2 className="text-xl text-gray-500 font-kanit font-semibold">SUBJECT</h2>
+          <p className="font-poppins text-md">Website is down</p>
+          <h2 className="text-xl mt-5 text-gray-500 font-kanit font-semibold">DESCRIPTION</h2>
+          <p className="font-poppins text-md">
+            Hello my name is A. Today when I access the website, the website is
+            automatically down on my laptop...
+          </p>
+          <div className="mt-5 text-sm font-poppins leading-6 text-gray-500">
+            <p><strong>Created at:</strong> 2025-02-20 23:59</p>
+            <p><strong>Updated at:</strong> 2025-02-20 23:59</p>
+            <p><strong>Sender:</strong> albertsantoso@gmail.com</p>
+            <p><strong>Handled by:</strong> Ella, Ellis, Rafael</p>
           </div>
         </div>
-        <div className="font-medium">Website down</div>
-        
-        <div className="font-semibold text-gray-500 mt-4">DESCRIPTION</div>
-        <p className="text-sm mt-1">
-          Hello my name is A. Today when I access the website, the website is automatically down 
-          in my laptop. When I access it again on afternoon, it's fine, so I register a competition 
-          halfway. But, when on night, I want to continue register, the website is down for 
-          competition page and I cant access it until now. Help!!!
-        </p>
-        
-        <div className="text-xs text-gray-500 mt-4 grid grid-cols-2 gap-y-1">
-          <div>Created at</div>
-          <div>2025-02-20 23:59</div>
-          <div>Updated at</div>
-          <div>2025-02-20 23:59</div>
-          <div>Sender</div>
-          <div>albertsantoso@gmail.com</div>
-          <div>Handled by</div>
-          <div>Ella, Ellis, Rafael</div>
-        </div>
-      </div>
 
-      {/* Response message */}
-      <div className="border rounded-md p-4 mb-4">
-        <div className="flex justify-between mb-2">
-          <div className="font-semibold text-gray-500">SUBJECT</div>
-          <div className="text-xs text-gray-500">2025-02-21 11:00</div>
-        </div>
-        <div className="font-medium">Response to Website Down</div>
-        
-        <div className="font-semibold text-gray-500 mt-4">MESSAGE</div>
-        <p className="text-sm mt-1">
-          Hello A. Thank you for the information. We will investigate and inform you soon for the 
-          latest info.
-        </p>
-        
-        <div className="flex justify-center mt-4">
-          <span className="bg-gray-400 text-white text-xs px-3 py-1 rounded-full">
-            Ticket marked as in progress.
-          </span>
-        </div>
-      </div>
-
-      {/* Resolution message */}
-      <div className="border rounded-md p-4 mb-4">
-        <div className="flex justify-between mb-2">
-          <div className="font-semibold text-gray-500">SUBJECT</div>
-          <div className="text-xs text-gray-500">2025-02-21 11:31</div>
-        </div>
-        <div className="font-medium">Resolve for Website Down</div>
-        
-        <div className="font-semibold text-gray-500 mt-4">MESSAGE</div>
-        <p className="text-sm mt-1">
-          Hello A. We have fixed our issue. You can try the competition page again. Do not hesitate if 
-          you have any problem. Thank you
-        </p>
-        
-        <div className="flex justify-center mt-4">
-          <span className="bg-gray-400 text-white text-xs px-3 py-1 rounded-full">
-            Ticket mark as resolved.
-          </span>
-        </div>
-      </div>
-
-      {/* Thank you message */}
-      <div className="border rounded-md p-4 mb-4">
-        <div className="font-semibold text-gray-500">SUBJECT</div>
-        <div className="font-medium">Thank you</div>
-        
-        <div className="font-semibold text-gray-500 mt-4">MESSAGE</div>
-        <p className="text-sm mt-1">
-          Thank you.
-        </p>
-        
-        <div className="flex justify-center mt-4">
-          <span className="bg-gray-400 text-white text-xs px-3 py-1 rounded-full">
-            Ticket mark as closed.
-          </span>
-        </div>
-      </div>
-
-      {/* Reply form */}
-      <div className="border rounded-md p-4">
-        <input 
-          type="text" 
-          placeholder="Add a Subject" 
-          className="input input-bordered w-full mb-4"
-          value={subject}
-          onChange={(e) => setSubject(e.target.value)}
-        />
-        <textarea 
-          className="textarea textarea-bordered w-full h-32 mb-4" 
-          placeholder="Type your message here..."
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-        ></textarea>
-        <div className="flex justify-end">
-          <button className="btn btn-sm">
-            Send
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-            </svg>
-          </button>
+        <div>
+          <div className="bg-red-400 font-poppins w-min p-0.5 px-8 text-sm text-white font-semibold rounded-2xl">Open</div>
+          <div><div className="font-poppins inline-flex mr-2 mt-5 ml-2 w-2.5 h-2.5 bg-red-600"></div>Urgent </div>
         </div>
       </div>
     </div>
+
+    {messages.map((msg, index) => (
+        <ChatBox msg={msg} index={index} role={"user"}></ChatBox>
+      ))}
+
+      <div className="mt-6">
+        <input
+          type="text"
+          placeholder="Add a Subject"
+          className="input input-bordered w-full mb-2"
+        />
+        <textarea
+          placeholder="Type your message here..."
+          className="textarea textarea-bordered w-full mb-2"
+        ></textarea>
+        <button className="btn btn-primary w-full">Send</button>
+      </div>
+
+
+
+
+    </div>
+    
   );
 };
 

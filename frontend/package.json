@@ -16,9 +16,11 @@
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.2.0",
     "@material-tailwind/react": "^2.1.10",
+    "@radix-ui/react-slot": "^1.1.2",
     "@tailwindcss/vite": "^4.0.9",
     "autoprefixer": "^10.4.21",
-    "daisyui": "^5.0.6",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "framer-motion": "^12.4.10",
     "lucide-react": "^0.479.0",
     "postcss": "^8.5.3",
@@ -28,10 +30,13 @@
     "react-modal": "^3.16.3",
     "react-router-dom": "^7.2.0",
     "swiper": "^11.2.5",
-    "tailwindcss": "^4.0.9"
+    "tailwind-merge": "^3.0.2",
+    "tailwindcss": "^4.0.9",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
+    "@types/node": "^22.13.10",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
