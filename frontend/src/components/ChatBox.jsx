@@ -2,18 +2,18 @@ import { Card, CardContent } from "@/components/ui/card";
 
 export default function ChatBox({ msg, index, role }) {
   return (
-    <div className="max-w-6xl mt-6 mx-auto font-poppins">
+    <div className="max-w-6xl mt-6 mx-auto font-poppins" lang="en">
       <Card className="shadow-none border-none bg-transparent p-4">
         <div className={`relative flex ${msg.sender === role ? "justify-end" : "justify-start"}`}>
           <div className="relative">
           <CardContent
-            key={index}
-            className={`p-2 px-4 w-fit max-w-4xl rounded-lg break-words whitespace-pre-wrap ${
-                msg.sender === role
-                ? "bg-gray-700 text-white ml-auto"
-                : "bg-gray-200 text-black"
-            }`}
-            >
+              key={index}
+              className={`p-2 px-4 w-fit max-w-4xl rounded-lg break-all hyphens-auto whitespace-pre-wrap ${
+                  msg.sender === role
+                  ? "bg-gray-700 text-white ml-auto"
+                  : "bg-gray-200 text-black"
+              }`}
+          >
               <h3 className="font-semibold">{msg.subject}</h3>
               <p className={`mt-2 ${
                 msg.sender === role

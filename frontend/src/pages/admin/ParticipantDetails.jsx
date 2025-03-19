@@ -34,7 +34,7 @@ const ParticipantDetails = () => {
     return (
         <div className='mt-25 ml-4 mr-8 md:ml-20'>
             <div className='flex'>
-                <button className="border border-gray-600 w-10 h-10 flex items-center justify-center rounded-full hover:cursor-pointer hover:bg-gray-100"
+                <button className="bg-white text-slate-500 border shadow-md border-slate-300 w-10 h-10 flex items-center justify-center rounded-full hover:cursor-pointer hover:bg-gray-100"
                         onClick={() => navigate('/admincomp', { state: { updatedData: { ...data, status: updatedStatus } } })}>
                     <FontAwesomeIcon icon={faChevronLeft} />
                 </button>
