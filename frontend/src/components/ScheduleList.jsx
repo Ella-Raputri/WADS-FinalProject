@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { CompetitionPopUp } from "./CompetitionPopUp";
+import { StatusModal } from "./StatusModal";
 
 export const SecheduleList = ({competition}) => {
     let days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
@@ -23,7 +24,8 @@ export const SecheduleList = ({competition}) => {
         year = startDate.getFullYear();
     }
 
-    const [isOpen, setIsOpen] = useState(false);
+    const [competitionIsOpen, setCompetitionIsOpen] = useState(false);
+    const [statusIsOpen, setStatusIsOpen] = useState(false);
 
     return (
         <>
@@ -39,25 +41,30 @@ export const SecheduleList = ({competition}) => {
                     <p>Category: {competition.category}</p>
                     <p>Time: {competition.time}</p>
                     <button className="w-23 my-[0.7em] py-2 color-component-red rounded-md hover:!bg-red-700 duration-300 text-white cursor-pointer sm:hidden" onClick={() => {
-                        setIsOpen(true);
+                        setCompetitionIsOpen(true);
                     }}>Details</button>
                     <button className="w-23 py-2 ml-[1em] bg-blue-500 rounded-md hover:!bg-blue-700 duration-300 text-white cursor-pointer sm:hidden" onClick={() => {
-                        setIsOpen(true);
+                        setStatusIsOpen(true);
                     }}>Status</button>
                 </div>
                 <div className="w-[50%] sm:w-[30%] hidden sm:flex sm:flex-col sm:justify-center sm:items-center gap-[10px] my-[0.7em]">
                     <button className="w-23 py-2 color-component-red rounded-md hover:!bg-red-700 duration-300 text-white cursor-pointer" onClick={() => {
-                        setIsOpen(true);
+                        setCompetitionIsOpen(true);
                     }}>Details</button>
                     <button className="w-23 py-2 bg-blue-500 rounded-md hover:!bg-blue-700 duration-300 text-white cursor-pointer" onClick={() => {
-                        setIsOpen(true);
+                        setStatusIsOpen(true);
                     }}>Status</button>
                 </div>
             </div>
         </div>
-        { isOpen && 
-            <CompetitionPopUp competition={competition} isRegistered={true} isOpen={isOpen} onClose={() => {
-                setIsOpen(false);
+        { competitionIsOpen && 
+            <CompetitionPopUp competition={competition} isRegistered={true} isOpen={competitionIsOpen} onClose={() => {
+                setCompetitionIsOpen(false);
+            }} />
+        }
+        { statusIsOpen && 
+            <StatusModal competition={competition} isOpen={statusIsOpen} onClose={() => {
+                setStatusIsOpen(false);
             }} />
         }
         </>
