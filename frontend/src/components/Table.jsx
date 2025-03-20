@@ -4,7 +4,7 @@ import { faSortUp, faSortDown, faExternalLink } from "@fortawesome/free-solid-sv
 import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 
-function Table({ columns, data }) { 
+function Table({ columns, data, role }) { 
     const [sortedData, setSortedData] = useState(data);
     const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
 
@@ -34,7 +34,8 @@ function Table({ columns, data }) {
     const handleRowClick = (row)=>{
         console.log("clicked");
         if (columns.includes("SUBJECT")) {
-            navigate(`/xx/${row.id}`); 
+            if(role==="admin") navigate(`/xx/${row.id}`); 
+            if(role ==="participant") navigate(`/userticketdetails`, {state: {data:row}}); 
             return;
         } else if (columns.includes("NAME")) {
             navigate(`/adminparticipantdetails`, { state: { data:row } });
