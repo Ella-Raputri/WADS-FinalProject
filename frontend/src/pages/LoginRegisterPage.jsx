@@ -52,7 +52,7 @@ const LoginRegisterPage = () => {
           </form>
         </div>
         <div className="hidden w-1/2 flex-col items-center justify-center bg-[#DD3833] p-12 text-white md:flex rounded-l-[80px]">
-          <h1 className="mb-4 text-3xl font-bold md:text-4xl">Welcome!</h1>
+          <p className="mb-4 text-3xl font-bold md:text-4xl">Welcome!</p>
           <p className="mb-6 text-center text-sm md:text-base">
             Register with your personal details to compete in competitions!
           </p>
