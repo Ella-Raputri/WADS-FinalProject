@@ -17,7 +17,7 @@ const LoginRegisterPage = () => {
 
       <div className="relative z-10 flex w-[70%] h-[70%] flex-col overflow-hidden rounded-lg bg-white shadow-lg md:flex-row">
         <div className="hidden w-1/2 flex-col items-center justify-center bg-[#DD3833] p-12 text-white md:flex rounded-r-[80px]">
-          <h1 className="mb-4 text-3xl font-bold md:text-4xl">Hello Friend!</h1>
+          <p className="mb-4 text-3xl font-bold md:text-4xl">Hello Friend!</p>
           <p className="mb-6 text-center text-sm md:text-base">
             Already have an account? Login to Continue Competing and Winning!
           </p>
@@ -72,9 +72,9 @@ const LoginRegisterPage = () => {
         </div>
       </div>
       <div className="relative z-10 mt-6 flex w-full max-w-sm flex-col items-center justify-center bg-[#DD3833] p-6 text-white md:hidden rounded-lg shadow-lg">
-        <p className="mb-3 text-2xl font-bold">Welcome!</p>
+        <p className="mb-3 text-2xl font-bold">Hello Friend!</p>
         <p className="mb-4 text-center text-sm">
-          Register with your personal details to compete in competitions!
+          Already have an account? Login to Continue Competing and Winning!
         </p>
         <button
           onClick={handleSignUp}
