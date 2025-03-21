@@ -11,8 +11,9 @@ const LoginRegisterPage = () => {
   const handleSignUp = () => {
     navigate("/register"); 
   };
+
   return (
-    <div className="relative flex h-screen items-center justify-center bg-cover bg-center px-4" style={{ backgroundImage: "url('/src/assets/Bg.webp')" }}>
+    <div className="relative flex h-screen w-full items-center justify-center bg-cover bg-center px-4" style={{ backgroundImage: "url('/src/assets/Bg.webp')" }}>
        <div className="absolute inset-0 bg-black/30 backdrop-blur-xl"></div>
 
 
@@ -62,19 +63,7 @@ const LoginRegisterPage = () => {
           </button>
         </div>
       </div>
-      <div className="relative z-10 mt-6 flex w-full max-w-sm flex-col items-center justify-center bg-[#DD3833] p-6 text-white md:hidden rounded-lg shadow-lg">
-        <p className="mb-3 text-2xl font-bold">Welcome!</p>
-        <p className="mb-4 text-center text-sm">
-          Register with your personal details to compete in competitions!
-        </p>
-        <button
-          className="rounded-lg border-2 border-white px-6 py-2 font-medium hover:bg-white hover:text-[#DD3833]"
-          aria-label="Sign Up"
-        >
-          SIGN UP
-        </button>
       </div>
-    </div>
   );
 };
 
