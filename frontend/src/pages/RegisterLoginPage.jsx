@@ -26,7 +26,7 @@ const LoginRegisterPage = () => {
           </button>
         </div>
         <div className="w-full p-6 md:w-1/2 md:p-12">
-          <p className="mt-8 mb-6 text-center text-2xl font-bold md:text-4xl">USER LOGIN</p>
+          <p className="mt-8 mb-6 text-center text-2xl font-bold md:text-4xl">USER SIGNUP</p>
           <form onSubmit={handleSignUp} className="space-y-6 mt-6">
             <div>
               <input
