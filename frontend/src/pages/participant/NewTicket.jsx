@@ -3,6 +3,7 @@ import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 
 const NewTicket = () => {
     const [message, setMessage] = useState("");
@@ -85,7 +86,14 @@ const NewTicket = () => {
                 {imageName && (
                         <span className="text-gray-700 ml-1 md:ml-2 text-sm">{imageName}</span>
                     )}
-                {image && <img src={image} alt="Uploaded preview" className="mt-5 w-80 rounded-lg border-2 border-dashed border-gray-500" />}
+                {image && (
+                    <div className='mt-4'>
+                    <img src={image} alt="Uploaded preview" className="mt-5 w-80 rounded-lg border-2 border-dashed border-gray-500" />
+                    <Button className="mt-4 hover:bg-red-50 cursor-pointer text-red-500 border border-red-300 bg-white" onClick={() => {setImage(null); setImageName("")}}>
+                        Remove
+                    </Button>
+                    </div>)}
+                
             </div>
 
             {/* Submit Button */}

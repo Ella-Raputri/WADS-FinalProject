@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { faCheck, faChevronLeft, faClipboardCheck, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faChevronLeft, faClipboardCheck, faImage, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,7 @@ const TicketDetails = () => {
       timestamp: "2025-02-21 11:00",
       status: "in-progress",
       sender: "ellis",
+      image:"",
     },
     {
       subject: "Resolve for Website Down",
@@ -23,6 +24,7 @@ const TicketDetails = () => {
       timestamp: "2025-02-21 11:31",
       status: "resolved",
       sender: "ellis",
+      image:"",
     },
     {
       subject: "Thank you",
@@ -30,23 +32,48 @@ const TicketDetails = () => {
       timestamp: "2025-02-21 11:35",
       status: "closed",
       sender: "John Doe",
+      image:"",
     },
   ]);
 
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
+  const [imageUploaded, setImageUploaded] =useState(null);
+  const [imageName, setImageName] = useState("");
 
   const messagesEndRef = useRef(null);
 
-  // Scroll to bottom whenever messages update
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  const shortenFileName = (name) => {
+    const maxLength = 50; // Adjust the length as needed
+    const ext = name.split(".").pop(); // Get file extension
+    const baseName = name.substring(0, name.lastIndexOf(".")); // Remove extension
+
+    if (baseName.length > maxLength) {
+        return `${baseName.substring(0, 20)}...${baseName.slice(-4)}.${ext}`;
+    }
+    return name;
+  };
+
+  const handleUploadImage = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImageUploaded(reader.result);
+        setImageName(shortenFileName(file.name)); // Shorten filename
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSend = (e) => {
     e.preventDefault();
 
-    if (!message.trim()) return; // Prevent sending empty messages
+    if (!message.trim() && !imageUploaded) return; // Prevent sending empty messages
 
     const newMessage = {
       subject: subject || "No Subject",
@@ -54,6 +81,7 @@ const TicketDetails = () => {
       timestamp: new Date().toISOString().slice(0, 16).replace("T", " "), // Format: YYYY-MM-DD HH:mm
       status: "sent",
       sender: user.name,
+      image: imageUploaded
     };
 
     setMessages((prevMessages) => [...prevMessages, newMessage]);
@@ -61,6 +89,8 @@ const TicketDetails = () => {
     // Clear input fields
     setSubject("");
     setMessage("");
+    setImageUploaded(null);
+    setImageName("");
   };
 
   const handlePreviousLink=(e)=>{
@@ -193,10 +223,33 @@ const TicketDetails = () => {
               className="w-full mb-5 min-h-56 max-h-56 bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 pr-28 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
             ></textarea>
 
-          <div className="flex justify-end">
+          <div className="flex justify-between">
+          <Button className={`px-4 mr-4 py-5 text-md bg-white border shadow-md border-slate-300 hover:bg-gray-100 cursor-pointer ${imageUploaded ? "text-green-500" : "text-slate-500"}`}>
+            <label htmlFor="imageUpload" className="cursor-pointer flex items-center">
+              Add Image &nbsp; <FontAwesomeIcon icon={faImage} />
+            </label>
+          </Button>
+          <input
+            id="imageUpload"
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleUploadImage}
+          />
+
             <Button onClick={handleSend} className="px-6 py-5 text-md bg-white text-slate-500 border shadow-md border-slate-300 hover:bg-gray-100 cursor-pointer">
               Send <FontAwesomeIcon icon={faPaperPlane} /> </Button>
           </div>
+
+          {imageUploaded && (
+            <div className="mt-4">
+              <p className="text-sm text-gray-700 font-poppins">{imageName}</p>
+              <img src={imageUploaded} alt="Uploaded Preview" className="mt-5 max-w-xs rounded-lg border-2 border-dashed border-gray-500" />
+              <Button className="mt-4 hover:bg-red-50 cursor-pointer text-red-500 border border-red-300 bg-white" onClick={() => {setImageUploaded(null); setImageName("")}}>
+                Remove
+              </Button>
+            </div>
+          )}
         </CardContent>
       </Card>  
       

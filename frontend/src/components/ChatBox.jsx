@@ -20,7 +20,10 @@ export default function ChatBox({ msg, index, role }) {
               }`}
             >
               {!isSystemMessage && <h3 className="font-semibold">{msg.subject}</h3>}
-              <p className="mt-2">{msg.message}</p>
+              {msg.image && (
+                <img src={msg.image} alt="Attached" className="mt-2 max-w-xs max-h-[30vh] object-contain rounded-lg shadow-md" />
+              )}
+              {msg.message && (<p className="mt-2">{msg.message}</p>)}
 
               {msg.timestamp && (
                 <p className={`text-xs mt-2 text-right ${isSystemMessage ? "text-white" : isUserMessage? "text-white": "text-gray-700"}`}>
