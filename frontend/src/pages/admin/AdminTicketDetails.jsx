@@ -79,7 +79,7 @@ const AdminTicketDetails = () => {
   return (
     <div className="mt-25 ml-4 mr-8 md:ml-20 ">
     
-    <div className="flex place-self-center items-center justify-between w-[97%]">
+    <div className="flex place-self-center items-center justify-between w-11/12">
       {/* Back Button (Left) */}
       <button className="bg-white text-slate-500 border shadow-md border-slate-300 w-10 h-10 flex items-center justify-center rounded-full hover:cursor-pointer hover:bg-gray-100"
         onClick={() => navigate('/adminticket')} >
@@ -87,7 +87,7 @@ const AdminTicketDetails = () => {
       </button>
 
       {/* Message Button (Right) */}
-      <button className="lg:mr-10 color-component-red text-white shadow-md  w-10 h-10 flex items-center justify-center rounded-full hover:cursor-pointer "
+      <button className="color-component-red text-white shadow-md  w-10 h-10 flex items-center justify-center rounded-full hover:cursor-pointer "
         onClick={() => navigate(`/userticketdetails`, { state: { data: data, user: user } })}>
            <FontAwesomeIcon icon={faMessage} />
       </button>
@@ -118,15 +118,15 @@ const AdminTicketDetails = () => {
         </div>
 
         <div className="flex flex-col items-start md:items-end mt-8 md:mt-0">
-          <div className={`font-poppins w-min p-0.5 px-6 text-sm text-white font-semibold rounded-2xl 
-            ${data.status === 'Open' ? 'bg-red-400' :
-              data.status === 'Closed' ? 'bg-lime-500' :
-              data.status === 'In Progress' ? 'bg-amber-500' :
-              'bg-sky-400' // Resolved
+          <div className={`font-poppins border-2  w-min py-0.5 px-3 text-md  font-medium rounded-md 
+            ${data.status === 'Open' ? 'border-red-400 text-red-500' :
+              data.status === 'Closed' ? 'border-lime-500 text-lime-600' :
+              data.status === 'In Progress' ? 'border-amber-500 text-amber-600' :
+              'border-sky-400 text-sky-500' // Resolved
               }`}>
             {data.status}</div>
-          <div className="flex items-center mt-2 mr-5">
-            <div className={`font-poppins inline-flex mr-2 w-2.5 h-2.5 
+          <div className="flex items-center mt-2 mr-3 font-poppins">
+            <div className={`inline-flex mr-2 w-2.5 h-2.5 
               ${data.priority === 'Urgent' ? 'bg-red-600' :
                 data.priority === 'Low' ? 'bg-green-500' :
                 data.priority === 'High' ? 'bg-amber-600' :

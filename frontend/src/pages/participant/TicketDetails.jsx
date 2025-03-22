@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { faChevronLeft, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faChevronLeft, faClipboardCheck, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -74,6 +74,28 @@ const TicketDetails = () => {
   const [data, setData] = useState(null);
   const [user, setUser] =useState(null);
 
+  const handleClickResolveClose=(e)=>{
+    e.preventDefault();
+
+    if(data.status==='Resolved' || data.status==='Closed') return;
+
+    const up = user.role === 'admin' ? 'Resolved' : 'Closed';
+        setData(prevData => ({
+            ...prevData,
+            status: up
+    }));
+
+    const systemMessage = {
+      subject: "Ticket Status Updated",
+      message: `The ticket status has been changed to ${up.toLowerCase()}.`,
+      timestamp: new Date().toISOString().slice(0, 16).replace("T", " "),
+      status: "system",
+      sender: "System",
+    };
+  
+    setMessages((prevMessages) => [...prevMessages, systemMessage]);
+  }
+
   useEffect(() => {
       if (location.state?.data && location.state?.user) {
           setData(location.state.data);
@@ -88,11 +110,20 @@ const TicketDetails = () => {
 
   return (
     <div className="mt-25 ml-4 mr-8 md:ml-20 ">
-      <div className='flex ml-5'>
-          <button className="bg-white text-slate-500 border shadow-md border-slate-300 w-10 h-10 flex items-center justify-center rounded-full hover:cursor-pointer hover:bg-gray-100"
-          onClick={handlePreviousLink}>
-              <FontAwesomeIcon icon={faChevronLeft} />
-          </button>
+      <div className="flex place-self-center items-center justify-between w-11/12">
+        {/* Back Button (Left) */}
+        <button className="bg-white text-slate-500 border shadow-md border-slate-300 w-10 h-10 flex items-center justify-center rounded-full hover:cursor-pointer hover:bg-gray-100"
+          onClick={handlePreviousLink} >
+            <FontAwesomeIcon icon={faChevronLeft} />
+        </button>
+  
+        {/* Message Button (Right) */}
+        <button className={`text-white shadow-md font-poppins font-semibold px-5 py-2 flex items-center justify-center rounded-full hover:cursor-pointer 
+         ${user.role==='admin'? 'bg-sky-400 hover:bg-sky-500': 'bg-green-500 hover:bg-green-600'}`}
+          onClick={handleClickResolveClose}>
+            <FontAwesomeIcon className="text-lg font-black" icon={faCheck} /> &ensp;  
+            {user.role==='admin'? 'Resolve' : 'Close' }
+        </button>
       </div>
 
 
@@ -100,9 +131,9 @@ const TicketDetails = () => {
       <div className="border-b pb-4 mb-4 flex flex-col md:flex-row justify-between">
         <div>
           <h2 className="text-xl text-gray-500 font-kanit font-semibold">SUBJECT</h2>
-          <p className="font-poppins text-md"> {data.subject} </p>
+          <p className="font-poppins text-md  break-all"> {data.subject} </p>
           <h2 className="text-xl mt-5 text-gray-500 font-kanit font-semibold">DESCRIPTION</h2>
-          <p className="font-poppins text-md">
+          <p className="font-poppins text-md max-w-10/12  break-all">
             test description
           </p>
           <div className="mt-5 text-sm font-poppins leading-6 text-gray-500">
@@ -114,15 +145,15 @@ const TicketDetails = () => {
         </div>
 
         <div className="flex flex-col items-start md:items-end mt-8 md:mt-0">
-          <div className={`font-poppins w-min p-0.5 px-6 text-sm text-white font-semibold rounded-2xl 
-            ${data.status === 'Open' ? 'bg-red-400' :
-              data.status === 'Closed' ? 'bg-lime-500' :
-              data.status === 'In Progress' ? 'bg-amber-500' :
-              'bg-sky-400' // Resolved
+          <div className={`font-poppins border-2  py-0.5 px-3 text-md  font-medium rounded-md 
+            ${data.status === 'Open' ? 'border-red-400 text-red-500' :
+              data.status === 'Closed' ? 'border-lime-500 text-lime-600' :
+              data.status === 'In Progress' ? 'border-amber-500 text-amber-600' :
+              'border-sky-400 text-sky-500' // Resolved
               }`}>
             {data.status}</div>
-          <div className="flex items-center mt-2 mr-5">
-            <div className={`font-poppins inline-flex mr-2 w-2.5 h-2.5 
+          <div className="flex items-center mt-2 mr-3 font-poppins">
+            <div className={`inline-flex mr-2 w-2.5 h-2.5 
               ${data.priority === 'Urgent' ? 'bg-red-600' :
                 data.priority === 'Low' ? 'bg-green-500' :
                 data.priority === 'High' ? 'bg-amber-600' :
