@@ -1,3 +1,6 @@
+import { BarChartMulti } from "@/components/BarChartMulti";
+import { DonutChart } from "@/components/DonutChart";
+import GaugeChart from "@/components/GaugeChart";
 import React, { useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
@@ -5,7 +8,6 @@ import "react-calendar/dist/Calendar.css";
 const Dashboard = () => {
   const [date, setDate] = useState(new Date());
 
-  // Function to get the start and end of the selected week
   const getWeekRange = (date) => {
     const start = new Date(date);
     start.setDate(start.getDate() - start.getDay()); // Start of the week (Sunday)
@@ -30,7 +32,7 @@ const Dashboard = () => {
         Hello, user!
       </h1>
 
-      <div className="lg:hidden ml-15 mr-15 mb-10 p-6 bg-white shadow rounded-lg flex justify-center items-center overflow-x-auto">
+      <div className="lg:hidden ml-12 mr-12 mb-10 p-6 bg-white shadow rounded-lg flex justify-center items-center overflow-x-auto">
         <div className="min-w-[300px]">
           <Calendar 
             onChange={handleDateChange} 
@@ -69,14 +71,17 @@ const Dashboard = () => {
 
       
       <div className="font-poppins lg:ml-18 ml-15 grid grid-cols-1 lg:grid-cols-[2.0fr_1.0fr] gap-6 mr-15 mt-8">
-        <div className="p-6 bg-white shadow rounded-lg lg:row-span-2">
+        <div className="p-4 bg-white shadow rounded-lg lg:row-span-2">
           <h2 className="font-kanit font-medium text-2xl mb-4 text-gray-400">Resolved Ticket vs Received Ticket</h2>
+          <BarChartMulti/>
         </div>
-        <div className="p-6 bg-white shadow rounded-lg">
+        <div className="p-4 bg-white shadow rounded-lg">
           <h2 className="font-kanit font-medium text-2xl mb-4 text-gray-400">Customer Satisfaction Rate</h2>
+          <GaugeChart/>
         </div>
-        <div className="p-6 bg-white shadow rounded-lg">
+        <div className="p-4 bg-white shadow rounded-lg">
           <h2 className="font-kanit font-medium text-2xl mb-4 text-gray-400">Tickets by Emergency</h2>
+          <DonutChart/>
         </div>
       </div>
 
