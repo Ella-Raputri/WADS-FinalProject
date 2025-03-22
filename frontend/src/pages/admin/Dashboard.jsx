@@ -1,6 +1,8 @@
+import { AgentsTable } from "@/components/AgentsTable";
 import { BarChartMulti } from "@/components/BarChartMulti";
 import { DonutChart } from "@/components/DonutChart";
 import GaugeChart from "@/components/GaugeChart";
+import { StatusChart } from "@/components/StatusChart";
 import React, { useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
@@ -71,9 +73,11 @@ const Dashboard = () => {
 
       
       <div className="font-poppins lg:ml-18 ml-15 grid grid-cols-1 lg:grid-cols-[2.0fr_1.0fr] gap-6 mr-15 mt-8">
-        <div className="p-4 bg-white shadow rounded-lg lg:row-span-2">
-          <h2 className="font-kanit font-medium text-2xl mb-4 text-gray-400">Resolved Ticket vs Received Ticket</h2>
-          <BarChartMulti/>
+        <div className="p-4 bg-white shadow rounded-lg lg:row-span-2 overflow-x-auto">
+          <div className="min-w-[300px]">
+            <h2 className="font-kanit font-medium text-2xl mb-5 text-gray-400">Resolved Ticket vs Received Ticket</h2>
+            <BarChartMulti/>
+          </div>          
         </div>
         <div className="p-4 bg-white shadow rounded-lg">
           <h2 className="font-kanit font-medium text-2xl mb-4 text-gray-400">Customer Satisfaction Rate</h2>
@@ -87,11 +91,15 @@ const Dashboard = () => {
 
 
       <div className="font-poppins lg:ml-18 ml-15 grid grid-cols-1 lg:grid-cols-2 gap-6 mr-15 mt-8 mb-20">
-        <div className="p-6 bg-white shadow rounded-lg">
-          <h2 className="font-kanit font-medium text-2xl mb-4 text-gray-400">Agent Details</h2>
-        </div>
-        <div className="p-6 bg-white shadow rounded-lg">
-          <h2 className="font-kanit font-medium text-2xl mb-4 text-gray-400">Tickets by Status</h2>
+        <AgentsTable/>
+        
+        <div className="p-6 bg-white shadow rounded-lg flex justify-center"> {/* Center the chart */}
+          <div className="w-full flex justify-center">
+            <div className="w-[90%] ">
+              <h2 className="font-kanit font-medium text-2xl mb-5 text-gray-400">Tickets by Status</h2>
+              <StatusChart />
+            </div>
+          </div>
         </div>
       </div>
 
