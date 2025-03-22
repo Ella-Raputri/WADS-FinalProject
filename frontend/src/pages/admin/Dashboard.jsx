@@ -1,3 +1,4 @@
+import GaugeChart from "@/components/GaugeChart";
 import React, { useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
@@ -5,7 +6,6 @@ import "react-calendar/dist/Calendar.css";
 const Dashboard = () => {
   const [date, setDate] = useState(new Date());
 
-  // Function to get the start and end of the selected week
   const getWeekRange = (date) => {
     const start = new Date(date);
     start.setDate(start.getDate() - start.getDay()); // Start of the week (Sunday)
@@ -74,6 +74,7 @@ const Dashboard = () => {
         </div>
         <div className="p-6 bg-white shadow rounded-lg">
           <h2 className="font-kanit font-medium text-2xl mb-4 text-gray-400">Customer Satisfaction Rate</h2>
+          <GaugeChart/>
         </div>
         <div className="p-6 bg-white shadow rounded-lg">
           <h2 className="font-kanit font-medium text-2xl mb-4 text-gray-400">Tickets by Emergency</h2>
