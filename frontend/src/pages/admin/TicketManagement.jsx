@@ -178,8 +178,8 @@ const TicketManagement = () => {
 
       <div className="pl-5 pr-8 pt-2 pb-0 md:ml-20 flex justify-between items-center font-poppins">
         <SearchBar onApply={handleSearch} placeholderSubject={"Search subject..."}/>
-        <div className="sm:mr-20 md:mr-26 2xl:mr-35 flex gap-5">
-          <button className="border bg-white border-slate-200 transition duration-300 ease hover:border-slate-300 shadow-sm focus:shadow px-3 py-2 rounded-xl hover:bg-gray-100 hover:cursor-pointer"
+        <div className="sm:mr-20 md:mr-26 2xl:mr-35 flex gap-2">
+          <button className="border bg-white border-slate-200 transition ml-2 duration-300 ease hover:border-slate-300 shadow-sm focus:shadow px-3 py-2 rounded-xl hover:bg-gray-100 hover:cursor-pointer"
           onClick={() => setOpenFilter(true)}>
             <FontAwesomeIcon icon={faFilter} />
           </button>
@@ -197,7 +197,7 @@ const TicketManagement = () => {
       <div className="flex justify-between mt-2 text-xs md:text-sm md:mr-32 md:ml-5 font-poppins">
         {currentData.length>0 ? 
         (<>
-          <p className='flex-1 text-gray-500'>
+          <p className='flex-1 text-gray-500 ml-5 md:ml-0'>
           {`Showing ${Math.min((currentPage - 1) * itemsPerPage + 1, totalResult)} - 
               ${Math.min(currentPage * itemsPerPage, totalResult)} of ${totalResult} results`}
           </p>

@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import { MdOutlineFileDownload } from "react-icons/md";
 
 function SaveButton({data, type}) {
 
@@ -31,9 +32,9 @@ function SaveButton({data, type}) {
 
   return (
     <>
-        <button className="font-semibold px-8 py-2 rounded-2xl bg-red-700 text-white hover:bg-red-800 hover:cursor-pointer"
+        <button className="font-semibold px-2 py-2 rounded-2xl bg-red-700 text-white hover:bg-red-800 hover:cursor-pointer"
           onClick={handleSaveList}>
-            SAVE LIST
+            <MdOutlineFileDownload className='text-2xl'/>
           </button>
     </>
   )

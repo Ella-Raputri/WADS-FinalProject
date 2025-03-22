@@ -6,6 +6,7 @@ import { StatusChart } from "@/components/StatusChart";
 import React, { useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import { MdOutlineFileDownload } from "react-icons/md";
 
 const Dashboard = () => {
   const [date, setDate] = useState(new Date());
@@ -30,9 +31,14 @@ const Dashboard = () => {
 
   return (
     <>
-      <h1 className="lg:ml-15 ml-12 mt-25 mb-10 font-medium text-4xl font-kanit p-5  ">
-        Hello, user!
-      </h1>
+
+      <div className="flex items-center justify-between px-6 py-4 lg:ml-15 ml-12 mt-25 mb-10 mr-15">
+        <h1 className="text-4xl lg:text-5xl font-kanit font-medium flex-grow">Hello, user!</h1>
+        <button className="px-4 py-2 mt-10 color-component-red text-white rounded-full shadow">
+          <MdOutlineFileDownload className="text-2xl lg:text-3xl"/>
+        </button>
+      </div>
+
 
       <div className="lg:hidden ml-12 mr-12 mb-10 p-6 bg-white shadow rounded-lg flex justify-center items-center overflow-x-auto">
         <div className="min-w-[300px]">
