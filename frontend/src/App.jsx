@@ -17,6 +17,7 @@ import NewTicket from './pages/participant/NewTicket.jsx';
 import ScrollToTop from './components/ScrolltoTop.jsx';
 import ParticipantDetails from './pages/admin/ParticipantDetails.jsx';
 import TicketDetails from './pages/participant/TicketDetails.jsx';
+import AdminTicketDetails from './pages/admin/AdminTicketDetails';
 
 function App() {
   return (
@@ -49,6 +50,7 @@ function MainLayout() {
             <Route path='/admincomp' element={<CompManagement />} />
             <Route path='/adminticket' element={<TicketManagement />} />
             <Route path='/adminparticipantdetails' element={<ParticipantDetails />} />
+            <Route path='/adminticketdetails' element={<AdminTicketDetails />} />
 
             <Route path='/*' element={<NotFound />} />
           </Routes>
