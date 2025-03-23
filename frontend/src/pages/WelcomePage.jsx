@@ -1,10 +1,32 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { motion } from "framer-motion";
 import { useNavigate } from 'react-router-dom';
 import Carousel from '../components/Carousel';
 import Tassle from '../components/Tassle';
 
 const WelcomePage = () => {
   const navigate = useNavigate();
+  const competitionRef = useRef(null);
+  const [animateCompetition, setAnimateCompetition] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setAnimateCompetition(entry.isIntersecting);
+      },
+      { threshold: 0.8 } 
+    );
+
+    if (competitionRef.current) {
+      observer.observe(competitionRef.current);
+    }
+
+    return () => {
+      if (competitionRef.current) {
+        observer.unobserve(competitionRef.current);
+      }
+    };
+  }, []);
 
   const goToCompete = () => {
     navigate('/usercomp');
@@ -22,15 +44,15 @@ const WelcomePage = () => {
       let value = window.scrollY;
 
       if (descRef.current) {
-        descRef.current.style.top = value * 2.5 + 'px';
+        descRef.current.style.top = value * 2.1 + 'px';
       }
       if (leftFlowerRef.current) {
-        leftFlowerRef.current.style.top = value * -1.5 + 'px';
-        leftFlowerRef.current.style.left = value * 1.5 + 'px';
+        leftFlowerRef.current.style.top = value * -1.0 + 'px';
+        leftFlowerRef.current.style.left = value * 1.0 + 'px';
       }
       if (rightFlowerRef.current) {
-        rightFlowerRef.current.style.top = value * -1.5 + 'px';
-        rightFlowerRef.current.style.right = value * 1.5 + 'px';
+        rightFlowerRef.current.style.top = value * -1.0 + 'px';
+        rightFlowerRef.current.style.right = value * 1.0 + 'px';
       }
 
       const fadeValue = Math.max(0, 1 - value/200);
@@ -72,7 +94,7 @@ const WelcomePage = () => {
             src="src/assets/welcome_page/light1.png" 
             alt="Light1" 
             ref={light1Ref}
-            className="absolute z-2 top-30 -left-[10%] h-80 sm:left-[8%] md:h-100 lg:left-[15%] xl:top-45 xl:h-120" 
+            className="absolute z-2 top-30 -left-[10%] h-80 sm:left-[8%] md:h-100 lg:left-[15%] xl:top-45 xl:h-120 xl:left-[18%] 2xl:left-[20%]" 
           />
           <img
             src="src/assets/welcome_page/flower.png"
@@ -89,7 +111,7 @@ const WelcomePage = () => {
           <img
             src="src/assets/welcome_page/tower.png"
             alt="Tower"
-            className="absolute z-10 top-70 left-30 w-14 sm:w-16 sm:top-60 md:w-18 lg:w-21 lg:left-35 lg:top-55 xl:w-25 xl:top-60 xl:left-42 2xl:w-30 2xl:top-65 2xl:left-45"
+            className="absolute z-10 top-70 left-30 w-14 sm:w-16 sm:top-60 md:w-18 lg:w-21 lg:left-35 lg:top-55 xl:w-25 xl:top-60 xl:left-45 2xl:w-30 2xl:top-65 2xl:left-55"
           />
           <img
             src="src/assets/welcome_page/temple.png"
@@ -99,17 +121,17 @@ const WelcomePage = () => {
           <img
             src="src/assets/welcome_page/ferris.png"
             alt="Ferris Wheel"
-            className="absolute z-10 top-60 left-3/4 w-70 sm:w-73 sm:top-54 md:w-83 md:left-140 lg:left-3/4 lg:w-92 xl:w-110 2xl:w-130 2xl:top-50"
+            className="absolute z-10 top-60 left-3/4 w-70 sm:w-73 sm:top-54 md:w-83 md:left-140 lg:left-3/4 lg:w-92 xl:w-110 2xl:w-130 2xl:top-55"
           />
           <img
             src="src/assets/welcome_page/buildings.png"
             alt="Buildings"
-            className="absolute z-10 top-83 left-3/5 w-130 sm:w-135 sm:top-80 md:w-160 md:top-81 md:left-105 lg:w-180 lg:left-1/3 xl:w-215 xl:left-5/12 xl:top-94 2xl:w-250 2xl:left-1/3 2xl:top-100 object-cover"
+            className="absolute z-10 top-83 left-3/5 w-130 sm:w-135 sm:top-80 md:w-160 md:top-81 md:left-105 lg:w-180 lg:left-1/3 xl:w-215 xl:left-5/12 xl:top-94 2xl:w-260 2xl:left-[42%] 2xl:top-100 object-cover"
           />
           <img
             src="src/assets/welcome_page/palace.png"
             alt="Palace"
-            className="absolute z-10 top-98 left-30 w-82 sm:w-88 sm:top-94 md:w-110 md:top-95 md:left-20 lg:w-122 lg:left-30 lg:top-98 xl:w-145 xl:left-35 xl:top-113 2xl:w-170 2xl:left-40 2xl:top-120"
+            className="absolute z-10 top-98 left-30 w-82 sm:w-88 sm:top-94 md:w-110 md:top-95 md:left-20 lg:w-122 lg:left-30 lg:top-98 xl:w-145 xl:left-35 xl:top-113 2xl:w-170 2xl:left-50 2xl:top-120"
           />     
         </div>
 
@@ -137,15 +159,15 @@ const WelcomePage = () => {
       </section>
 
       <div className="flex items-center justify-center min-h-screen md:min-h-[80vh] color-component-cream -translate-y-4">
-        <div className="max-w-5xl w-full flex flex-col md:flex-row items-center p-8">
+        <div className="max-w-5xl w-full flex flex-col md:flex-row items-center p-8 xl:p-0">
           <div className="md:w-1/2">
-            <h2 className="text-2xl lg:text-3xl font-bold mb-4 font-kanit">ABOUT US</h2>
-            <p className="text-gray-700 mb-4 font-poppins text-md lg:text-lg">
+            <h2 className="text-2xl lg:text-3xl xl:text-4xl font-bold mb-4 font-kanit">ABOUT US</h2>
+            <p className="text-gray-700 mb-4 font-poppins text-md lg:text-lg xl:text-xl">
               NMC (National Mandarin Competition) is one of the events held by BNMC
               (BINUS Mandarin Club) with the goal of improving one's Chinese skills,
               and to preserve Chinese culture.
             </p>
-            <p className="text-gray-700 font-poppins text-md lg:text-lg">
+            <p className="text-gray-700 font-poppins text-md lg:text-lg xl:text-xl">
               NMC's theme “Bridging Generations With Chinese Culture” hopes that
               NMC can be a bridge that connects people from different generations to
               support the preservation and introduction of Chinese culture towards
@@ -158,9 +180,35 @@ const WelcomePage = () => {
         </div>
       </div>
 
-      <div className="flex flex-col items-center pt-20 md:pt-30 min-h-[80vh] md:min-h-screen w-full">
-        <h1 className="text-3xl lg:text-4xl font-bold font-kanit mb-8 lg:mb-12">COMPETITIONS</h1>
-        <Carousel />
+      <div ref={competitionRef} className="relative flex flex-col items-center pt-20 md:pt-30 min-h-[80vh] md:min-h-screen w-full">
+        <motion.img 
+          src="src/assets/welcome_page/decor.png" 
+          alt="left decor" 
+          initial={{ x: "50%", opacity: 1 }}
+          animate={animateCompetition ? { x: "-100%", opacity: 0 } : { x: "50%", opacity: 1 }}
+          transition={{ duration: 1.5, ease: "easeInOut" }}
+          className="absolute left-1/2 top-[18%] sm:top-[15%] md:top-[20%] xl:top-[15%] transform -translate-x-full -translate-y-1/2 w-12 md:w-16"
+        />
+
+        <motion.h1 
+          className="text-3xl lg:text-4xl font-bold font-kanit mb-8 lg:mb-20"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={animateCompetition ? { opacity: 1, scale: 1 } :  { opacity: 0, scale: 0.8 }}
+          transition={{ duration: 1.2, delay: 0.7, ease: "easeOut" }}
+        >
+          COMPETITIONS
+        </motion.h1>
+
+        <motion.img 
+          src="src/assets/welcome_page/decor2.png" 
+          alt="right decor" 
+          initial={{ x: "-50%", opacity: 1 }}
+          animate={animateCompetition ? { x: "100%", opacity: 0 } : {}}
+          transition={{ duration: 1.5, ease: "easeInOut" }}
+          className="absolute right-1/2 top-[18%] sm:top-[15%] md:top-[20%] xl:top-[15%] transform translate-x-full -translate-y-1/2 w-12 md:w-16"
+        />
+
+        <Carousel/>
       </div>
 
       <div className="flex flex-col items-center w-full mt-20 md:mt-10 mb-20 ">
