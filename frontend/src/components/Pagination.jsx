@@ -24,31 +24,33 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   return (
     <div className="flex items-center space-x-2">
       <button
-        className={`px-3 py-1 text-gray-500 hover:text-black disabled:text-gray-300
-            ${currentPage===1? "hover:cursor-default" : "hover:cursor-pointer"}`}
+        className={`px-3 py-1 sm:ml-40 text-gray-500 hover:text-black disabled:text-gray-300
+            ${currentPage === 1 ? "hover:cursor-default" : "hover:cursor-pointer"}`}
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
       >
         ← Previous
       </button>
 
-      {getPageNumbers().map((page, index) => (
-  <button
-    key={index}
-    className={`px-3 py-1 rounded-md 
-      ${page === currentPage ? "bg-gray-300 cursor-default" : "text-gray-500 hover:bg-gray-100"}
-      ${page === "..." ? "cursor-default hover:bg-transparent" : "hover:cursor-pointer"}
-    `}
-    onClick={() => typeof page === "number" && onPageChange(page)}
-    disabled={page === "..."}
-  >
-    {page}
-  </button>
-))}
+      <div className="hidden lg:flex space-x-2">
+        {getPageNumbers().map((page, index) => (
+          <button
+            key={index}
+            className={`px-3 py-1 rounded-md 
+              ${page === currentPage ? "bg-gray-300 cursor-default" : "text-gray-500 hover:bg-gray-100"}
+              ${page === "..." ? "cursor-default hover:bg-transparent" : "hover:cursor-pointer"}
+            `}
+            onClick={() => typeof page === "number" && onPageChange(page)}
+            disabled={page === "..."}
+          >
+            {page}
+          </button>
+        ))}
+      </div>
 
       <button
-         className={`px-3 py-1 text-gray-500 hover:text-black disabled:text-gray-300
-            ${currentPage===totalPages? "hover:cursor-default" : "hover:cursor-pointer"}`}
+        className={`px-3 py-1 text-gray-500 hover:text-black disabled:text-gray-300
+            ${currentPage === totalPages ? "hover:cursor-default" : "hover:cursor-pointer"}`}
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
       >

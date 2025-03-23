@@ -189,7 +189,7 @@ const HelpPage = () => {
       <div className="flex justify-between mt-2 text-xs md:text-sm md:mr-32 md:ml-5 font-poppins">
         {currentData.length>0 ? 
         (<>
-          <p className='flex-1 te`xt-gray-500'>
+          <p className='flex-1 te`xt-gray-500 ml-5 md:ml-0'>
           {`Showing ${Math.min((currentPage - 1) * itemsPerPage + 1, totalResult)} - 
               ${Math.min(currentPage * itemsPerPage, totalResult)} of ${totalResult} results`}
           </p>

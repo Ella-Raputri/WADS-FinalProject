@@ -32,6 +32,10 @@
   background-color:#DD3833;
 }
 
+.color-component-red:hover{
+  background-color:#c93631;
+}
+
 .red-navbar{
   background-color: #CB0105;
 }
@@ -68,3 +72,36 @@
 .arrow-button:hover .arrow {
   transform: rotate(-45deg) translate(4px, 4px);
 }
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.chat-container {
+  overflow-y: scroll;
+}
+
+.chat-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-container::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  transition: opacity 0.3s;
+}
+
+.chat-container:hover::-webkit-scrollbar-thumb {
+  opacity: 1;
+}
+
+.chat-container::-webkit-scrollbar-thumb {
+  opacity: 0;
+}
+

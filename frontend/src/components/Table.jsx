@@ -30,12 +30,24 @@ function Table({ columns, data, role }) {
         setSortConfig({ key: columnKey, direction });
     };
 
+    const cthuser = {
+        name: "John Doe",
+        email: "john.doe@example.com",
+        role: "participant",
+      };
+      const cthadmin = {
+        name: "ellis",
+        email: "john.doe@example.com",
+        role: "admin"
+      };
+
     const navigate = useNavigate();
     const handleRowClick = (row)=>{
         console.log("clicked");
         if (columns.includes("SUBJECT")) {
-            if(role==="admin") navigate(`/xx/${row.id}`); 
-            if(role ==="participant") navigate(`/userticketdetails`, {state: {data:row}}); 
+            if(role==="admin") navigate(`/adminticketdetails`, {state: {data:row,  user:cthadmin}}); 
+            if(role ==="participant") navigate(`/userticketdetails`,  { state: { data:row, user:cthuser } }); 
+            console.log("row: "+ row);
             return;
         } else if (columns.includes("NAME")) {
             navigate(`/adminparticipantdetails`, { state: { data:row } });

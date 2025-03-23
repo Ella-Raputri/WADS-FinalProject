@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes, useNavigate, useLocation } from
 import WelcomePage from './pages/WelcomePage.jsx'
 import NotFound from './pages/NotFound.jsx'
 import LoginRegisterPage from './pages/LoginRegisterPage.jsx'
+import RegisterLoginPage from './pages/RegisterLoginPage.jsx'
 import HomePage from './pages/participant/HomePage.jsx'
 import CompetitionPage from './pages/participant/CompetitionPage.jsx'
 import HelpPage from './pages/participant/HelpPage.jsx'
@@ -16,6 +17,7 @@ import NewTicket from './pages/participant/NewTicket.jsx';
 import ScrollToTop from './components/ScrolltoTop.jsx';
 import ParticipantDetails from './pages/admin/ParticipantDetails.jsx';
 import TicketDetails from './pages/participant/TicketDetails.jsx';
+import AdminTicketDetails from './pages/admin/AdminTicketDetails';
 
 function App() {
   return (
@@ -37,7 +39,7 @@ function MainLayout() {
           <Routes>
             <Route path='/' element={<WelcomePage />} />
             <Route path='/login' element={<LoginRegisterPage />} />
-
+            <Route path='/register' element={<RegisterLoginPage />} />
             <Route path='/userhome' element={<HomePage />} />
             <Route path='/usercomp' element={<CompetitionPage />} />
             <Route path='/userhelp' element={<HelpPage />} />
@@ -48,6 +50,7 @@ function MainLayout() {
             <Route path='/admincomp' element={<CompManagement />} />
             <Route path='/adminticket' element={<TicketManagement />} />
             <Route path='/adminparticipantdetails' element={<ParticipantDetails />} />
+            <Route path='/adminticketdetails' element={<AdminTicketDetails />} />
 
             <Route path='/*' element={<NotFound />} />
           </Routes>
