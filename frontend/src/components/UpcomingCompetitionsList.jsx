@@ -40,8 +40,8 @@ export const UpcomingCompetitionsList = ({competitions}) => {
                 allowTouchMove={false}
                 onSwiper={(Swiper) => {swiperRef.current = Swiper}}
                 onSlideChange={() => updateChange()}>
-                {competitions.map((competition) => (    
-                    <SwiperSlide className='flex flex-col items-center'>
+                {competitions.map((competition, index) => (    
+                    <SwiperSlide className='flex flex-col items-center' key={index}>
                         <div className="overflow-hidden h-[20vh] max-h-[180px] w-[100%] lg:aspect-[7.5/3.5] lg:h-auto border bg-white">
                             <img src="image_placeholder.jpeg" className="h-[100%] w-[100%] object-center object-cover" />
                         </div>

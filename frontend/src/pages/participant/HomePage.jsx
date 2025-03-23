@@ -1,13 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { SecheduleList } from '../../components/ScheduleList';
 import { UpcomingCompetitionsList } from '../../components/UpcomingCompetitionsList';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { UserData } from '../../components/UserData';
+import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import { EditAccount } from '@/components/EditAccount';
 
 const HomePage = () => {
-  let userName = "Santoso";
-
   let upcomingCompetitions = [
     {
       title: "Traditional Chinese Songs Singing 1", 
@@ -64,7 +64,17 @@ endDate: new Date(2026, 0, 15)
   ]
 
   let sortedCompetitions = upcomingCompetitions.sort((a, b) => a.startDate - b.startDate);
-  
+  const [isEditingAccount, setIsEditingAccount] = useState(false);
+
+  const [userName, setUsername] = useState("Santoso")
+  const [mandarinName, setMandarinName] = useState("Xi Xi Xi")
+  const [email, setEmail] = useState("Santoso@gmail.com")
+  const [dateOfBirth, setDateOfBirth] = useState("2002-01-02");
+  const [gender, setGender] = useState("Male");
+  const [address, setAddress] = useState("123 Main Street, Jakarta, Indonesia");
+  const [phoneNumber, setPhoneNumber] = useState("+ 62 812-3456-7890");
+  const [institution, setInstitution] = useState("Binus University");
+
   return (
     <>
       <div className='mt-[7em] text-center sm:text-start sm:ml-[4em]'>
@@ -72,24 +82,28 @@ endDate: new Date(2026, 0, 15)
         <p className='font-poppins text-[#7D7979] text-[0.9rem]'>{new Date().toDateString()}</p>
         <p className='font-poppins text-[0.9rem] mt-[1em]'>Welcome Back, {userName}!</p>
       </div>
-      <div className='flex flex-col w-[95%] sm:w-[70%] mx-auto p-[2em] sm:p-[3em] xl:max-w-[1200px] 2xl:max-w-[1800px]'>
+      <div className='flex flex-col w-[95%] sm:w-[80%] md:w-[70%] mx-auto p-[2em] sm:p-[3em] xl:max-w-[1200px] 2xl:max-w-[1800px]'>
         <div className='flex items-center gap-[15px]'>
           <div className='bg-gray-500 rounded-full h-fit w-fit py-3 px-4'>
             <FontAwesomeIcon icon={faUser} className='text-gray-900 text-[1.5em]' />
           </div>
           <div className='flex flex-col'>
-            <p className='font-semibold font-kanit text-[1.5rem]'>Santoso</p>
-            <p className='font-poppins text-[0.9rem]'>Santoso@gmail.com</p>
+            <p className='font-semibold font-kanit text-[1.5rem]'>{userName}</p>
+            <p className='font-poppins text-[0.9rem]'>{email}</p>
+          </div>
+          <div className='flex justify-end w-[100%] items-center'>
+            <button className='color-component-red rounded-md hover:!bg-red-700 duration-300 text-white cursor-pointer py-2 px-3 hidden sm:block' onClick={() => {setIsEditingAccount(true)}}><FontAwesomeIcon icon={faEdit} className='px-1' /> Change</button>
+            <FontAwesomeIcon icon={faEdit} className='block sm:invisible cursor-pointer' onClick={() => {setIsEditingAccount(true)}} />
           </div>
         </div>
-        <UserData name="Santoso" mandarinName="Xi Xi Xi" DOB="2002-05-15" gender="Male" fullAddress="123 Main Street, Jakarta, Indonesia" phoneNumber="+ 62 812-3456-7890" email="Santoso@gmail.com" institution="Bina Nusantara" />
+        <UserData name={userName} mandarinName={mandarinName} DOB={dateOfBirth} gender={gender} fullAddress={address} phoneNumber={phoneNumber} email={email} institution={institution} />
       </div>
       <div className='bg-[#F4F4F4] w-[100%] mt-[2.5em] flex justify-center items-center relative'>
         <div className='bg-[#FFFFFF] w-[90%] md:w-[70%] shadow-xl rounded-[20px] my-[3em] xl:max-w-[1200px] 2xl:max-w-[1800px]'>
           <p className='font-kanit text-[1.4rem] font-medium sm:ml-[4em] justify-self-center pt-[2em] pb-[0.5em] sm:justify-self-start'>Schedule</p>
           <div className={`h-[70vh] min-h-[200px] max-h-[300px] xl:max-h-[500px] overflow-auto sm:mx-[2em] mb-5`}>
-            {sortedCompetitions.length > 0 ? sortedCompetitions.map((competition) => (
-              <SecheduleList competition={competition} />
+            {sortedCompetitions.length > 0 ? sortedCompetitions.map((competition, index) => (
+              <SecheduleList competition={competition} key={index} />
             )) : (
               <p className='font-poppins text-[#818181] '>-- No Upcoming Competitions --</p>
             )}
@@ -99,8 +113,13 @@ endDate: new Date(2026, 0, 15)
       <p></p>
       <p className='font-kanit text-[1.4rem] ml-[3em] mt-[3em] font-medium'>Upcoming Competitions</p>
       <UpcomingCompetitionsList competitions={upcomingCompetitions} />
+      { isEditingAccount && 
+        <EditAccount isOpen={isEditingAccount} setIsOpen = {setIsEditingAccount}
+        userName={userName} mandarinName={mandarinName} email={email} dateOfBirth={dateOfBirth} gender={gender} address={address} phoneNumber={phoneNumber} institution={institution}
+        setUsername={setUsername} setMandarinName={setMandarinName} setEmail={setEmail} setDateOfBirth={setDateOfBirth} setGender={setGender} setAddress={setAddress} setPhoneNumber={setPhoneNumber} setInstitution={setInstitution}
+        />
+      }
     </>
   )
 }
-
 export default HomePage
