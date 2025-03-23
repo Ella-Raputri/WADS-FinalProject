@@ -9,7 +9,7 @@ const ticketData = [
   
   export function StatusChart() {
     return (
-      <div className="w-[90%] mx-auto"> {/* 90% width container */}
+      <div className="w-[95%] mx-auto"> {/* 90% width container */}
         {ticketData.map((ticket) => (
           <div key={ticket.status} className="mb-3">
             <div className="flex justify-between items-center">

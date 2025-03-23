@@ -78,7 +78,7 @@ const CompManagement = () => {
         return prevData.map(ticket => 
           ticket.id === updatedData.id ? { ...ticket, ...updatedData } : ticket
         );
-      });
+      }); 
   
       setBaseFilteredData(prevData => {
         return prevData.map(ticket => 

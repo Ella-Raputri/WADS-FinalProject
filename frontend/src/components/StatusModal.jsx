@@ -3,13 +3,36 @@ import { useEffect } from "react";
 
 export const StatusModal = ({competition, isOpen, onClose}) => {
     useEffect(() => {
-        if (isOpen){
-            document.body.style.overflow = "hidden";
-        } 
+        if (isOpen) {
+          const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+          
+          document.body.style.overflow = "hidden";
+          document.body.style.paddingRight = `${scrollbarWidth}px`;
+      
+          const navbar = document.querySelector(".navbar"); // Ensure this class is in your Navbar
+          if (navbar) {
+            navbar.style.paddingRight = `${scrollbarWidth}px`;
+          }
+        } else {
+          document.body.style.overflow = "auto";
+          document.body.style.paddingRight = "0px";
+      
+          const navbar = document.querySelector(".navbar");
+          if (navbar) {
+            navbar.style.paddingRight = "0px";
+          }
+        }
+      
         return () => {
-            document.body.style.overflow = "auto";
-        } 
-    }, [isOpen])
+          document.body.style.overflow = "auto";
+          document.body.style.paddingRight = "0px";
+      
+          const navbar = document.querySelector(".navbar");
+          if (navbar) {
+            navbar.style.paddingRight = "0px";
+          }
+        };
+      }, [isOpen]);
 
     return(
         <Modal competition={competition} isOpen={isOpen} onRequestClose={onClose} className="items-center font-poppins flex flex-col w-[90%] md:w-[70%] bg-white mx-auto shadow-xl relative overflow-y-auto scrollbar-thin rounded-[10px] xl:max-w-[1200px] 2xl:max-w-[1800px]" overlayClassName="flex justify-center items-center inset-0 fixed z-1000 bg-[rgba(0,0,0,0.5)] overflow-hidden">

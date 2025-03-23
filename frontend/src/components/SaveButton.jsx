@@ -32,7 +32,7 @@ function SaveButton({data, type}) {
 
   return (
     <>
-        <button className="font-semibold px-2 py-2 rounded-2xl bg-red-700 text-white hover:bg-red-800 hover:cursor-pointer"
+        <button className="font-semibold px-3 shadow-md transition duration-300 ease py-2 rounded-2xl bg-red-700 text-white hover:bg-red-800 hover:cursor-pointer"
           onClick={handleSaveList}>
             <MdOutlineFileDownload className='text-2xl'/>
           </button>

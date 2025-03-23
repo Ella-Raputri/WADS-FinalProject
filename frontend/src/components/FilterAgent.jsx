@@ -1,13 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import Modal from "react-modal";
-import { faCalendar } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 Modal.setAppElement("#root");
 
-const FilterStatusModal = ({ isOpen, onClose, onApply }) => {
+const FilterAgent = ({ isOpen, onClose, onApply }) => {
   const [filters, setFilters] = useState({
     status: "",
+    sort:"",
   });
 
   useEffect(() => {
@@ -41,6 +40,9 @@ const FilterStatusModal = ({ isOpen, onClose, onApply }) => {
       }
     };
   }, [isOpen]);
+  
+  
+  
 
   const handleFilterChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
@@ -54,6 +56,7 @@ const FilterStatusModal = ({ isOpen, onClose, onApply }) => {
   const handleReset = () => {
     setFilters({
       status: "",
+      sort:"",
     });
   };
 
@@ -80,14 +83,27 @@ const FilterStatusModal = ({ isOpen, onClose, onApply }) => {
           onChange={handleFilterChange}
         >
           <option value="">Select Status</option>
-          <option value="rejected">Rejected</option>
-          <option value="pending">Pending</option>
-          <option value="accepted">Accepted</option>
+          <option value="online">Online</option>
+          <option value="offline">Offline</option>
+        </select>
+      </div>
+
+      <div className="mt-6">
+        <label className="block text-sm font-poppins mb-1 font-medium">SORT TICKET NUMBER:</label>
+        <select
+          name="sort"
+          className="border p-2 rounded w-full"
+          value={filters.sort}
+          onChange={handleFilterChange}
+        >
+          <option value="">Select Sorting Method</option>
+          <option value="ascending">Ascending</option>
+          <option value="descending">Descending</option>
         </select>
       </div>
 
       {/* Buttons */}
-      <div className="mt-6 flex justify-end gap-2">
+      <div className="mt-8 flex justify-end gap-2">
         <button
           className="bg-gray-400 hover:bg-gray-500 cursor-pointer text-white px-4 py-2 rounded"
           onClick={handleReset}
@@ -105,4 +121,4 @@ const FilterStatusModal = ({ isOpen, onClose, onApply }) => {
   );
 };
 
-export default FilterStatusModal;
+export default FilterAgent;

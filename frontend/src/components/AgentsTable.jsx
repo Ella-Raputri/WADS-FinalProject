@@ -1,25 +1,54 @@
-import React from "react";
-import { FaFilter } from "react-icons/fa"; // Import filter icon
+import { faFilter } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useState } from "react";
+import FilterAgent from "./FilterAgent";
 
-const agents = [
-  { name: "Ella Raputri", tickets: 87, status: "Online" },
-  { name: "Ella Raputri", tickets: 87, status: "Offline" },
-  { name: "Ella Raputri", tickets: 87, status: "Offline" },
-  { name: "Ella Raputri", tickets: 87, status: "Offline" },
-  { name: "Ella Raputri", tickets: 87, status: "Offline" },
-  { name: "Ella Raputri", tickets: 87, status: "Offline" },
-  { name: "Ella Raputri", tickets: 87, status: "Offline" },
-  { name: "Ella Raputri", tickets: 87, status: "Offline" },
-  { name: "Ella Raputri", tickets: 87, status: "Offline" },
+const data = [
+  { name: "Ella Raputri", tickets: 85, status: "Online" },
+  { name: "Ella Raputri", tickets: 8, status: "Offline" },
+  { name: "Ella Raputri", tickets: 7, status: "Offline" },
+  { name: "Ella Raputri", tickets: 86, status: "Offline" },
+  { name: "Ella Raputri", tickets: 86, status: "Offline" },
+  { name: "Ella Raputri", tickets: 88, status: "Offline" },
+  { name: "Ella Raputri", tickets: 89, status: "Offline" },
+  { name: "Ella Raputri", tickets: 97, status: "Offline" },
+  { name: "Ella Raputri", tickets: 77, status: "Offline" },
 ];
 
+
 export function AgentsTable() {
+  const [openFilter, setOpenFilter] =useState(false);
+  const [filteredData, setFilteredData] = useState(data);
+
+  const handleFilter = (newFilters) => {
+    setOpenFilter(false);
+    const { sort, status } = newFilters; // 'sort' instead of 'sortDirection'
+  
+    // Ensure correct status filtering
+    const filtered = data.filter(ticket => {
+      return status ? ticket.status.toLowerCase() === status.toLowerCase() : true;
+    });
+  
+    // Fix sortDirection comparison (matching "ascending"/"descending")
+    const sortedArray = [...filtered].sort((a, b) => {
+      if (a.tickets < b.tickets) return sort === "ascending" ? -1 : 1;
+      if (a.tickets > b.tickets) return sort === "ascending" ? 1 : -1;
+      return 0;
+    });
+  
+    setFilteredData(sortedArray);
+  };
+  
+
   return (
     <div className="p-6 bg-white shadow rounded-lg w-full mx-auto">
       {/* Header */}
       <div className="flex justify-between items-center mb-5">
         <h2 className="font-kanit font-medium text-2xl text-gray-400">Agents Details</h2>
-        <FaFilter className="text-brown-800 text-lg cursor-pointer" />
+        <button className="border bg-white border-slate-200 ml-2 transition duration-300 ease hover:border-slate-300 shadow-sm focus:shadow px-3 py-2 rounded-xl hover:bg-gray-100 hover:cursor-pointer"
+        onClick={() => setOpenFilter(true)}>
+          <FontAwesomeIcon icon={faFilter} />
+        </button>
       </div>
 
       {/* Scrollable Table Container */}
@@ -35,7 +64,7 @@ export function AgentsTable() {
           </thead>
           {/* Table Body */}
           <tbody>
-            {agents.map((agent, index) => (
+            {filteredData.map((agent, index) => (
               <tr key={index} className="border-t">
                 <td className="py-3 px-4 text-lg">{agent.name}</td>
                 <td className="py-3 px-4 text-lg font-semibold">{agent.tickets}</td>
@@ -51,6 +80,9 @@ export function AgentsTable() {
           </tbody>
         </table>
       </div>
+          
+      {openFilter && <FilterAgent isOpen={openFilter} onClose={()=>setOpenFilter(false)} onApply={handleFilter}/>}
+
     </div>
   );
 }
