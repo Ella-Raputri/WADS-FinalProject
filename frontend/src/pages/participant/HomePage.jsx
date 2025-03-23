@@ -68,9 +68,9 @@ endDate: new Date(2026, 0, 15)
   return (
     <>
       <div className='mt-[7em] text-center sm:text-start sm:ml-[4em]'>
-        <p className='font-kanit text-[1.7rem] xl:text-[2.1rem] font-medium'>Dashboard</p>
-        <p className='font-poppins text-[#7D7979] text-[0.9rem] xl:text-[1.3rem]'>{new Date().toDateString()}</p>
-        <p className='font-poppins text-[0.9rem] xl:text-[1.3rem] mt-[1em]'>Welcome Back, {userName}!</p>
+        <p className='font-kanit text-[1.7rem] font-medium'>Dashboard</p>
+        <p className='font-poppins text-[#7D7979] text-[0.9rem]'>{new Date().toDateString()}</p>
+        <p className='font-poppins text-[0.9rem] mt-[1em]'>Welcome Back, {userName}!</p>
       </div>
       <div className='flex flex-col w-[95%] sm:w-[70%] mx-auto p-[2em] sm:p-[3em] xl:max-w-[1200px] 2xl:max-w-[1800px]'>
         <div className='flex items-center gap-[15px]'>
@@ -86,7 +86,7 @@ endDate: new Date(2026, 0, 15)
       </div>
       <div className='bg-[#F4F4F4] w-[100%] mt-[2.5em] flex justify-center items-center relative'>
         <div className='bg-[#FFFFFF] w-[90%] md:w-[70%] shadow-xl rounded-[20px] my-[3em] xl:max-w-[1200px] 2xl:max-w-[1800px]'>
-          <p className='font-kanit text-[1.4rem] xl:text-[1.8rem] font-medium sm:ml-[4em] justify-self-center pt-[2em] pb-[0.5em] sm:justify-self-start'>Schedule</p>
+          <p className='font-kanit text-[1.4rem] font-medium sm:ml-[4em] justify-self-center pt-[2em] pb-[0.5em] sm:justify-self-start'>Schedule</p>
           <div className={`h-[70vh] min-h-[200px] max-h-[300px] xl:max-h-[500px] overflow-auto sm:mx-[2em] mb-5`}>
             {sortedCompetitions.length > 0 ? sortedCompetitions.map((competition) => (
               <SecheduleList competition={competition} />
@@ -97,7 +97,7 @@ endDate: new Date(2026, 0, 15)
         </div>
       </div>
       <p></p>
-      <p className='font-kanit text-[1.4rem] xl:text-[1.8rem] ml-[3em] mt-[2em] font-medium'>Upcoming Competitions</p>
+      <p className='font-kanit text-[1.4rem] ml-[3em] mt-[3em] font-medium'>Upcoming Competitions</p>
       <UpcomingCompetitionsList competitions={upcomingCompetitions} />
     </>
   )

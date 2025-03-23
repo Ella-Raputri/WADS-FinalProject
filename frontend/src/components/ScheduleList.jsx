@@ -29,13 +29,13 @@ export const SecheduleList = ({competition}) => {
 
     return (
         <>
-        <div className="flex w-[95%] lg:w-[90%] mx-auto mt-[2em] md:mt-[2em] sm:mt-[0.7em] mb-[1em] justify-center items-center lg:mt-[1em] ">
+        <div className="flex w-[95%] lg:w-[90%] mx-auto mt-[2em] md:mt-[2em] sm:mt-[0.7em] mb-[1em] justify-center items-center lg:mt-[1em]">
             <div className="w-[20%] sm:flex-col sm:items-center sm:justify-center hidden sm:flex">
-                <p className="text-[0.7rem] xl:text-[1.1rem]">{day}</p>
-                <p className="font-medium text-[1.4rem] xl:text-[1.8rem]">{date}</p>
-                <p className="text-[0.7rem] xl:text-[1.1rem]">{month} {year}</p>
+                <p className="text-[0.7rem]">{day}</p>
+                <p className="font-medium text-[1.4rem]">{date}</p>
+                <p className="text-[0.7rem]">{month} {year}</p>
             </div>
-            <div className="w-[80%] bg-[#F4F4F4] rounded-[10px] text-[0.8rem] xl:text-[1.2rem] font-medium flex flex-col justify-center sm:items-center sm:flex-row pt-4 pb-4 sm:pt-3 sm:pb-3 shadow">
+            <div className="w-[80%] bg-[#F4F4F4] rounded-[10px] text-[0.8rem] font-medium flex flex-col justify-center sm:items-center sm:flex-row pt-4 pb-4 sm:pt-3 sm:pb-3 shadow">
                 <div className="pl-[2em] w-[90%] sm:w-[70%]">
                     <p className="w-[100%] md:w-[80%]">Competition Name: {competition.title}</p>
                     <p>Category: {competition.category}</p>
@@ -49,7 +49,7 @@ export const SecheduleList = ({competition}) => {
                 </div>
                 <div className="w-[50%] sm:w-[30%] hidden sm:flex sm:flex-col sm:justify-center sm:items-center gap-[10px] my-[0.7em]">
                     <button className="w-23 py-2 color-component-red rounded-md hover:!bg-red-700 duration-300 text-white cursor-pointer" onClick={() => {
-                        setCompetitionIsOpen(true);
+                        setCompetitionIsOpen(true); 
                     }}>Details</button>
                     <button className="w-23 py-2 bg-blue-500 rounded-md hover:!bg-blue-700 duration-300 text-white cursor-pointer" onClick={() => {
                         setStatusIsOpen(true);

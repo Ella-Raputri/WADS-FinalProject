@@ -27,7 +27,7 @@ export const UpcomingCompetitionsList = ({competitions}) => {
 
     return(
         <>
-        <div className="relative flex items-center justify-self-center w-[100%] my-[4em] xl:max-w-[1200px] 2xl:max-w-[1800px]">
+        <div className="relative flex items-center justify-self-center w-[100%] my-[3em] xl:max-w-[1200px] 2xl:max-w-[1800px]">
             <div className="w-[20%] sm:w-[30%] lg:w-[10%] flex justify-center">
                 <ChevronLeft size={30} onClick={() => prev()} className= {`${isBeginning ? "invisible" : "block"} cursor-pointer`} />
             </div>
