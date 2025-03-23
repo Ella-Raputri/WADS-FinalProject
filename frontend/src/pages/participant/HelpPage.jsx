@@ -160,24 +160,27 @@ const HelpPage = () => {
       </div>
 
 
-      <h1 className='md:ml-20 mt-12 font-medium text-3xl font-kanit p-5 pb-0'>
-        Help Tickets
-      </h1>
+      <div className="flex justify-between items-center md:ml-20 mt-12 p-6 pb-0">
+        <h1 className="mt-2 font-medium text-3xl font-kanit">
+          Help Tickets
+        </h1>
 
-
-      <div className="pl-5 pr-8 pt-2 pb-0 md:ml-20 flex justify-between items-center font-poppins">
-        
-        <div className="sm:mr-20 md:mr-26 2xl:mr-35 flex gap-5">
-          <button className="border border-slate-200 transition duration-300 ease hover:border-slate-300 shadow-sm focus:shadow px-3 py-2 rounded-xl hover:bg-gray-100 hover:cursor-pointer"
-          onClick={() => setOpenFilter(true)}>
+        <div className="sm:mr-20 md:mr-28 2xl:mr-35 flex gap-5">
+          <button 
+            className="border border-slate-200 transition duration-300 ease hover:border-slate-300 shadow-sm focus:shadow px-3 py-2 rounded-xl hover:bg-gray-100 hover:cursor-pointer"
+            onClick={() => setOpenFilter(true)}
+          >
             <FontAwesomeIcon icon={faFilter} />
           </button>
-          <button className="font-semibold px-8 py-2 rounded-2xl bg-red-700 text-white hover:bg-red-800 hover:cursor-pointer"
-          onClick={() => navigate('/usernewticket')}>
+          <button 
+            className="font-poppins font-semibold px-8 py-2 transition duration-200 ease rounded-2xl bg-red-700 text-white hover:bg-red-800 hover:cursor-pointer"
+            onClick={() => navigate('/usernewticket')}
+          >
             NEW TICKET
           </button>
         </div>
       </div>
+
 
       <div className="md:ml-20 mb-30 p-4 pt-0 pl-0">
         {currentData.length > 0 ? (

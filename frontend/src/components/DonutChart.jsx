@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react";
-import { Pie, PieChart, Cell, Tooltip } from "recharts"
+import { useEffect, useState, useRef } from "react";
+import { Pie, PieChart, Cell, Tooltip } from "recharts";
 
-const chartData = [
+const finalChartData = [
   { priority: "Urgent", count: 30, color: "#DC2626" },
   { priority: "High", count: 50, color: "#D97706" },
   { priority: "Medium", count: 70, color: "#FACC15" },
@@ -12,6 +12,9 @@ const chartData = [
 
 export function DonutChart() {
   const [chartSize, setChartSize] = useState(250);
+  const [isVisible, setIsVisible] = useState(false);
+  const [shouldAnimate, setShouldAnimate] = useState(false);
+  const chartRef = useRef(null);
 
   useEffect(() => {
     const updateSize = () => {
@@ -25,17 +28,53 @@ export function DonutChart() {
     return () => window.removeEventListener("resize", updateSize);
   }, []);
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+        if (entry.isIntersecting) {
+          setShouldAnimate(true);
+        }
+      },
+      { threshold: 0.1 } 
+    );
+
+    if (chartRef.current) {
+      observer.observe(chartRef.current);
+    }
+
+    return () => {
+      if (chartRef.current) {
+        observer.unobserve(chartRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isVisible) {
+      const timeout = setTimeout(() => {
+        setShouldAnimate(false);
+      }, 300);
+      
+      return () => clearTimeout(timeout);
+    }
+  }, [isVisible]);
+
   return (
-    <div className="flex flex-col items-center w-full">
+    <div ref={chartRef} className="flex flex-col items-center w-full">
       <PieChart width={chartSize} height={chartSize}>
         <Pie
-          data={chartData}
+          data={finalChartData}
           dataKey="count"
           nameKey="priority"
           innerRadius={chartSize * 0.3}
           outerRadius={chartSize * 0.45}
+          animationBegin={0}
+          animationDuration={1500}
+          animationEasing="ease-out"
+          isAnimationActive={shouldAnimate}
         >
-          {chartData.map((entry, index) => (
+          {finalChartData.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={entry.color} />
           ))}
         </Pie>
@@ -49,9 +88,14 @@ export function DonutChart() {
             ) : null
           }
         />
-        <text x="50%" y="50%" dy={8} textAnchor="middle"
+        <text 
+          x="50%" 
+          y="50%" 
+          dy={8} 
+          textAnchor="middle"
           className="fill-black text-lg md:text-xl font-semibold font-poppins"
-        > Tickets
+        > 
+          Tickets
         </text>
       </PieChart>
     </div>

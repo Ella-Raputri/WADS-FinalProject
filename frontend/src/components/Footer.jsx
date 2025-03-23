@@ -4,7 +4,7 @@ import { HiOutlineMail } from "react-icons/hi";
 const Footer = () => {
   return (
     <footer className="mt-10 md:mt-5 font-poppins w-full red-navbar text-white py-4">
-      <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between px-6">
+      <div className="w-full mx-auto flex flex-col sm:flex-row items-center justify-between px-6">
 
         <div className="text-center sm:text-left">
           <p>© Copyright 2025 Group Raft & NMC</p>

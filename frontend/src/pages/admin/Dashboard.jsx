@@ -34,7 +34,7 @@ const Dashboard = () => {
 
       <div className="flex items-center justify-between px-6 py-4 lg:ml-15 ml-12 mt-25 mb-10 mr-15">
         <h1 className="text-4xl lg:text-5xl font-kanit font-medium flex-grow">Hello, user!</h1>
-        <button className="px-4 py-2 mt-10 color-component-red text-white rounded-full shadow">
+        <button className="px-4 py-2 mt-10 color-component-red text-white rounded-full shadow-md cursor-pointer">
           <MdOutlineFileDownload className="text-2xl lg:text-3xl"/>
         </button>
       </div>

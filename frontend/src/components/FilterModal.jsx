@@ -23,10 +23,33 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
 
   useEffect(() => {
     if (isOpen) {
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      
       document.body.style.overflow = "hidden";
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+  
+      const navbar = document.querySelector(".navbar"); // Ensure this class is in your Navbar
+      if (navbar) {
+        navbar.style.paddingRight = `${scrollbarWidth}px`;
+      }
+    } else {
+      document.body.style.overflow = "auto";
+      document.body.style.paddingRight = "0px";
+  
+      const navbar = document.querySelector(".navbar");
+      if (navbar) {
+        navbar.style.paddingRight = "0px";
+      }
     }
+  
     return () => {
       document.body.style.overflow = "auto";
+      document.body.style.paddingRight = "0px";
+  
+      const navbar = document.querySelector(".navbar");
+      if (navbar) {
+        navbar.style.paddingRight = "0px";
+      }
     };
   }, [isOpen]);
 

@@ -41,7 +41,7 @@ const Navbar = () => {
   ];
 
   return (
-    <Disclosure as="nav" className={`shadow-md fixed top-0 left-0 w-full 
+    <Disclosure as="nav" className={`navbar shadow-md fixed top-0 left-0 w-full 
       z-50 ${userRole === 'admin'? 'red-navbar' : 'bg-white'}`}>
       {({ open }) => (
         <>
