@@ -14,7 +14,7 @@ const WelcomePage = () => {
       ([entry]) => {
         setAnimateCompetition(entry.isIntersecting);
       },
-      { threshold: 0.8 } 
+      { threshold: 0.4 } 
     );
 
     if (competitionRef.current) {
