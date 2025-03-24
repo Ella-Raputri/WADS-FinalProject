@@ -7,7 +7,7 @@ const CompetitionPage = ({}) => {
     {
         title: "Traditional Chinese Songs Singing", 
         category: "Singing", 
-        description: "This competition's theme revolves around singing Chinese traditional songs, where the committee will decide the songs for each contestant. The contestants will be given 30 minutes to prepare themselves, before recording them singing and submit it on the submission form provided.", 
+        description: "This competition's theme revolves around singing Chinese traditional songs, where the committee will decide the songs for each contestant. The contestants will be given 30 minutes to prepare themselves, before recording them singing and submit it on the submission form provided. pneumonoultramicroscopicsilicovolcanoconiosis", 
         venue: "Online Meeting",
         date: "Dec 21 - 25",
         time: "13:00 - 16:00",

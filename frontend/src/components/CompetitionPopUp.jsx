@@ -1,6 +1,8 @@
 import Modal from "react-modal";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const CompetitionPopUp = ({competition, isRegistered, isOpen, onClose}) => {
     let requirement_arr = competition.rules.split("\n");
@@ -40,25 +42,25 @@ export const CompetitionPopUp = ({competition, isRegistered, isOpen, onClose}) =
       }, [isOpen]);
 
     return (
-        <Modal competition={competition} isOpen={isOpen} onRequestClose={onClose} className="font-poppins md:w-[80%] w-[90%] bg-white mx-auto shadow-xl relative rounded-[10px]" overlayClassName="flex justify-center items-center inset-0 fixed z-1000 bg-[rgba(0,0,0,0.5)] overflow-hidden">
-            <div className="md:h-[80vh] h-[90vh] overflow-y-auto" style={{scrollbarWidth:"thin", scrollbarColor:"#ccc transparent"}}>
+        <Modal competition={competition} isOpen={isOpen} onRequestClose={onClose} className="font-poppins md:w-[80%] w-[90%] py-6 pb-8 bg-white mx-auto shadow-xl relative rounded-[10px]" overlayClassName="flex justify-center items-center inset-0 fixed z-1000 bg-[rgba(0,0,0,0.5)] overflow-hidden">
+            <div className="h-[80vh] md:h-[70vh] overflow-y-auto" style={{scrollbarWidth:"thin", scrollbarColor:"#ccc transparent"}}>
               <div className="top-0 sticky pt-1 bg-white">
-                  <p className="font-kanit text-[1.5rem] xl:text-[1.9rem] mt-[1.5em] ml-[2em] w-[65%] md:w-auto">{competition.title}</p>
-                  <p className="ml-[4em] text-[0.8rem] xl:text-[1.2rem] mt-[1em]">Price: {competition.price} / Person</p>
-                  <span className="text-[2.3rem] xl:text-[2.7rem] absolute top-0 right-0 mr-[1em] md:mr-[1.5em] mt-[0.4em] cursor-pointer" onClick={onClose}>&times;</span>
+                  <p className="font-kanit font-medium text-2xl xl:text-3xl ml-11 w-[65%] md:w-auto">{competition.title}</p>
+                  <p className="ml-11 text-md xl:text-lg mt-3">Price: {competition.price} / Person</p>
+                  <span className="text-[2.3rem] xl:text-[2.7rem] text-gray-500 absolute top-0 right-0 mr-[1em] md:mr-[1.5em] mt-[0.4em] hover:text-gray-600 cursor-pointer" onClick={onClose}> <FontAwesomeIcon icon={faTimes}/> </span>
                   <div className="w-[80%] h-[0.05em] bg-gray-400 ml-[3.1em] mt-[0.5em]"></div>
               </div>
-              <p className="ml-[4em] text-[0.8rem] xl:text-[1.2rem] mt-[1em]">Venue: {competition.venue}</p>
-              <p className="ml-[4em] text-[0.8rem] xl:text-[1.2rem] mt-[0.6em]">Date: {competition.date}</p>
-              <p className="ml-[4em] text-[0.8rem] xl:text-[1.2rem] mt-[0.6em]">Time: {competition.time}</p>
-              <p className="ml-[4em] text-[0.8rem] xl:text-[1.2rem] mt-[0.6em]">Prizepool: {competition.prizepool}</p>
-              <p className="ml-[3.5em] text-[0.9rem] xl:text-[1.3rem] font-semibold mt-[1em]">Rules / Requirements</p>
-              <ul className="list-disc ml-[4em]">
+              <p className="ml-11 text-md xl:text-lg mt-[1.2em]"><span className="font-semibold">Venue:</span> {competition.venue}</p>
+              <p className="ml-11 text-md xl:text-lg mt-[0.7em]"><span className="font-semibold">Date:</span> {competition.date}</p>
+              <p className="ml-11 text-md xl:text-lg mt-[0.7em]"><span className="font-semibold">Time:</span> {competition.time}</p>
+              <p className="ml-11 text-md xl:text-lg mt-[0.7em]"><span className="font-semibold">Prizepool:</span> {competition.prizepool}</p>
+              <p className="ml-11 text-md xl:text-lg font-semibold mt-[1.4em]">Requirements:</p>
+              <ul className="list-disc ml-11">
                   {requirement_arr.map((line) => (
-                      <li className={`w-[80%] text-[0.8rem] xl:text-[1.2rem] mt-[0.6em]`}>{line}</li>
+                      <li className={`leading-7 ml-5 w-[80%] text-md xl:text-lg mt-[0.6em]`}>{line}</li>
                   ))}
               </ul>
-              <button className={`w-30 h-9 mt-5 ${isRegistered ? "bg-[#319340] hover:!bg-green-700" : "color-component-red hover:!bg-red-700"} rounded-md text-white text-center block mx-auto mb-[3em] cursor-pointer`}>{isRegistered ? "Registered" : "Register"}</button>
+              <button className={`w-30 h-9 mt-8 ${isRegistered ? "bg-[#319340]" : "bg-red-600 cursor-pointer hover:bg-red-700"} font-poppins shadow-md font-semibold rounded-md text-white text-center block mx-auto mb-2`}>{isRegistered ? "Registered" : "Register"}</button>
             </div>
         </Modal>
     );

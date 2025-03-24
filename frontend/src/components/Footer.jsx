@@ -6,11 +6,11 @@ const Footer = () => {
     <footer className="mt-10 md:mt-5 font-poppins w-full red-navbar text-white py-4">
       <div className="w-full mx-auto flex flex-col sm:flex-row items-center justify-between px-6">
 
-        <div className="text-center sm:text-left">
+        <div className="text-center sm:text-left font-semibold text-md">
           <p>© Copyright 2025 Group Raft & NMC</p>
         </div>
 
-        <div className="flex space-x-4 mt-3 sm:mt-0">
+        <div className="flex space-x-5 mt-3 font-semibold sm:mt-0">
           <a
             href="https://www.instagram.com/nmcbnmc/"
             target="_blank"

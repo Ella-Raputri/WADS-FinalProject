@@ -34,10 +34,12 @@
 
 .color-component-red:hover{
   background-color:#c93631;
+  cursor: pointer;
+  transition:ease 0.3s;
 }
 
 .red-navbar{
-  background-color: #CB0105;
+  background-color: oklch(0.577 0.245 27.325);
 }
 
 .red-hover:hover{
@@ -105,3 +107,14 @@
   opacity: 0;
 }
 
+@media (max-width: 376px) {
+  .calendardate {
+    right: 140px;
+  }
+}
+
+@media (max-width: 320px) {
+  .calendardate {
+    right: 90px;
+  }
+}

@@ -74,30 +74,62 @@ endDate: new Date(2026, 0, 15)
   const [address, setAddress] = useState("123 Main Street, Jakarta, Indonesia");
   const [phoneNumber, setPhoneNumber] = useState("+ 62 812-3456-7890");
   const [institution, setInstitution] = useState("Binus University");
+  const [studentCardUrl, setStudentCardUrl] = useState('https://indonesia.travel/content/dam/indtravelrevamp/home-revamp/bali-jack.jpg')
 
   return (
     <>
-      <div className='mt-[7em] text-center sm:text-start sm:ml-[4em]'>
-        <p className='font-kanit text-[1.7rem] font-medium'>Dashboard</p>
-        <p className='font-poppins text-[#7D7979] text-[0.9rem]'>{new Date().toDateString()}</p>
-        <p className='font-poppins text-[0.9rem] mt-[1em]'>Welcome Back, {userName}!</p>
+      <div className='mt-[7em] text-center flex flex-col justify-center sm:text-start sm:ml-[4em]'>
+        <p className='font-kanit mx-auto text-3xl font-medium'>Dashboard</p>
+        <p className='font-poppins mx-auto text-[#7D7979] text-xl'>{new Date().toDateString()}</p>
+        <p className='font-poppins mx-auto text-lg mt-[1em]'>Welcome Back, {userName}!</p>
       </div>
-      <div className='flex flex-col w-[95%] sm:w-[80%] md:w-[70%] mx-auto p-[2em] sm:p-[3em] xl:max-w-[1200px] 2xl:max-w-[1800px]'>
-        <div className='flex items-center gap-[15px]'>
-          <div className='bg-gray-500 rounded-full h-fit w-fit py-3 px-4'>
-            <FontAwesomeIcon icon={faUser} className='text-gray-900 text-[1.5em]' />
+
+
+      <div className="flex flex-col mt-4 md:mt-0 w-[95%] sm:w-[80%] md:w-[70%] mx-auto p-[2em] sm:p-[3em] xl:max-w-[1200px] 2xl:max-w-[1800px]">
+        {/* User Info */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+          {/* Left Section: Icon + Text */}
+          <div className="flex items-center gap-4">
+            {/* User Icon */}
+            <div className="bg-gray-500 rounded-full h-fit w-fit py-3 px-4 flex items-center justify-center">
+              <FontAwesomeIcon icon={faUser} className="text-gray-900 text-[1.5em]" />
+            </div>
+
+            {/* User Info */}
+            <div className="flex flex-col">
+              <p className="font-semibold font-kanit text-2xl">{userName}</p>
+              <p className="font-poppins text-lg mt-1">{email}</p>
+            </div>
           </div>
-          <div className='flex flex-col'>
-            <p className='font-semibold font-kanit text-[1.5rem]'>{userName}</p>
-            <p className='font-poppins text-[0.9rem]'>{email}</p>
-          </div>
-          <div className='flex justify-end w-[100%] items-center'>
-            <button className='color-component-red rounded-md hover:!bg-red-700 duration-300 text-white cursor-pointer py-2 px-3 hidden sm:block' onClick={() => {setIsEditingAccount(true)}}><FontAwesomeIcon icon={faEdit} className='px-1' /> Change</button>
-            <FontAwesomeIcon icon={faEdit} className='block sm:invisible cursor-pointer' onClick={() => {setIsEditingAccount(true)}} />
+
+          {/* Button - Moves below on small screens */}
+          <div className="mt-4 sm:mt-0 sm:ml-auto flex sm:justify-end">
+            <button
+              className="bg-red-600 rounded-md hover:!bg-red-700 duration-200 text-white cursor-pointer py-2 px-4 flex items-center gap-2 shadow-md ease transition font-poppins font-semibold"
+              onClick={() => setIsEditingAccount(true)}
+            >
+              <FontAwesomeIcon icon={faEdit} />
+              Change
+            </button>
           </div>
         </div>
-        <UserData name={userName} mandarinName={mandarinName} DOB={dateOfBirth} gender={gender} fullAddress={address} phoneNumber={phoneNumber} email={email} institution={institution} />
+
+        {/* User Data */}
+        <UserData
+          name={userName}
+          mandarinName={mandarinName}
+          DOB={dateOfBirth}
+          gender={gender}
+          fullAddress={address}
+          phoneNumber={phoneNumber}
+          email={email}
+          institution={institution}
+          studentCardUrl={studentCardUrl}
+        />
       </div>
+
+
+      
       <div className='bg-[#F4F4F4] w-[100%] mt-[2.5em] flex justify-center items-center relative'>
         <div className='bg-[#FFFFFF] w-[90%] md:w-[70%] shadow-xl rounded-[20px] my-[3em] xl:max-w-[1200px] 2xl:max-w-[1800px]'>
           <p className='font-kanit text-[1.4rem] font-medium sm:ml-[4em] justify-self-center pt-[2em] pb-[0.5em] sm:justify-self-start'>Schedule</p>
@@ -110,14 +142,15 @@ endDate: new Date(2026, 0, 15)
           </div>
         </div>
       </div>
-      <p></p>
-      <p className='font-kanit text-[1.4rem] ml-[3em] mt-[3em] font-medium'>Upcoming Competitions</p>
-      <UpcomingCompetitionsList competitions={upcomingCompetitions} />
+      
+
+      {/* <p className='font-kanit text-[1.4rem] ml-[3em] mt-[3em] font-medium'>Upcoming Competitions</p>
+      <UpcomingCompetitionsList competitions={upcomingCompetitions} /> */}
       { isEditingAccount && 
         <EditAccount isOpen={isEditingAccount} setIsOpen = {setIsEditingAccount}
         userName={userName} mandarinName={mandarinName} email={email} dateOfBirth={dateOfBirth} gender={gender} address={address} phoneNumber={phoneNumber} institution={institution}
         setUsername={setUsername} setMandarinName={setMandarinName} setEmail={setEmail} setDateOfBirth={setDateOfBirth} setGender={setGender} setAddress={setAddress} setPhoneNumber={setPhoneNumber} setInstitution={setInstitution}
-        />
+        studentCardUrl={studentCardUrl} setStudentCardUrl={setStudentCardUrl} />
       }
     </>
   )

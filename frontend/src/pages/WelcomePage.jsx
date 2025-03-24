@@ -77,7 +77,7 @@ const WelcomePage = () => {
     <>
       <section className="relative w-full flex flex-col items-center text-center py-10 overflow-hidden pb-0 mb-0">
         {/* Background Images */}
-        <div className="relative w-full flex justify-center">
+        <div className=" relative w-full flex justify-center">
         <img 
             src="src/assets/welcome_page/light3.png" 
             alt="Light3" 
@@ -111,12 +111,12 @@ const WelcomePage = () => {
           <img
             src="src/assets/welcome_page/tower.png"
             alt="Tower"
-            className="absolute z-10 top-70 left-30 w-14 sm:w-16 sm:top-60 md:w-18 lg:w-21 lg:left-35 lg:top-55 xl:w-25 xl:top-60 xl:left-45 2xl:w-30 2xl:top-65 2xl:left-55"
+            className="absolute z-10 top-80 left-30 w-14 sm:w-16 sm:top-80 md:w-18 lg:w-21 lg:left-35 lg:top-55 xl:w-25 xl:top-60 xl:left-45 2xl:w-30 2xl:top-65 2xl:left-55"
           />
           <img
             src="src/assets/welcome_page/temple.png"
             alt="Temple"
-            className="absolute z-10 top-82 -left-15 w-65 sm:w-70 sm:top-78 sm:-left-20 md:w-78 md:-left-22 md:top-80 lg:w-90 lg:-left-26 xl:w-110 xl:-left-30 xl:top-88 2xl:w-130 2xl:-left-35 2xl:top-95"
+            className="absolute z-10 top-92 -left-15 w-65 sm:w-70 sm:top-78 sm:-left-20 md:w-78 md:-left-22 md:top-80 lg:w-90 lg:-left-26 xl:w-110 xl:-left-30 xl:top-88 2xl:w-130 2xl:-left-35 2xl:top-95"
           />
           <img
             src="src/assets/welcome_page/ferris.png"
@@ -137,14 +137,14 @@ const WelcomePage = () => {
 
         {/* Text & Button */}
         <div className="relative z-5 mt-24 sm:mt-16" ref={descRef}>
-          <h1 className="color-text-red font-extrabold text-6xl sm:text-7xl md:text-8xl xl:text-9xl 2xl:text-10xl font-raleway p-5 pb-3">
+          <h1 className="text-red-600 font-extrabold text-6xl sm:text-7xl md:text-8xl xl:text-9xl 2xl:text-10xl font-raleway p-5 pb-3">
             NMC
           </h1>
-          <p className="text-lg sm:text-xl xl:text-2xl 2xl:text-3xl color-text-red">
+          <p className="font-poppins text-lg sm:text-xl xl:text-2xl 2xl:text-3xl text-red-600">
             RELEASE YOUR POTENTIAL AND CLAIM YOUR GLORY!
           </p>
           <button
-            className="cursor-pointer mx-auto mt-6 bg-red-800 text-white font-bold py-3 px-6 rounded-lg text-sm sm:text-base xl:text-lg 2xl:text-xl hover:bg-red-700 transition"
+            className="cursor-pointer  mx-auto mt-6 bg-red-600 duration-300 ease hover:bg-red-700 shadow-md text-white font-semibold py-3 px-6 rounded-lg text-sm sm:text-base xl:text-lg 2xl:text-xl transition font-poppins"
             onClick={goToCompete}
           >
             Join and Compete
@@ -215,10 +215,12 @@ const WelcomePage = () => {
         <div className="rounded-xl border-5 w-3/4 lg:w-1/2 text-center min-h-80 flex flex-col items-center justify-center p-4" style={{ borderColor: "#DD3833" }}>
           <h1 className="text-2xl md:text-3xl font-poppins text-black font-semibold mb-15">Contact us if you have any questions!</h1>
           <div className="flex gap-6">
-          <button className="arrow-button px-4 md:px-6 py-3 border-2 border-red-600 text-red-600 font-semibold text-md md:text-lg rounded-lg hover:bg-neutral-100 transition">
+          <button className="font-poppins arrow-button px-4 md:px-6 py-3 border-2 border-red-600 text-red-600 font-semibold text-md md:text-lg rounded-lg hover:bg-gray-100 transition"
+          onClick={()=>{window.location.href = 'https://www.instagram.com/nmcbnmc/'}}>
             Contact Us <span className="arrow"></span>
           </button>
-          <button className="arrow-button px-4 md:px-6 py-3 bg-red-600 text-white font-semibold text-md md:text-lg rounded-lg hover:bg-red-700 transition">
+          <button className="font-poppins arrow-button px-4 md:px-6 py-3 bg-red-600 text-white font-semibold text-md md:text-lg rounded-lg hover:bg-red-700 transition"
+          onClick={()=>(navigate('/userhelp'))}>
             See FAQ <span className="arrow"></span>
           </button>
           </div>

@@ -20,9 +20,15 @@ import TicketDetails from './pages/participant/TicketDetails.jsx';
 import AdminTicketDetails from './pages/admin/AdminTicketDetails';
 
 function App() {
+  const [isLoading, setIsLoading] = useState(true);
+ 
+    setTimeout(() => {
+        setIsLoading(false);
+    }, 1000);
+
   return (
     <Router>
-      <MainLayout />
+      {isLoading ? (<h1 className='font-black mt-20 mx-auto'>Loading...</h1>) : (<MainLayout/>)}
     </Router>
   );
 }
@@ -35,6 +41,7 @@ function MainLayout() {
     <div className={`flex flex-col min-h-screen`} style={{backgroundColor:bgColor}}>
         <ScrollToTop />
         <Navbar />
+
         <main className="flex-1"> 
           <Routes>
             <Route path='/' element={<WelcomePage />} />

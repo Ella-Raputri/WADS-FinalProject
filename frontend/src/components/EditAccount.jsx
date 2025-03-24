@@ -1,16 +1,42 @@
 import Modal from "react-modal";
-import { useEffect, useState } from "react";
+import { Button } from "./ui/button";
+import { useEffect, useRef, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalculator, faCalendar, faImage, faTimes } from "@fortawesome/free-solid-svg-icons";
 
-export const EditAccount = ({isOpen, setIsOpen, userName, mandarinName, email, dateOfBirth, gender, address, phoneNumber, institution, setUsername, setMandarinName, setEmail, setDateOfBirth, setGender, setAddress, setPhoneNumber, setInstitution}) => {
+export const EditAccount = ({isOpen, setIsOpen, userName, mandarinName, email, dateOfBirth, gender, address, phoneNumber, institution, setUsername, setMandarinName, setEmail, setDateOfBirth, setGender, setAddress, setPhoneNumber, setInstitution, studentCardUrl, setStudentCardUrl}) => {
 
     useEffect(() => {
         if (isOpen) {
-            document.body.style.overflow="hidden";
+          const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+          
+          document.body.style.overflow = "hidden";
+          document.body.style.paddingRight = `${scrollbarWidth}px`;
+      
+          const navbar = document.querySelector(".navbar"); // Ensure this class is in your Navbar
+          if (navbar) {
+            navbar.style.paddingRight = `${scrollbarWidth}px`;
+          }
+        } else {
+          document.body.style.overflow = "auto";
+          document.body.style.paddingRight = "0px";
+      
+          const navbar = document.querySelector(".navbar");
+          if (navbar) {
+            navbar.style.paddingRight = "0px";
+          }
         }
+      
         return () => {
-            document.body.style.overflow="auto";
-        }
-    })
+          document.body.style.overflow = "auto";
+          document.body.style.paddingRight = "0px";
+      
+          const navbar = document.querySelector(".navbar");
+          if (navbar) {
+            navbar.style.paddingRight = "0px";
+          }
+        };
+      }, [isOpen]);
 
     const [userNameText, setUserNameText] = useState(userName);
     const [mandarinNameText, setMandarinNameText] = useState(mandarinName);
@@ -20,6 +46,32 @@ export const EditAccount = ({isOpen, setIsOpen, userName, mandarinName, email, d
     const [addressText, setAddressText] = useState(address);
     const [phoneNumberText, setPhoneNumberText] = useState(phoneNumber);
     const [institutionText, setInstitutionText] = useState(institution);
+    const [studentCardUrlText, setStudentCardUrlText] = useState(studentCardUrl);
+    const [image, setImage] = useState(studentCardUrl);
+    const [imageName, setImageName] = useState('');
+
+    const dateInputRef = useRef(null);
+
+    const handleImageUpload = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setImage(URL.createObjectURL(file)); // Preview image
+            setImageName(shortenFileName(file.name)); // Shorten filename
+            // setStudentCardUrlText()      //ini nanti kalian edit untuk ambil url habis insert ke database gitulah
+        }
+    };
+
+    const shortenFileName = (name) => {
+        const maxLength = 50; // Adjust the length as needed
+        const ext = name.split(".").pop(); // Get file extension
+        const baseName = name.substring(0, name.lastIndexOf(".")); // Remove extension
+
+        if (baseName.length > maxLength) {
+            return `${baseName.substring(0, 20)}...${baseName.slice(-4)}.${ext}`;
+        }
+        return name;
+    };
+
 
     const applyChanges = () => {
         setUsername(userNameText);
@@ -30,6 +82,7 @@ export const EditAccount = ({isOpen, setIsOpen, userName, mandarinName, email, d
         setAddress(addressText);
         setPhoneNumber(phoneNumberText);
         setInstitution(institutionText);
+        setStudentCardUrl(studentCardUrlText);
 
         alert("Changes Applied!")
     }
@@ -37,30 +90,69 @@ export const EditAccount = ({isOpen, setIsOpen, userName, mandarinName, email, d
     return(
         <Modal isOpen={isOpen} onRequestClose={() => {
             setIsOpen(false);
-        }} className="items-center font-poppins flex flex-col w-[90%] md:w-[70%] bg-white mx-auto shadow-xl relative overflow-y-auto rounded-[10px] xl:max-w-[1200px] 2xl:max-w-[1800px]" overlayClassName="flex justify-center items-center inset-0 fixed z-1000 bg-[rgba(0,0,0,0.5)] overflow-hidden">
-            <p className="font-kanit text-center text-[1.3rem] mt-[1.5em]">Edit Account</p>
-            <span className="text-[2.3rem] xl:text-[2.7rem] absolute top-0 right-0 mr-[1em] md:mr-[1.5em] mt-[0.4em] cursor-pointer" onClick={() => {setIsOpen(false)}}>&times;</span>
+        }} className="font-poppins md:w-[80%] w-[90%] p-6 pb-8 bg-white mx-auto shadow-xl relative rounded-[10px]" overlayClassName="flex justify-center items-center inset-0 fixed z-1000 bg-[rgba(0,0,0,0.5)] overflow-hidden">
+            <p className="font-kanit text-center text-2xl xl:text-3xl mx-4 mb-2">Edit Account</p>
+            <span className="text-[2.3rem] xl:text-[2.7rem] text-gray-500 absolute top-0 right-0 mr-[1em] md:mr-[1.5em] mt-[0.4em] hover:text-gray-600 cursor-pointer" onClick={() => {setIsOpen(false);}}> <FontAwesomeIcon icon={faTimes}/> </span>
 
-            <div className="max-h-[90vh] flex flex-col overflow-y-auto w-[100%] items-center" style={{scrollbarWidth:"thin", scrollbarColor:"#ccc transparent"}}>
-                <div className="grid grid-cols-[auto] lg:max-h-none sm:grid-cols-[auto_1fr] gap-y-[0.5em] md:gap-y-[1.2em] gap-x-[1.5em] mt-[2em] w-fit">
+            <div className="max-h-[70vh] flex flex-col overflow-y-auto w-[100%] items-center" style={{scrollbarWidth:"thin", scrollbarColor:"#ccc transparent"}}>
+                <div className="grid grid-cols-[auto] lg:max-h-none sm:grid-cols-[auto_1fr] gap-y-[0.5em] md:gap-y-6 gap-x-[1.5em] mt-[2em] w-fit">
                     <p>Name:</p>
-                    <input type="text" className="rounded-[5px] border border-black pl-[1em] text-gray-500" value={userNameText} onChange={(e) => {setUserNameText(e.target.value)}} />
+                    <input type="text" className="bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 pr-2 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow p-2" value={userNameText} onChange={(e) => {setUserNameText(e.target.value)}} />
                     <p>Mandarin Name:</p>
-                    <input type="text" className="rounded-[5px] border border-black pl-[1em] text-gray-500" value={mandarinNameText} onChange={(e) => {setMandarinNameText(e.target.value)}} />
+                    <input type="text" className="bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 pr-2 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow p-2" value={mandarinNameText} onChange={(e) => {setMandarinNameText(e.target.value)}} />
+                    
                     <p>Date of Birth:</p>
-                    <input type="text" className="rounded-[5px] border border-black pl-[1em] text-gray-500" value={dateOfBirthText} onChange={(e) => {setDateOfBirthText(e.target.value)}} />
+                    <div className="relative w-full">
+                        <input
+                            type="date"
+                            className="bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 pr-2 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow p-2" 
+                            value={dateOfBirthText} 
+                            onChange={(e) => {setDateOfBirthText(e.target.value)}}
+                            ref={dateInputRef}
+                        />
+                        <button
+                            type="button"
+                            className="absolute right-43 cursor-pointer hover:text-gray-600 top-2 text-gray-500 w-5 h-5 calendardate"
+                            onClick={() => dateInputRef.current?.showPicker()}
+                        >
+                            <FontAwesomeIcon icon={faCalendar} />
+                        </button>
+                        </div>
+                    
+                    
                     <p>Gender:</p>
-                    <input type="text" className="rounded-[5px] border border-black pl-[1em] text-gray-500" value={genderText} onChange={(e) => {setGenderText(e.target.value)}} />
+                    <input type="text" className="bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 pr-2 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow p-2" value={genderText} onChange={(e) => {setGenderText(e.target.value)}} />
                     <p>Full Address:</p>
-                    <input type="text" className="rounded-[5px] border border-black pl-[1em] text-gray-500" value={addressText} onChange={(e) => {setAddressText(e.target.value)}} />
+                    <input type="text" className="bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 pr-2 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow p-2" value={addressText} onChange={(e) => {setAddressText(e.target.value)}} />
                     <p>Phone Number:</p>
-                    <input type="text" className="rounded-[5px] border border-black pl-[1em] text-gray-500" value={phoneNumberText} onChange={(e) => {setPhoneNumberText(e.target.value)}} />
+                    <input type="text" className="bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 pr-2 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow p-2" value={phoneNumberText} onChange={(e) => {setPhoneNumberText(e.target.value)}} />
                     <p>Email:</p>
-                    <input type="text" className="rounded-[5px] border border-black pl-[1em] text-gray-500" value={emailText} onChange={(e) => {setEmailText(e.target.value)}} />
+                    <input type="text" className="bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 pr-2 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow p-2" value={emailText} onChange={(e) => {setEmailText(e.target.value)}} />
                     <p>Institution:</p>
-                    <input type="text" className="rounded-[5px] border border-black pl-[1em] text-gray-500" value={institutionText} onChange={(e) => {setInstitutionText(e.target.value)}} />
+                    <input type="text" className="bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 pr-2 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow p-2" value={institutionText} onChange={(e) => {setInstitutionText(e.target.value)}} />
+                
+                    {/* Image Upload Section */}
+                    <p>Student Card:</p>
+                    <div className='flex flex-col gap-2'>
+                        <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" id="file-upload" />
+                        <Button className={`pl-3 pr-2 py-5 mb-2 text-sm bg-white border shadow-md border-slate-300 hover:bg-gray-100 cursor-pointer text-gray-700`}>
+                            <label htmlFor="file-upload" className="cursor-pointer flex items-center">
+                                Add Image &nbsp; <FontAwesomeIcon icon={faImage} />
+                            </label>
+                        </Button>
+                        {imageName && (
+                                <span className="text-gray-700 ml-1 md:ml-2 text-sm">{imageName}</span>
+                            )}
+                        {image && (
+                            <div className='mt-0'>
+                            <img src={image} alt="Uploaded preview" className="w-80 rounded-lg border-2 border-dashed border-gray-500" />
+                            <Button className="mt-4 hover:bg-red-50 cursor-pointer text-red-500 border border-red-300 bg-white" onClick={() => {setImage(null); setImageName("")}}>
+                                Remove
+                            </Button>
+                            </div>)}
+                    </div>
                 </div>
-                <button className='color-component-red rounded-md hover:!bg-red-700 duration-300 text-white cursor-pointer py-2 px-3 mt-[2em] mb-[2em] w-fit mx-auto' onClick={() => {applyChanges()}}>Save Changes</button>
+                <button className='bg-red-600 shadow-md mt-8 mb-8 transition ease duration-200 rounded-md hover:!bg-red-700 text-white cursor-pointer py-2 px-3 w-fit mx-auto font-poppins font-semibold text-sm' onClick={() => {applyChanges()}}>Save Changes</button>
             </div>
         </Modal>
     );

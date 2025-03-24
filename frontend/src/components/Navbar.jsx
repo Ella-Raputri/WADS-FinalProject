@@ -41,7 +41,7 @@ const Navbar = () => {
   ];
 
   return (
-    <Disclosure as="nav" className={`navbar shadow-md fixed top-0 left-0 w-full 
+    <Disclosure as="nav" className={`navbar font-poppins shadow-md fixed top-0 left-0 w-full 
       z-50 ${userRole === 'admin'? 'red-navbar' : 'bg-white'}`}>
       {({ open }) => (
         <>
@@ -91,8 +91,8 @@ const Navbar = () => {
                 {userRole ? (
                   <button
                     onClick={logOut}
-                    className={`px-4 py-2 font-medium rounded-md ${userRole === 'admin'? 'bg-white text-red-700 hover:bg-neutral-100' 
-                      : 'hover:!bg-red-700 text-white color-component-red'}
+                    className={`px-4 py-2 font-poppins transition duration-200 ease text-sm shadow-sm font-semibold cursor-pointer rounded-md ${userRole === 'admin'? 'bg-white text-red-700 hover:bg-neutral-100' 
+                      : 'hover:bg-red-700 text-white bg-red-600'}
                      `}
                   >
                     Logout
@@ -100,7 +100,7 @@ const Navbar = () => {
                 ) : (
                   <Link
                     to="/login"
-                    className="color-component-red font-medium rounded-md
+                    className="bg-red-600 text-sm transition duration-200 ease font-poppins shadow-sm font-semibold cursor-pointer rounded-md
                      hover:!bg-red-700 text-white px-4 py-2 "
                   >
                     Login
