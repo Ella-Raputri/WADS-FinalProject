@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Table from '../../components/Table';
 import Pagination from '../../components/Pagination';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"; 
-import { faFilter } from "@fortawesome/free-solid-svg-icons"; 
+import { faFilter, faPlus } from "@fortawesome/free-solid-svg-icons"; 
 import AccordionFAQ from '../../components/AccordionFAQ';
 import { useNavigate } from 'react-router-dom';
 import FilterModal from '../../components/FilterModal';
@@ -160,7 +160,7 @@ const HelpPage = () => {
       </div>
 
 
-      <div className="flex justify-between items-center md:ml-20 mt-12 p-6 pb-0">
+      <div className="flex justify-between items-center md:ml-20 mt-15 p-6 pb-0">
         <h1 className="mt-2 font-medium text-3xl font-kanit">
           Help Tickets
         </h1>
@@ -173,10 +173,10 @@ const HelpPage = () => {
             <FontAwesomeIcon icon={faFilter} />
           </button>
           <button 
-            className="font-poppins font-semibold px-8 py-2 transition duration-200 ease rounded-2xl bg-red-700 text-white hover:bg-red-800 hover:cursor-pointer"
+            className="font-poppins font-semibold px-4 py-2 transition duration-200 ease rounded-lg shadow-md bg-red-600 text-white hover:bg-red-700 hover:cursor-pointer"
             onClick={() => navigate('/usernewticket')}
           >
-            NEW TICKET
+            <FontAwesomeIcon icon={faPlus}/> &nbsp; New Ticket
           </button>
         </div>
       </div>

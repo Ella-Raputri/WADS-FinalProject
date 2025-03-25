@@ -107,14 +107,3 @@
   opacity: 0;
 }
 
-@media (max-width: 376px) {
-  .calendardate {
-    right: 140px;
-  }
-}
-
-@media (max-width: 320px) {
-  .calendardate {
-    right: 90px;
-  }
-}

@@ -191,7 +191,7 @@ const WelcomePage = () => {
         />
 
         <motion.h1 
-          className="text-3xl lg:text-4xl font-bold font-kanit mb-8 lg:mb-20"
+          className="text-3xl lg:text-4xl font-bold font-kanit mb-8 lg:mb-15"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={animateCompetition ? { opacity: 1, scale: 1 } :  { opacity: 0, scale: 0.8 }}
           transition={{ duration: 1.2, delay: 0.7, ease: "easeOut" }}

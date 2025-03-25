@@ -1,33 +1,16 @@
 import React from 'react';
-import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faImage } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
+import UploadImage from '@/components/UploadImage';
 
 const NewTicket = () => {
     const [message, setMessage] = useState("");
     const [image, setImage] = useState(null);
     const [imageName, setImageName] = useState("");
 
-    const handleImageUpload = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setImage(URL.createObjectURL(file)); // Preview image
-            setImageName(shortenFileName(file.name)); // Shorten filename
-        }
-    };
-
-    const shortenFileName = (name) => {
-        const maxLength = 50; // Adjust the length as needed
-        const ext = name.split(".").pop(); // Get file extension
-        const baseName = name.substring(0, name.lastIndexOf(".")); // Remove extension
-
-        if (baseName.length > maxLength) {
-            return `${baseName.substring(0, 20)}...${baseName.slice(-4)}.${ext}`;
-        }
-        return name;
-    };
+    
 
     const navigate = useNavigate();
 
@@ -79,25 +62,12 @@ const NewTicket = () => {
 
             {/* Image Upload */}
             <div className='ml-16 mt-10'>
-                <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" id="file-upload" />
-                <label htmlFor="file-upload" className="cursor-pointer hover:bg-gray-300 bg-gray-200 px-4 py-2 rounded-lg inline-block text-gray-700">
-                    Upload Image
-                </label>
-                {imageName && (
-                        <span className="text-gray-700 ml-1 md:ml-2 text-sm">{imageName}</span>
-                    )}
-                {image && (
-                    <div className='mt-4'>
-                    <img src={image} alt="Uploaded preview" className="mt-5 w-80 rounded-lg border-2 border-dashed border-gray-500" />
-                    <Button className="mt-4 hover:bg-red-50 cursor-pointer text-red-500 border border-red-300 bg-white" onClick={() => {setImage(null); setImageName("")}}>
-                        Remove
-                    </Button>
-                    </div>)}
-                
+                <UploadImage image={image} imageName={imageName} setImage={setImage} setImageName={setImageName} />
             </div>
 
             {/* Submit Button */}
-            <button className="cursor-pointer hover:bg-red-800 mb-30 ml-16 mt-8 text-lg p-5 font-semibold bg-red-700 text-white py-2 rounded-full">CREATE TICKET</button>
+            <button className="cursor-pointer hover:bg-red-700 mb-30 ml-16 mt-8 text-md p-5 font-semibold bg-red-600 text-white py-2 rounded-md shadow-md ease transition duration-200">
+                Create Ticket</button>
         </form>
       
 

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import Modal from "react-modal";
-import { faCalendar } from "@fortawesome/free-solid-svg-icons";
+import { faCalendar, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 Modal.setAppElement("#root");
@@ -117,30 +117,30 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
       isOpen={isOpen}
       onRequestClose={onClose}
       className="w-[80%] md:w-[600px] h-auto bg-white mx-auto shadow-xl rounded-lg p-6 overflow-y-auto"
-      overlayClassName="fixed inset-0 flex justify-center items-center bg-[rgba(0,0,0,0.5)]"
+      overlayClassName="fixed inset-0 flex z-1000 justify-center items-center bg-[rgba(0,0,0,0.5)]"
     >
       {/* Header */}
       <div className="flex justify-between items-center font-kanit">
-        <h2 className="text-2xl">Filter</h2>
-        <button onClick={onClose} className="text-xl cursor-pointer">✖</button>
+        <h2 className="text-2xl font-medium">Filter</h2>
+        <button onClick={onClose} className="text-3xl cursor-pointer hover:text-gray-600 text-gray-500"> <FontAwesomeIcon icon={faTimes}/></button>
       </div>
 
       {/* Created At */}
       <div className="mt-4">
-        <label className="block text-sm mb-1 font-poppins font-medium">CREATED AT:</label>
+        <label className="block text-md mb-2 font-poppins font-medium">CREATED AT:</label>
         <div className="md:flex gap-2">
           <div className="relative w-full">
             <input
               type="date"
               name="createdStart"
-              className="border p-2 rounded w-full pr-10"
+              className="p-2 font-poppins w-full pr-10 bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
               value={filters.createdStart}
               onChange={handleFilterChange}
               ref={createdStartRef}
             />
             <button
               type="button"
-              className="absolute right-2 top-2 text-gray-500 w-5 h-5"
+              className="absolute cursor-pointer right-2 top-1 text-gray-500 w-5 h-5"
               onClick={() => createdStartRef.current?.showPicker()}
             >
               <FontAwesomeIcon icon={faCalendar} />
@@ -151,14 +151,14 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
             <input
               type="date"
               name="createdEnd"
-              className="border p-2 rounded w-full pr-10"
+              className="bg-white font-poppins placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 pr-10 py-2 transition duration-300 ease focus:outline-none w-full focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
               value={filters.createdEnd}
               onChange={handleFilterChange}
               ref={createdEndRef}
             />
             <button
               type="button"
-              className="absolute right-2 top-2 text-gray-500 w-5 h-5"
+              className="absolute cursor-pointer right-2 top-1 text-gray-500 w-5 h-5"
               onClick={() => createdEndRef.current?.showPicker()}
             >
               <FontAwesomeIcon icon={faCalendar} />
@@ -168,21 +168,21 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
       </div>
 
       {/* Updated At */}
-      <div className="mt-4">
-        <label className="block text-sm mb-1 font-poppins font-medium">UPDATED AT:</label>
+      <div className="mt-6">
+        <label className="block text-md mb-2 font-poppins font-medium">UPDATED AT:</label>
         <div className="md:flex gap-2">
           <div className="relative w-full">
             <input
               type="date"
               name="updatedStart"
-              className="border p-2 rounded w-full pr-10"
+              className="w-full font-poppins bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 pr-10 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
               value={filters.updatedStart}
               onChange={handleFilterChange}
               ref={updatedStartRef}
             />
             <button
               type="button"
-              className="absolute right-2 top-2 text-gray-500 w-5 h-5"
+              className="absolute cursor-pointer right-2 top-1 text-gray-500 w-5 h-5"
               onClick={() => updatedStartRef.current?.showPicker()}
             >
               <FontAwesomeIcon icon={faCalendar} />
@@ -193,14 +193,14 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
             <input
               type="date"
               name="updatedEnd"
-              className="border p-2 rounded w-full pr-10"
+              className="w-full font-poppins bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 pr-10 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
               value={filters.updatedEnd}
               onChange={handleFilterChange}
               ref={updatedEndRef}
             />
             <button
               type="button"
-              className="absolute right-2 top-2 text-gray-500 w-5 h-5"
+              className="absolute cursor-pointer right-2 top-1 text-gray-500 w-5 h-5"
               onClick={() => updatedEndRef.current?.showPicker()}
             >
               <FontAwesomeIcon icon={faCalendar} />
@@ -210,11 +210,11 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
       </div>
 
       {/* Priority Dropdown */}
-      <div className="mt-4">
-        <label className="block text-sm font-poppins mb-1 font-medium">PRIORITY:</label>
+      <div className="mt-6">
+        <label className="block text-md font-poppins mb-2 font-medium">PRIORITY:</label>
         <select
           name="priority"
-          className="border p-2 rounded w-full"
+          className="w-full font-poppins cursor-pointer bg-white  text-slate-700 text-md border border-slate-300 rounded-md pl-3 pr-10 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
           value={filters.priority}
           onChange={handleFilterChange}
         >
@@ -227,11 +227,11 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
       </div>
 
       {/* Status Dropdown */}
-      <div className="mt-4">
-        <label className="block text-sm font-poppins mb-1 font-medium">STATUS:</label>
+      <div className="mt-6">
+        <label className="block text-md font-poppins mb-2 font-medium">STATUS:</label>
         <select
           name="status"
-          className="border p-2 rounded w-full"
+          className="w-full cursor-pointer bg-white placeholder:text-slate-400 text-slate-700 text-md border border-slate-300 rounded-md pl-3 pr-10 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
           value={filters.status}
           onChange={handleFilterChange}
         >
@@ -244,15 +244,15 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
       </div>
 
       {/* Buttons */}
-      <div className="mt-6 flex justify-end gap-2">
+      <div className="mt-6 flex justify-end text-sm font-poppins font-semibold gap-5">
         <button
-          className="bg-gray-400 hover:bg-gray-500 cursor-pointer text-white px-4 py-2 rounded"
+          className="bg-gray-400 hover:bg-gray-500 shadow-md cursor-pointer text-white px-4 py-2 rounded"
           onClick={handleReset}
         >
           Reset
         </button>
         <button
-          className="bg-red-600 hover:bg-red-700 cursor-pointer text-white px-4 py-2 rounded"
+          className="bg-red-600 hover:bg-red-700 shadow-md cursor-pointer text-white px-4 py-2 rounded"
           onClick={handleApply}
         >
           Apply

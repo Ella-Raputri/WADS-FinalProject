@@ -47,7 +47,7 @@ export const CompetitionPopUp = ({competition, isRegistered, isOpen, onClose}) =
               <div className="top-0 sticky pt-1 bg-white">
                   <p className="font-kanit font-medium text-2xl xl:text-3xl ml-11 w-[65%] md:w-auto">{competition.title}</p>
                   <p className="ml-11 text-md xl:text-lg mt-3">Price: {competition.price} / Person</p>
-                  <span className="text-[2.3rem] xl:text-[2.7rem] text-gray-500 absolute top-0 right-0 mr-[1em] md:mr-[1.5em] mt-[0.4em] hover:text-gray-600 cursor-pointer" onClick={onClose}> <FontAwesomeIcon icon={faTimes}/> </span>
+                  <span className="text-[2.3rem] xl:text-[2.7rem] text-gray-500 absolute top-0 right-0 mr-[1em] md:mr-[1.5em]  hover:text-gray-600 cursor-pointer" onClick={onClose}> <FontAwesomeIcon icon={faTimes}/> </span>
                   <div className="w-[80%] h-[0.05em] bg-gray-400 ml-[3.1em] mt-[0.5em]"></div>
               </div>
               <p className="ml-11 text-md xl:text-lg mt-[1.2em]"><span className="font-semibold">Venue:</span> {competition.venue}</p>
@@ -60,7 +60,7 @@ export const CompetitionPopUp = ({competition, isRegistered, isOpen, onClose}) =
                       <li className={`leading-7 ml-5 w-[80%] text-md xl:text-lg mt-[0.6em]`}>{line}</li>
                   ))}
               </ul>
-              <button className={`w-30 h-9 mt-8 ${isRegistered ? "bg-[#319340]" : "bg-red-600 cursor-pointer hover:bg-red-700"} font-poppins shadow-md font-semibold rounded-md text-white text-center block mx-auto mb-2`}>{isRegistered ? "Registered" : "Register"}</button>
+              <button className={`w-30 h-9 mt-8 ${isRegistered ? "bg-[#319340]" : "bg-red-600 cursor-pointer hover:bg-red-700 shadow-md"} font-poppins font-semibold rounded-md text-white text-center block mx-auto mb-2`}>{isRegistered ? "Registered" : "Register"}</button>
             </div>
         </Modal>
     );

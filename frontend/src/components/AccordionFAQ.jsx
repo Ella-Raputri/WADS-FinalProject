@@ -1,6 +1,6 @@
 import React from "react";
-import {Accordion, AccordionHeader,AccordionBody,} from "@material-tailwind/react";
- 
+import { Accordion, AccordionHeader, AccordionBody } from "@material-tailwind/react";
+
 function Icon({ id, open }) {
   return (
     <svg
@@ -15,58 +15,47 @@ function Icon({ id, open }) {
     </svg>
   );
 }
- 
+
+function FAQItem({ id, open, handleOpen, question, answer }) {
+  return (
+    <Accordion open={open === id} icon={<Icon id={id} open={open} />} className="mb-2">
+      <AccordionHeader 
+        onClick={() => handleOpen(id)} 
+        className="font-medium text-lg text-white bg-red-600 hover:bg-red-700 shadow-md font-poppins transition duration-300 ease rounded-xl p-3 hover:cursor-pointer"
+      >
+        {question}
+      </AccordionHeader>
+      <AccordionBody className="p-3 font-normal break-words text-md color-text-brown bg-red-200 rounded-xl">
+        {answer}
+      </AccordionBody>
+    </Accordion>
+  );
+}
+
 function AccordionFAQ() {
   const [open, setOpen] = React.useState(0);
- 
   const handleOpen = (value) => setOpen(open === value ? 0 : value);
- 
+
+  const faqData = [
+    { id: 1, question: "What is Material Tailwind?", answer: "Material Tailwind is a component library for Tailwind CSS." },
+    { id: 2, question: "How does it work?", answer: "It provides ready-to-use components styled with Tailwind CSS." },
+    { id: 3, question: "Is it free to use?", answer: "Yes, Material Tailwind is open-source and free to use." },
+    { id: 4, question: "Can I customize the styles?", answer: "Yes, you can extend or modify styles using Tailwind classes." },
+    { id: 5, question: "Where can I learn more?", answer: "Visit the official Material Tailwind documentation." }
+  ];
+
   return (
     <>
-      <Accordion open={open === 1} icon={<Icon id={1} open={open} />} className="mb-2">
-        <AccordionHeader onClick={() => handleOpen(1)} className="font-medium text-lg text-white color-component-red rounded-xl p-3 hover:cursor-pointer">What is Material Tailwind?</AccordionHeader>
-        <AccordionBody className='p-3 font-normal color-text-brown bg-red-200 rounded-xl'>
-          We&apos;re not always in the position that we want to be at. We&apos;re constantly
-          growing. We&apos;re constantly making mistakes. We&apos;re constantly trying to express
-          ourselves and actualize our dreams.
-        </AccordionBody>
-      </Accordion>
-
-      <Accordion open={open === 2} icon={<Icon id={2} open={open} />} className="mb-2">
-        <AccordionHeader onClick={() => handleOpen(2)} className="font-medium text-lg text-white color-component-red rounded-xl p-3 hover:cursor-pointer">What is Material Tailwind?</AccordionHeader>
-        <AccordionBody className='p-3 font-normal color-text-brown bg-red-200 rounded-xl'>
-          We&apos;re not always in the position that we want to be at. We&apos;re constantly
-          growing. We&apos;re constantly making mistakes. We&apos;re constantly trying to express
-          ourselves and actualize our dreams.
-        </AccordionBody>
-      </Accordion>
-
-      <Accordion open={open === 3} icon={<Icon id={3} open={open} />} className="mb-2">
-        <AccordionHeader onClick={() => handleOpen(3)} className="font-medium text-lg text-white color-component-red rounded-xl p-3 hover:cursor-pointer">What is Material Tailwind?</AccordionHeader>
-        <AccordionBody className='p-3 font-normal color-text-brown bg-red-200 rounded-xl'>
-          We&apos;re not always in the position that we want to be at. We&apos;re constantly
-          growing. We&apos;re constantly making mistakes. We&apos;re constantly trying to express
-          ourselves and actualize our dreams.
-        </AccordionBody>
-      </Accordion>
-    
-      <Accordion open={open === 4} icon={<Icon id={4} open={open} />} className="mb-2">
-        <AccordionHeader onClick={() => handleOpen(4)} className="font-medium text-lg text-white color-component-red rounded-xl p-3 hover:cursor-pointer">What is Material Tailwind?</AccordionHeader>
-        <AccordionBody className='p-3 font-normal color-text-brown bg-red-200 rounded-xl'>
-          We&apos;re not always in the position that we want to be at. We&apos;re constantly
-          growing. We&apos;re constantly making mistakes. We&apos;re constantly trying to express
-          ourselves and actualize our dreams.
-        </AccordionBody>
-      </Accordion>
-
-      <Accordion open={open === 5} icon={<Icon id={5} open={open} />} className="mb-2">
-        <AccordionHeader onClick={() => handleOpen(5)} className="font-medium text-lg text-white color-component-red rounded-xl p-3 hover:cursor-pointer">What is Material Tailwind?</AccordionHeader>
-        <AccordionBody className='p-3 font-normal color-text-brown bg-red-200 rounded-xl'>
-          We&apos;re not always in the position that we want to be at. We&apos;re constantly
-          growing. We&apos;re constantly making mistakes. We&apos;re constantly trying to express
-          ourselves and actualize our dreams.
-        </AccordionBody>
-      </Accordion>
+      {faqData.map((item) => (
+        <FAQItem 
+          key={item.id} 
+          id={item.id} 
+          open={open} 
+          handleOpen={handleOpen} 
+          question={item.question} 
+          answer={item.answer} 
+        />
+      ))}
     </>
   );
 }

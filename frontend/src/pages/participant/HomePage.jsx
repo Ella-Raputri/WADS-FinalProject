@@ -131,8 +131,8 @@ endDate: new Date(2026, 0, 15)
 
       
       <div className='bg-[#F4F4F4] w-[100%] mt-[2.5em] flex justify-center items-center relative'>
-        <div className='bg-[#FFFFFF] w-[90%] md:w-[70%] shadow-xl rounded-[20px] my-[3em] xl:max-w-[1200px] 2xl:max-w-[1800px]'>
-          <p className='font-kanit text-[1.4rem] font-medium sm:ml-[4em] justify-self-center pt-[2em] pb-[0.5em] sm:justify-self-start'>Schedule</p>
+        <div className='bg-[#FFFFFF] w-[90%] md:w-[70%] shadow-xl rounded-[20px] py-6 my-[3em] xl:max-w-[1200px] 2xl:max-w-[1800px]'>
+          <p className='font-kanit text-3xl font-medium sm:ml-25 justify-self-center mt-2 md:mt-6 pb-[0.5em] sm:justify-self-start'>Schedule</p>
           <div className={`h-[70vh] min-h-[200px] max-h-[300px] xl:max-h-[500px] overflow-auto sm:mx-[2em] mb-5`} style={{scrollbarWidth:"thin", scrollbarColor:"#ccc transparent"}}>
             {sortedCompetitions.length > 0 ? sortedCompetitions.map((competition, index) => (
               <SecheduleList competition={competition} key={index} />
