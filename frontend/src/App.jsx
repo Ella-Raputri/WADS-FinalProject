@@ -18,6 +18,7 @@ import ScrollToTop from './components/ScrolltoTop.jsx';
 import ParticipantDetails from './pages/admin/ParticipantDetails.jsx';
 import TicketDetails from './pages/participant/TicketDetails.jsx';
 import AdminTicketDetails from './pages/admin/AdminTicketDetails';
+import Loading from './components/Loading';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -28,7 +29,7 @@ function App() {
 
   return (
     <Router>
-      {isLoading ? (<h1 className='font-black mt-20 mx-auto'>Loading...</h1>) : (<MainLayout/>)}
+      {isLoading ? (<Loading/>) : (<MainLayout/>)}
     </Router>
   );
 }
@@ -59,7 +60,7 @@ function MainLayout() {
             <Route path='/adminparticipantdetails' element={<ParticipantDetails />} />
             <Route path='/adminticketdetails' element={<AdminTicketDetails />} />
 
-            <Route path='/*' element={<NotFound />} />
+            <Route path='/*' element={<Loading />} />
           </Routes>
         </main>
         <Footer />

@@ -118,3 +118,21 @@
     right: 90px;
   }
 }
+
+@keyframes blink {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.dot1 {
+  animation: blink 1.5s infinite;
+}
+
+.dot2 {
+  animation: blink 1.5s infinite 0.5s;
+}
+
+.dot3 {
+  animation: blink 1.5s infinite 1s;
+}
