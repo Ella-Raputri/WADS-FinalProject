@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useLocation, useNavigate } from 'react-router-dom';
+import Loading from '@/components/Loading';
 
 const ParticipantDetails = () => {
     const navigate = useNavigate();
@@ -28,7 +29,7 @@ const ParticipantDetails = () => {
     };
 
     if (!data) {
-        return <p className="text-center text-lg text-gray-600">Loading...</p>;
+        return <Loading/>;
     }
 
     return (

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import './App.css'
-import { BrowserRouter as Router, Route, Routes, useNavigate, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useNavigate, useLocation, matchRoutes } from 'react-router-dom';
 import WelcomePage from './pages/WelcomePage.jsx'
 import NotFound from './pages/NotFound.jsx'
 import LoginRegisterPage from './pages/LoginRegisterPage.jsx'
@@ -18,6 +18,7 @@ import ScrollToTop from './components/ScrolltoTop.jsx';
 import ParticipantDetails from './pages/admin/ParticipantDetails.jsx';
 import TicketDetails from './pages/participant/TicketDetails.jsx';
 import AdminTicketDetails from './pages/admin/AdminTicketDetails';
+import Loading from './components/Loading';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -28,14 +29,37 @@ function App() {
 
   return (
     <Router>
-      {isLoading ? (<h1 className='font-black mt-20 mx-auto'>Loading...</h1>) : (<MainLayout/>)}
+      {isLoading ? (<Loading/>) : (<MainLayout/>)}
     </Router>
   );
 }
 
+
 function MainLayout() {
+  const routes = [
+    { path: "/" },
+    { path: "/login" },
+    { path: "/register" },
+    { path: "/userhome" },
+    { path: "/usercomp" },
+    { path: "/userhelp" },
+    { path: "/usernewticket" },
+    { path: "/userticketdetails" },
+    { path: "/admindashboard" },
+    { path: "/admincomp" },
+    { path: "/adminticket" },
+    { path: "/adminparticipantdetails" },
+    { path: "/adminticketdetails" },
+  ];
+  
   const location = useLocation();
-  const bgColor = location.pathname.includes("admin") ? "#f7f7f7" : "white";
+  const matchedRoute = matchRoutes(routes, location);
+
+const bgColor = matchedRoute
+  ? location.pathname.includes("admin")
+    ? "#f7f7f7"
+    : "white"
+  : "#fcf1d4";
 
   return (
     <div className={`flex flex-col min-h-screen`} style={{backgroundColor:bgColor}}>
