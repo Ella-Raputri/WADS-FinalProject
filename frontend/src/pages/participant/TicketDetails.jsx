@@ -231,6 +231,7 @@ const TicketDetails = () => {
                 setImage={setImageUploaded} 
                 imageName={imageName} 
                 setImageName={setImageName} 
+                inputId={'image-upload'}
               />
               
               <Button 

@@ -3,12 +3,14 @@ import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Loading from '@/components/Loading';
+import { Card, CardContent, CardTitle } from '@/components/ui/card';
 
 const ParticipantDetails = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [data, setData] = useState(null);
     const [updatedStatus, setUpdatedStatus] = useState("");
+    const [message, setMessage] =useState('');
 
     useEffect(() => {
         if (location.state?.data) {
@@ -24,7 +26,7 @@ const ParticipantDetails = () => {
         setUpdatedStatus(up);
         setData(prevData => ({
             ...prevData,
-            status: updatedStatus
+            status: up
         }));
     };
 
@@ -65,25 +67,39 @@ const ParticipantDetails = () => {
                 <p className='mb-2 text-[#DD3833]'><b>Uploaded Twibbon Proof:</b></p>
                 <img src={data.upload_twibbon_proof} alt="Twibbon Proof" className='mb-5 w-80 rounded-lg' />
             </div>
-
-            <div className='flex flex-col text-lg justify-center ml-15 mt-5 mb-15 text-center text-white font-poppins font-semibold'>
+            
+            <div className='flex flex-col text-lg justify-center ml-15 mt-5 mb-15 '>
                 {data.status === 'Accepted' && (
-                    <span className="px-2 py-1 text-white bg-lime-500 rounded-full">Accepted</span>
+                    <span className="px-2 py-1 text-white bg-lime-500 rounded-full text-center font-poppins font-semibold">Accepted</span>
                 )}
                 {data.status === 'Rejected' && (
-                    <span className="px-2 py-1 text-white bg-red-400 rounded-full">Rejected</span>
+                    <span className="px-2 py-1 text-white bg-red-400 rounded-full text-center font-poppins font-semibold">Rejected</span>
                 )}
                 {data.status === 'Pending' && (
-                    <div className='flex justify-center gap-15'>
-                        <button onClick={() => handleButtons('accept')} className="px-3 py-2 shadow-md text-white bg-lime-500 hover:bg-lime-600 rounded-md font-semibold cursor-pointer">
-                            Accept
-                        </button>
-                        <button onClick={() => handleButtons('reject')} className="px-3 py-2 shadow-md text-white bg-red-400 hover:bg-red-500 rounded-md font-semibold  cursor-pointer">
-                            Reject
-                        </button>
-                    </div>
+                    <Card className=''>
+                    <CardContent>
+                        <p className='font-kanit font-medium text-2xl mb-4'>Admin Comments</p>
+                        <textarea
+                            placeholder="Type your message here..."
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                            className="w-full mb-5 min-h-56 max-h-56 text-md bg-white placeholder:text-slate-400 text-slate-700 border border-slate-300 rounded-md pl-3 pr-2 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
+                            ></textarea>
+                            
+                        <div className='flex justify-center gap-15'>
+                            <button onClick={() => handleButtons('accept')} className="text-center px-3 py-2 shadow-md text-white font-poppins bg-lime-500 hover:bg-lime-600 rounded-md font-semibold cursor-pointer">
+                                Accept
+                            </button>
+                            <button onClick={() => handleButtons('reject')} className="text-center px-3 py-2 shadow-md text-white font-poppins bg-red-400 hover:bg-red-500 rounded-md font-semibold  cursor-pointer">
+                                Reject
+                            </button>
+                        </div>
+                    </CardContent>
+                    </Card>
                 )}
             </div>
+                
+            
         </div>
     );
 };

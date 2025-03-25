@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faImage } from '@fortawesome/free-solid-svg-icons';
 import { Button } from './ui/button';
 
-function UploadImage({image, setImage, imageName, setImageName}) {
+function UploadImage({image, setImage, imageName, setImageName, inputId}) {
 
     const handleImageUpload = (event) => {
         const file = event.target.files[0]; // Get the selected file
@@ -72,11 +72,13 @@ function UploadImage({image, setImage, imageName, setImageName}) {
 
   return (
     <div className='w-full'>
-        <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" id="file-upload" />
+        <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" id={inputId} />
             <Button type='button' className={`pl-3 pr-2 py-5 mb-2 text-sm bg-white border shadow-md border-slate-300 hover:bg-gray-100 cursor-pointer text-gray-700 ${image ? "text-green-500" : "text-slate-500"}`}>
-                <label htmlFor="file-upload" className="cursor-pointer flex items-center">
-                    Upload Image &nbsp; <FontAwesomeIcon icon={faImage} />
-                </label>
+            <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" id={inputId} />
+            <label htmlFor={inputId} className="cursor-pointer flex items-center">
+                Upload Image &nbsp; <FontAwesomeIcon icon={faImage} />
+            </label>
+
             </Button>
             {imageName && (
                     <span className="text-gray-700 ml-1 break-all font-poppins md:ml-2 text-sm">{imageName}</span>

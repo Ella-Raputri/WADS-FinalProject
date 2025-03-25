@@ -1,22 +1,25 @@
 import Modal from "react-modal";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import UploadTwibbonPayment from "./UploadTwibbonPayment";
 
-export const CompetitionPopUp = ({competition, isRegistered, isOpen, onClose}) => {
+
+export const CompetitionPopUp = ({ competition, isRegistered, isOpen, onClose }) => {
     let requirement_arr = competition.rules.split("\n");
 
+    const [uploadOpen, setUploadOpen] = useState(false);  // State for upload pop-up
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (isOpen) {
+        if (isOpen || uploadOpen) {
           const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
           
           document.body.style.overflow = "hidden";
           document.body.style.paddingRight = `${scrollbarWidth}px`;
       
-          const navbar = document.querySelector(".navbar"); // Ensure this class is in your Navbar
+          const navbar = document.querySelector(".navbar");
           if (navbar) {
             navbar.style.paddingRight = `${scrollbarWidth}px`;
           }
@@ -39,10 +42,18 @@ export const CompetitionPopUp = ({competition, isRegistered, isOpen, onClose}) =
             navbar.style.paddingRight = "0px";
           }
         };
-      }, [isOpen]);
+      }, [isOpen, uploadOpen]);
 
     return (
-        <Modal competition={competition} isOpen={isOpen} onRequestClose={onClose} className="font-poppins md:w-[80%] w-[90%] py-6 pb-8 bg-white mx-auto shadow-xl relative rounded-[10px]" overlayClassName="flex justify-center items-center inset-0 fixed z-1000 bg-[rgba(0,0,0,0.5)] overflow-hidden">
+        <>
+        {/* Main Competition Modal */}
+        <Modal 
+            competition={competition} 
+            isOpen={isOpen} 
+            onRequestClose={onClose} 
+            className="font-poppins md:w-[80%] w-[90%] py-6 pb-8 bg-white mx-auto shadow-xl relative rounded-[10px]" 
+            overlayClassName="flex justify-center items-center inset-0 fixed z-1000 bg-[rgba(0,0,0,0.5)] overflow-hidden"
+        >
             <div className="h-[80vh] md:h-[70vh] overflow-y-auto" style={{scrollbarWidth:"thin", scrollbarColor:"#ccc transparent"}}>
               <div className="top-0 sticky pt-1 bg-white">
                   <p className="font-kanit font-medium text-2xl xl:text-3xl ml-11 w-[65%] md:w-auto">{competition.title}</p>
@@ -56,12 +67,23 @@ export const CompetitionPopUp = ({competition, isRegistered, isOpen, onClose}) =
               <p className="ml-11 text-md xl:text-lg mt-[0.7em]"><span className="font-semibold">Prizepool:</span> {competition.prizepool}</p>
               <p className="ml-11 text-md xl:text-lg font-semibold mt-[1.4em]">Requirements:</p>
               <ul className="list-disc ml-11">
-                  {requirement_arr.map((line) => (
-                      <li className={`leading-7 ml-5 w-[80%] text-md xl:text-lg mt-[0.6em]`}>{line}</li>
+                  {requirement_arr.map((line, i) => (
+                      <li key={i} className={`leading-7 ml-5 w-[80%] text-md xl:text-lg mt-[0.6em]`}>{line}</li>
                   ))}
               </ul>
-              <button className={`w-30 h-9 mt-8 ${isRegistered ? "bg-[#319340]" : "bg-red-600 cursor-pointer hover:bg-red-700 shadow-md"} font-poppins font-semibold rounded-md text-white text-center block mx-auto mb-2`}>{isRegistered ? "Registered" : "Register"}</button>
+              <button 
+                onClick={() => setUploadOpen(true)} 
+                className={`w-30 h-9 mt-8 ${isRegistered ? "bg-[#319340]" : "bg-red-600 cursor-pointer hover:bg-red-700 shadow-md"} font-poppins font-semibold rounded-md text-white text-center block mx-auto mb-2`}
+              >
+                {isRegistered ? "Registered" : "Register"}
+              </button>
             </div>
         </Modal>
+
+        {/* Upload Modal */}
+        <UploadTwibbonPayment isOpen={uploadOpen} onClose={() => setUploadOpen(false)} onCloseParent={onClose}/>
+        </>
     );
 }
+
+

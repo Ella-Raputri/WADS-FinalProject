@@ -116,7 +116,7 @@ export const EditAccount = ({isOpen, setIsOpen, userName, mandarinName, email, d
                     {/* Image Upload Section */}
                     <p>Student Card:</p>
                     <div className='flex flex-col gap-2'>
-                        <UploadImage image={image} imageName={imageName} setImage={setImage} setImageName={setImageName} />
+                        <UploadImage inputId={'img-upload'} image={image} imageName={imageName} setImage={setImage} setImageName={setImageName} />
                     </div>
                 </div>
                 <button className='bg-red-600 shadow-md mt-8 mb-8 transition ease duration-200 rounded-md hover:!bg-red-700 text-white cursor-pointer py-2 px-3 w-fit mx-auto font-poppins font-semibold text-sm' onClick={() => {applyChanges()}}>Save Changes</button>

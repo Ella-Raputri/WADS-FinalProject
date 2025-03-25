@@ -171,6 +171,7 @@ const AdminTicketDetails = () => {
                 setImage={setImageUploaded} 
                 imageName={imageName} 
                 setImageName={setImageName} 
+                inputId={'image-upload'}
               />
               
               <Button 

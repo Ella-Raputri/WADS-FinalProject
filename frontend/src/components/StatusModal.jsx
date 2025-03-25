@@ -1,12 +1,21 @@
 import Modal from "react-modal";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import UploadTwibbonPayment from "./UploadTwibbonPayment";
+
 
 
 export const StatusModal = ({competition, isOpen, onClose}) => {
+    const [uploadOpen, setUploadOpen] = useState(false);
+
+    //TODO: NANTI UBAH UTK IKUT SESUAI DATABASE. UTK SEMENTARA INI, AKU PAKE FALSE
+    const [isRejected, setIsRejected] = useState(false); 
+
+
+
     useEffect(() => {
-        if (isOpen) {
+        if (isOpen || uploadOpen) {
           const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
           
           document.body.style.overflow = "hidden";
@@ -35,9 +44,10 @@ export const StatusModal = ({competition, isOpen, onClose}) => {
             navbar.style.paddingRight = "0px";
           }
         };
-      }, [isOpen]);
+      }, [isOpen, uploadOpen]);
 
     return(
+      <>
         <Modal competition={competition} isOpen={isOpen} onRequestClose={onClose} className="font-poppins md:w-[80%] w-[90%] py-6 pb-8 bg-white mx-auto shadow-xl relative rounded-[10px]" overlayClassName="flex justify-center items-center inset-0 fixed z-1000 bg-[rgba(0,0,0,0.5)] overflow-hidden">
             <div className="h-[80vh] md:h-[70vh] overflow-y-auto" style={{scrollbarWidth:"thin", scrollbarColor:"#ccc transparent"}}>
               <div className="top-0 sticky pt-1 bg-white">
@@ -59,8 +69,23 @@ export const StatusModal = ({competition, isOpen, onClose}) => {
 
                   <p className="text-md font-semibold xl:text-lg sm:pt-0">Admin Comment:</p>
                   <p className="text-md text-justify leading-7 xl:text-md w-[80%] break-words">No Guawdawdawdawdawdawd aw dwa dwa dawd aw daw daw d awd awd awd awd awd aw dwa daw daw d awd awd aw daw daw d awd awd aw dd No Guawdawdawdawdawdawd aw dwa dwa dawd aw daw daw d awd awd awd awd awd aw dwa daw daw d awd awd aw daw daw d awd awd aw ddNo Guawdawdawdawdawdawd aw dwa dwa dawd aw daw daw d awd awd awd awd awd aw dwa daw daw d awd awd aw daw daw d awd awd aw ddNo Guawdawdawdawdawdawd aw dwa dwa dawd aw daw daw d awd awd awd awd awd aw dwa daw daw d awd awd aw daw daw d awd awd aw ddNo Guawdawdawdawdawdawd aw dwa dwa dawd aw daw daw d awd awd awd awd awd aw dwa daw daw d awd awd aw daw daw d awd awd aw ddNo Guawdawdawdawdawdawd aw dwa dwa dawd aw daw daw d awd awd awd awd awd aw dwa daw daw d awd awd aw daw daw d awd awd aw ddNo Guawdawdawdawdawdawd aw dwa dwa dawd aw daw daw d awd awd awd awd awd aw dwa daw daw d awd awd aw daw daw d awd awd aw ddNo Guawdawdawdawdawdawd aw dwa dwa dawd aw daw daw d awd awd awd awd awd aw dwa daw daw d awd awd aw daw daw d awd awd aw ddNo Guawdawdawdawdawdawd aw dwa dwa dawd aw daw daw d awd awd awd awd awd aw dwa daw daw d awd awd aw daw daw d awd awd aw dd</p>
+              
               </div>
+
+              {
+                !isRejected? (<button 
+                  onClick={() => setUploadOpen(true)} 
+                  className={`w-30 h-9 mt-8 bg-red-600 cursor-pointer hover:bg-red-700 shadow-md font-poppins font-semibold rounded-md text-white text-center block mx-auto mb-2`}
+                >
+                  Resubmit
+                </button>) : (<div></div>)
+              }
+              
             </div>
         </Modal>
+
+        {/* Upload Modal */}
+        <UploadTwibbonPayment isOpen={uploadOpen} onClose={() => setUploadOpen(false)} onCloseParent={onClose}/>
+        </>
     );
 }
