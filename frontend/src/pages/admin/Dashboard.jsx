@@ -32,12 +32,16 @@ const Dashboard = () => {
   return (
     <>
 
-      <div className="flex items-center justify-between px-6 py-4 lg:ml-15 ml-12 mt-25 mb-10 mr-15">
-        <h1 className="text-4xl lg:text-5xl font-kanit font-medium flex-grow">Hello, user!</h1>
-        <button className="px-4 py-2 mt-10 color-component-red text-white rounded-full shadow-md cursor-pointer">
-          <MdOutlineFileDownload className="text-2xl lg:text-3xl"/>
+      <div className="flex flex-col sm:flex-row items-center justify-between px-6 py-4 lg:ml-15 ml-12 mt-25 mb-10 mr-15 space-y-4 sm:space-y-0">
+        <h1 className="text-3xl lg:text-5xl font-kanit font-medium flex-grow text-center sm:text-left">
+          Hello, user!
+        </h1>
+        <button className="md:px-4 flex justify-center py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl shadow-md cursor-pointer w-full sm:w-auto">
+           <span className="sm:hidden font-poppins text-md font-semibold">Download &nbsp;</span> 
+           <MdOutlineFileDownload className="text-2xl lg:text-3xl"/>
         </button>
       </div>
+
 
 
       <div className="lg:hidden ml-12 mr-12 mb-10 p-6 bg-white shadow rounded-lg flex justify-center items-center overflow-x-auto">
@@ -53,11 +57,11 @@ const Dashboard = () => {
 
       <div className="font-poppins lg:ml-18 ml-15 mr-15 grid grid-cols-1 lg:grid-cols-[0.8fr_1.0fr_1.2fr] gap-6">
         <div className="p-6   bg-white shadow rounded-lg ">
-          <h2 className="font-kanit font-medium text-2xl mb-4 text-gray-400">Total Participants</h2>
+          <h2 className="font-kanit font-medium text-2xl mb-4 text-gray-500">Total Participants</h2>
           <h2 className="text-5xl font-medium mb-0">23</h2>
         </div>
         <div className="p-6   bg-white shadow rounded-lg">
-          <h2 className="font-kanit font-medium text-2xl mb-4 text-gray-400">First Response Time</h2>
+          <h2 className="font-kanit font-medium text-2xl mb-4 text-gray-500">First Response Time</h2>
           <h2 className="text-5xl font-medium mb-0">1<span className="text-2xl">h</span> 23<span className="text-2xl">m</span></h2>
         </div>
         <div className="hidden lg:flex p-6 bg-white shadow rounded-lg lg:row-span-2 justify-center items-center">
@@ -68,29 +72,29 @@ const Dashboard = () => {
           />
         </div>
         <div className="p-6   bg-white shadow rounded-lg">
-          <h2 className="font-kanit font-medium text-2xl mb-4 text-gray-400">Total Tickets</h2>
+          <h2 className="font-kanit font-medium text-2xl mb-4 text-gray-500">Total Tickets</h2>
           <h2 className="text-5xl font-medium mb-0">23</h2>
         </div>
         <div className="p-6   bg-white shadow rounded-lg">
-          <h2 className="font-kanit font-medium text-2xl mb-4 text-gray-400">Full Resolve Time</h2>
+          <h2 className="font-kanit font-medium text-2xl mb-4 text-gray-500">Full Resolve Time</h2>
           <h2 className="text-5xl font-medium mb-0">1<span className="text-2xl">h</span> 23<span className="text-2xl">m</span></h2>
         </div>
       </div>
 
       
       <div className="font-poppins lg:ml-18 ml-15 grid grid-cols-1 lg:grid-cols-[2.0fr_1.0fr] gap-6 mr-15 mt-8">
-        <div className="p-4 bg-white shadow rounded-lg lg:row-span-2 overflow-x-auto">
+        <div className="p-6 bg-white shadow rounded-lg lg:row-span-2 overflow-x-auto">
           <div className="min-w-[300px]">
-            <h2 className="font-kanit font-medium text-2xl mb-5 text-gray-400">Resolved Ticket vs Received Ticket</h2>
+            <h2 className="font-kanit font-medium text-2xl mb-5 text-gray-500">Resolved Ticket vs Received Ticket</h2>
             <BarChartMulti/>
           </div>          
         </div>
-        <div className="p-4 bg-white shadow rounded-lg">
-          <h2 className="font-kanit font-medium text-2xl mb-4 text-gray-400">Customer Satisfaction Rate</h2>
+        <div className="p-6 bg-white shadow rounded-lg">
+          <h2 className="font-kanit font-medium text-2xl mb-4 text-gray-500">Customer Satisfaction Rate</h2>
           <GaugeChart/>
         </div>
-        <div className="p-4 bg-white shadow rounded-lg">
-          <h2 className="font-kanit font-medium text-2xl mb-4 text-gray-400">Tickets by Emergency</h2>
+        <div className="p-6 bg-white shadow rounded-lg">
+          <h2 className="font-kanit font-medium text-2xl mb-4 text-gray-500">Tickets by Emergency</h2>
           <DonutChart/>
         </div>
       </div>
@@ -101,8 +105,8 @@ const Dashboard = () => {
         
         <div className="p-6 bg-white shadow rounded-lg flex justify-center"> {/* Center the chart */}
           <div className="w-full flex justify-center">
-            <div className="w-[90%] ">
-              <h2 className="font-kanit font-medium text-2xl mb-5 text-gray-400">Tickets by Status</h2>
+            <div className="w-[96%] ">
+              <h2 className="font-kanit font-medium text-2xl mb-6 text-gray-500">Tickets by Status</h2>
               <StatusChart />
             </div>
           </div>

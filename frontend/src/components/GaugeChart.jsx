@@ -88,7 +88,7 @@ export default function GaugeChart() {
           background={{ fill: "#e0e0e0" }}
           clockWise
           dataKey="value"
-          fill="#6BAF4E"
+          fill="#22C55E"
           cornerRadius={10}
         />
       </RadialBarChart>

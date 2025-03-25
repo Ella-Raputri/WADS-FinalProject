@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faImage } from '@fortawesome/free-solid-svg-icons';
 import { Button } from './ui/button';
 
-function UploadImage({image, setImage, imageName, setImageName, isImageSmall}) {
+function UploadImage({image, setImage, imageName, setImageName}) {
 
     const handleImageUpload = (event) => {
         const file = event.target.files[0]; // Get the selected file
@@ -12,6 +12,9 @@ function UploadImage({image, setImage, imageName, setImageName, isImageSmall}) {
             console.error("No file selected.");
             return;
         }
+
+        const nm = shortenFileName(file.name);
+        setImageName(nm);
     
         const img = new Image();
         const objectURL = URL.createObjectURL(file); // Ensure valid file before calling this
@@ -68,7 +71,7 @@ function UploadImage({image, setImage, imageName, setImageName, isImageSmall}) {
     };
 
   return (
-    <div>
+    <div className='w-full'>
         <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" id="file-upload" />
             <Button type='button' className={`pl-3 pr-2 py-5 mb-2 text-sm bg-white border shadow-md border-slate-300 hover:bg-gray-100 cursor-pointer text-gray-700 ${image ? "text-green-500" : "text-slate-500"}`}>
                 <label htmlFor="file-upload" className="cursor-pointer flex items-center">
@@ -76,11 +79,17 @@ function UploadImage({image, setImage, imageName, setImageName, isImageSmall}) {
                 </label>
             </Button>
             {imageName && (
-                    <span className="text-gray-700 ml-1 md:ml-2 text-sm">{imageName}</span>
+                    <span className="text-gray-700 ml-1 break-all font-poppins md:ml-2 text-sm">{imageName}</span>
                 )}
             {image && (
                 <div className='mt-4'>
-                <img src={image} alt="Uploaded preview" className={`mt-5 max-w-full max-h-72 rounded-lg border-2 border-dashed border-gray-500` }/>
+                <img 
+                    src={image} 
+                    alt="Uploaded preview" 
+                    className="mt-5 w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg max-h-72 rounded-lg border-2 border-dashed border-gray-500 object-contain"
+                    />
+
+
                 <Button type='button' className="mt-4 hover:bg-red-50 cursor-pointer text-red-500 border border-red-300 bg-white" onClick={() => {setImage(null); setImageName("")}}>
                     Remove
                 </Button>

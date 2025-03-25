@@ -49,20 +49,20 @@ const ParticipantDetails = () => {
                     .filter(([key]) => !excludedKeys.includes(key))
                     .map(([key, value]) => (
                         <p key={key} className="mb-3">
-                            <b className="text-red-700">
+                            <b className="text-[#DD3833]">
                                 {key.replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase())}:
                             </b>{" "}
                             &nbsp;{value}
                         </p>
                     ))}
 
-                <p className='mb-2 text-red-700'><b>Student Card Photo:</b></p>
+                <p className='mb-2 text-[#DD3833]'><b>Student Card Photo:</b></p>
                 <img src={data.student_card_photo} alt="Student Card" className='mb-5 w-80 rounded-lg' />
 
-                <p className='mb-2 text-red-700'><b>Payment Proof:</b></p>
+                <p className='mb-2 text-[#DD3833]'><b>Payment Proof:</b></p>
                 <img src={data.payment_proof} alt="Payment Proof" className='mb-5 w-80 rounded-lg' />
 
-                <p className='mb-2 text-red-700'><b>Uploaded Twibbon Proof:</b></p>
+                <p className='mb-2 text-[#DD3833]'><b>Uploaded Twibbon Proof:</b></p>
                 <img src={data.upload_twibbon_proof} alt="Twibbon Proof" className='mb-5 w-80 rounded-lg' />
             </div>
 
@@ -75,10 +75,10 @@ const ParticipantDetails = () => {
                 )}
                 {data.status === 'Pending' && (
                     <div className='flex justify-center gap-15'>
-                        <button onClick={() => handleButtons('accept')} className="p-3 shadow-md text-white bg-lime-500 hover:bg-lime-600 rounded-2xl cursor-pointer">
+                        <button onClick={() => handleButtons('accept')} className="px-3 py-2 shadow-md text-white bg-lime-500 hover:bg-lime-600 rounded-md font-semibold cursor-pointer">
                             Accept
                         </button>
-                        <button onClick={() => handleButtons('reject')} className="p-3 shadow-md text-white bg-red-400 hover:bg-red-500 rounded-2xl cursor-pointer">
+                        <button onClick={() => handleButtons('reject')} className="px-3 py-2 shadow-md text-white bg-red-400 hover:bg-red-500 rounded-md font-semibold  cursor-pointer">
                             Reject
                         </button>
                     </div>

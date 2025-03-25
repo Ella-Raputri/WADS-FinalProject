@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import ChatBox from "@/components/Chatbox";
+import UploadImage from "@/components/UploadImage";
 
 const TicketDetails = () => {
   const [messages, setMessages] = useState([
@@ -148,7 +149,7 @@ const TicketDetails = () => {
         </button>
   
         {/* Message Button (Right) */}
-        <button className={`text-white shadow-md font-poppins font-semibold px-5 py-2 flex items-center justify-center rounded-full hover:cursor-pointer 
+        <button className={`text-white shadow-md font-poppins font-semibold px-3 py-2 flex items-center justify-center rounded-md hover:cursor-pointer 
          ${user.role==='admin'? 'bg-sky-400 hover:bg-sky-500': 'bg-green-500 hover:bg-green-600'}`}
           onClick={handleClickResolveClose}>
             <FontAwesomeIcon className="text-lg font-black" icon={faCheck} /> &ensp;  
@@ -175,7 +176,7 @@ const TicketDetails = () => {
         </div>
 
         <div className="flex flex-col items-start md:items-end mt-8 md:mt-0">
-          <div className={`font-poppins border-2  py-0.5 px-3 text-md  font-medium rounded-md 
+          <div className={`font-poppins border-2  py-0.5 px-3 text-md  font-medium  
             ${data.status === 'Open' ? 'border-red-400 text-red-500' :
               data.status === 'Closed' ? 'border-lime-500 text-lime-600' :
               data.status === 'In Progress' ? 'border-amber-500 text-amber-600' :
@@ -183,7 +184,7 @@ const TicketDetails = () => {
               }`}>
             {data.status}</div>
           <div className="flex items-center mt-2 mr-3 font-poppins">
-            <div className={`inline-flex mr-2 w-2.5 h-2.5 
+            <div className={`inline-flex mr-2 w-2.5 h-2.5  
               ${data.priority === 'Urgent' ? 'bg-red-600' :
                 data.priority === 'Low' ? 'bg-green-500' :
                 data.priority === 'High' ? 'bg-amber-600' :
@@ -214,42 +215,33 @@ const TicketDetails = () => {
               placeholder="Add a subject"
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
-              className="w-full bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 pr-28 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow mb-6"
+              className="w-full bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 pr-2 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow mb-6"
             />
             <textarea
               placeholder="Type your message here..."
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="w-full mb-5 min-h-56 max-h-56 bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 pr-28 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
+              className="w-full mb-5 min-h-56 max-h-56 bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 pr-2 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
             ></textarea>
 
-          <div className="flex justify-between">
-          <Button className={`px-4 mr-4 py-5 text-md bg-white border shadow-md border-slate-300 hover:bg-gray-100 cursor-pointer ${imageUploaded ? "text-green-500" : "text-slate-500"}`}>
-            <label htmlFor="imageUpload" className="cursor-pointer flex items-center">
-              Add Image &nbsp; <FontAwesomeIcon icon={faImage} />
-            </label>
-          </Button>
-          <input
-            id="imageUpload"
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={handleUploadImage}
-          />
-
-            <Button onClick={handleSend} className="px-6 py-5 text-md bg-white text-slate-500 border shadow-md border-slate-300 hover:bg-gray-100 cursor-pointer">
-              Send <FontAwesomeIcon icon={faPaperPlane} /> </Button>
-          </div>
-
-          {imageUploaded && (
-            <div className="mt-4">
-              <p className="text-sm text-gray-700 font-poppins">{imageName}</p>
-              <img src={imageUploaded} alt="Uploaded Preview" className="mt-5 max-w-xs rounded-lg border-2 border-dashed border-gray-500" />
-              <Button className="mt-4 hover:bg-red-50 cursor-pointer text-red-500 border border-red-300 bg-white" onClick={() => {setImageUploaded(null); setImageName("")}}>
-                Remove
+            <div className="flex flex-col sm:flex-row items-start justify-between w-full space-y-5 sm:space-y-0">
+              <UploadImage 
+                className="max-w-[80%]" 
+                image={imageUploaded} 
+                setImage={setImageUploaded} 
+                imageName={imageName} 
+                setImageName={setImageName} 
+              />
+              
+              <Button 
+                onClick={handleSend} 
+                className="px-6 py-5 text-md bg-white text-slate-500 border shadow-md border-slate-300 hover:bg-gray-100 cursor-pointer sm:ml-4"
+              >
+                Send <FontAwesomeIcon icon={faPaperPlane} />
               </Button>
             </div>
-          )}
+
+          
         </CardContent>
       </Card>  
       

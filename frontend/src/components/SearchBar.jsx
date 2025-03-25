@@ -33,7 +33,7 @@ function SearchBar({ onApply , placeholderSubject }) {
                     }}
                 />
                 <button
-                    className="absolute top-0 right-0 h-full flex items-center rounded bg-red-800 py-1 px-2.5 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow focus:bg-red-800 focus:shadow-none active:bg-red-800 hover:bg-red-800 active:shadow-none"
+                    className="absolute top-0 right-0 h-full flex items-center rounded bg-red-600 py-1 px-2.5 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow focus:bg-red-800 focus:shadow-none active:bg-red-800 hover:bg-red-800 active:shadow-none"
                     type="button"
                     onClick={handleSearching}
                 >

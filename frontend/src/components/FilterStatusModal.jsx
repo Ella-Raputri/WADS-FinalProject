@@ -66,16 +66,16 @@ const FilterStatusModal = ({ isOpen, onClose, onApply }) => {
     >
       {/* Header */}
       <div className="flex justify-between items-center font-kanit">
-        <h2 className="text-2xl">Filter</h2>
+        <h2 className="text-2xl font-medium">Filter</h2>
         <button onClick={onClose} className="text-xl cursor-pointer">✖</button>
       </div>
 
       {/* Status Dropdown */}
-      <div className="mt-4">
+      <div className="mt-6">
         <label className="block text-sm font-poppins mb-1 font-medium">STATUS:</label>
         <select
           name="status"
-          className="border p-2 rounded w-full"
+          className="p-2 font-poppins w-full pr-10 bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
           value={filters.status}
           onChange={handleFilterChange}
         >
@@ -87,15 +87,15 @@ const FilterStatusModal = ({ isOpen, onClose, onApply }) => {
       </div>
 
       {/* Buttons */}
-      <div className="mt-6 flex justify-end gap-2">
+      <div className="mt-6 flex justify-end gap-4">
         <button
-          className="bg-gray-400 hover:bg-gray-500 cursor-pointer text-white px-4 py-2 rounded"
+          className="bg-gray-400 hover:bg-gray-500 font-semibold text-sm font-poppins shadow-md transition ease duration-200 cursor-pointer text-white px-4 py-2 rounded"
           onClick={handleReset}
         >
           Reset
         </button>
         <button
-          className="bg-red-600 hover:bg-red-700 cursor-pointer text-white px-4 py-2 rounded"
+          className="bg-red-600 hover:bg-red-700 font-semibold text-sm shadow-md transition ease duration-200 cursor-pointer text-white px-4 py-2 rounded"
           onClick={handleApply}
         >
           Apply

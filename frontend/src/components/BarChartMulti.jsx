@@ -39,18 +39,31 @@ export function BarChartMulti() {
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
             <XAxis dataKey="month" tickLine={false} axisLine={false} />
             <YAxis />
-            <Tooltip />
-            <Legend iconType="square" />
+            <Tooltip
+              content={({ active, payload }) =>
+                active && payload?.length ? (
+                  <div className="bg-white shadow-md p-2 rounded-md">
+                    <p className="font-semibold font-poppins">{payload[0].payload.month}</p>
+                    {payload.map((entry, index) => (
+                      <p key={index} className="font-poppins font-medium" style={{ color: `${entry.color}` }}>
+                        {entry.name}: {entry.value}
+                      </p>
+                    ))}
+                  </div>
+                ) : null
+              }
+            />
+            <Legend iconType="square" wrapperStyle={{ fontWeight: '500' }} />
             <Bar
               dataKey="received"
-              fill="#DD3833"
+              fill="oklch(0.637 0.237 25.331)"
               radius={4}
               name="Received"
-              animationDuration={1200} 
+              animationDuration={1200}
             />
             <Bar
               dataKey="resolved"
-              fill="#F9E04B"
+              fill="oklch(0.768 0.233 130.85)" 
               radius={4}
               name="Resolved"
               animationDuration={1200}

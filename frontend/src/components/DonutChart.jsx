@@ -4,16 +4,17 @@ import { useEffect, useState, useRef } from "react";
 import { Pie, PieChart, Cell, Tooltip } from "recharts";
 
 const finalChartData = [
-  { priority: "Urgent", count: 30, color: "#DC2626" },
-  { priority: "High", count: 50, color: "#D97706" },
-  { priority: "Medium", count: 70, color: "#FACC15" },
-  { priority: "Low", count: 100, color: "#22C55E" },
+  { priority: "Urgent", count: 30, color: "#DC2626", darkColor: "#B91C1C" },
+  { priority: "High", count: 50, color: "#D97706", darkColor: "#B45309" },
+  { priority: "Medium", count: 70, color: "#FACC15", darkColor: "#EAB308" },
+  { priority: "Low", count: 100, color: "#22C55E", darkColor: "#15803D" },
 ];
 
 export function DonutChart() {
   const [chartSize, setChartSize] = useState(250);
   const [isVisible, setIsVisible] = useState(false);
   const [shouldAnimate, setShouldAnimate] = useState(false);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
   const chartRef = useRef(null);
 
   useEffect(() => {
@@ -75,7 +76,10 @@ export function DonutChart() {
           isAnimationActive={shouldAnimate}
         >
           {finalChartData.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={entry.color} />
+            <Cell key={`cell-${index}`} 
+            fill={hoveredIndex === index ? entry.darkColor : entry.color}
+            onMouseEnter={() => setHoveredIndex(index)}
+            onMouseLeave={() => setHoveredIndex(null)}/>
           ))}
         </Pie>
         <Tooltip

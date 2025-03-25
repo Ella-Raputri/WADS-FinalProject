@@ -21,7 +21,11 @@ export default function ChatBox({ msg, index, role }) {
             >
               {!isSystemMessage && <h3 className="font-semibold">{msg.subject}</h3>}
               {msg.image && (
-                <img src={msg.image} alt="Attached" className="mt-2 max-w-xs max-h-[30vh] object-contain rounded-lg shadow-md" />
+                <img 
+                  src={msg.image} 
+                  alt="Attached" 
+                  className="mt-2 max-w-full max-h-72 object-contain rounded-lg shadow-md"
+                />
               )}
               {msg.message && (<p className="mt-2">{msg.message}</p>)}
 

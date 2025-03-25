@@ -44,7 +44,7 @@ export function AgentsTable() {
     <div className="p-6 bg-white shadow rounded-lg w-full mx-auto">
       {/* Header */}
       <div className="flex justify-between items-center mb-5">
-        <h2 className="font-kanit font-medium text-2xl text-gray-400">Agents Details</h2>
+        <h2 className="font-kanit font-medium text-2xl text-gray-500">Agents Details</h2>
         <button className="border bg-white border-slate-200 ml-2 transition duration-300 ease hover:border-slate-300 shadow-sm focus:shadow px-3 py-2 rounded-xl hover:bg-gray-100 hover:cursor-pointer"
         onClick={() => setOpenFilter(true)}>
           <FontAwesomeIcon icon={faFilter} />
