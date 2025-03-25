@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import './App.css'
-import { BrowserRouter as Router, Route, Routes, useNavigate, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useNavigate, useLocation, matchRoutes } from 'react-router-dom';
 import WelcomePage from './pages/WelcomePage.jsx'
 import NotFound from './pages/NotFound.jsx'
 import LoginRegisterPage from './pages/LoginRegisterPage.jsx'
@@ -34,9 +34,32 @@ function App() {
   );
 }
 
+
 function MainLayout() {
+  const routes = [
+    { path: "/" },
+    { path: "/login" },
+    { path: "/register" },
+    { path: "/userhome" },
+    { path: "/usercomp" },
+    { path: "/userhelp" },
+    { path: "/usernewticket" },
+    { path: "/userticketdetails" },
+    { path: "/admindashboard" },
+    { path: "/admincomp" },
+    { path: "/adminticket" },
+    { path: "/adminparticipantdetails" },
+    { path: "/adminticketdetails" },
+  ];
+  
   const location = useLocation();
-  const bgColor = location.pathname.includes("admin") ? "#f7f7f7" : "white";
+  const matchedRoute = matchRoutes(routes, location);
+
+const bgColor = matchedRoute
+  ? location.pathname.includes("admin")
+    ? "#f7f7f7"
+    : "white"
+  : "#fcf1d4";
 
   return (
     <div className={`flex flex-col min-h-screen`} style={{backgroundColor:bgColor}}>
@@ -60,7 +83,7 @@ function MainLayout() {
             <Route path='/adminparticipantdetails' element={<ParticipantDetails />} />
             <Route path='/adminticketdetails' element={<AdminTicketDetails />} />
 
-            <Route path='/*' element={<Loading />} />
+            <Route path='/*' element={<NotFound />} />
           </Routes>
         </main>
         <Footer />
