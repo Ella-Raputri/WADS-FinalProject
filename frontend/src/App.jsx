@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Route, Routes, useNavigate, useLocation, match
 import WelcomePage from './pages/WelcomePage.jsx'
 import NotFound from './pages/NotFound.jsx'
 import LoginRegisterPage from './pages/LoginRegisterPage.jsx'
-import RegisterLoginPage from './pages/RegisterLoginPage.jsx'
 import HomePage from './pages/participant/HomePage.jsx'
 import CompetitionPage from './pages/participant/CompetitionPage.jsx'
 import HelpPage from './pages/participant/HelpPage.jsx'
@@ -70,7 +69,6 @@ const bgColor = matchedRoute
           <Routes>
             <Route path='/' element={<WelcomePage />} />
             <Route path='/login' element={<LoginRegisterPage />} />
-            <Route path='/register' element={<RegisterLoginPage />} />
             <Route path='/userhome' element={<HomePage />} />
             <Route path='/usercomp' element={<CompetitionPage />} />
             <Route path='/userhelp' element={<HelpPage />} />

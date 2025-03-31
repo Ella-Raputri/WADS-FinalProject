@@ -71,7 +71,7 @@ function UploadImage({image, setImage, imageName, setImageName, inputId}) {
     };
 
   return (
-    <div className='w-full'>
+    <div className='w-full font-poppins'>
         <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" id={inputId} />
             <Button type='button' className={`pl-3 pr-2 py-5 mb-2 text-sm bg-white border shadow-md border-slate-300 hover:bg-gray-100 cursor-pointer text-gray-700 ${image ? "text-green-500" : "text-slate-500"}`}>
             <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" id={inputId} />

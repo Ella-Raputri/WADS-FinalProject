@@ -1,20 +1,25 @@
-import React, { useState, useRef } from "react";
+import UploadImage from "@/components/UploadImage";
+import { faCalendar, faChevronLeft, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 const InputField = ({ id, type = "text", value, onChange, placeholder }) => (
-  <input
-    id={id}
-    type={type}
-    value={value}
-    onChange={onChange}
-    placeholder={placeholder}
-    className="w-full rounded-lg bg-gray-100 px-5 py-4 text-lg text-gray-700 focus:outline-none mt-4"
-  />
+  <div className="relative">
+    <p className="ml-1 mb-2 font-semibold font-poppins text-md xl:text-lg">{placeholder}</p>
+    <input
+      id={id}
+      type={type}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      className="font-poppins w-full bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 pr-5 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow p-2"
+    />
+  </div>
 );
 
 const LoginRegisterPage = () => {
   const navigate = useNavigate();
-  const studentCardRef = useRef(null);
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
     fullName: "",
@@ -28,9 +33,14 @@ const LoginRegisterPage = () => {
     password: "",
   });
 
-  const [emailOrPhone, setEmailOrPhone] = useState("");
+  const [emailLogin, setEmailLogin] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [image, setImage] =useState(null);
+  const [imageName, setImageName] =useState("");
+
+  const dobRef = useRef(null);
+  const [showPassword, setShowPassword] =useState(false);  
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -49,7 +59,7 @@ const LoginRegisterPage = () => {
 
   const handleSignUp = (e) => {
     e.preventDefault();
-    const studentCard = studentCardRef.current?.files[0];
+    // const studentCard = studentCardRef.current?.files[0];
     if (
       !formData.fullName ||
       !formData.mandarinName ||
@@ -72,134 +82,299 @@ const LoginRegisterPage = () => {
     <div className="relative flex min-h-screen w-full items-center justify-center bg-cover bg-center px-4 py-8" style={{ backgroundImage: "url('/src/assets/Bg.webp')" }}>
       <div className="absolute inset-0 bg-black/30 backdrop-blur-xl"></div>
 
-      <div className="relative z-10 flex w-full max-w-md flex-col overflow-hidden rounded-lg bg-white shadow-lg md:hidden">
-        <div className="bg-[#DD3833] p-6 text-white">
+      <button className="bg-white absolute top-8 left-8 z-1000 text-slate-500 border shadow-md border-slate-300 w-10 h-10 flex items-center justify-center rounded-full hover:cursor-pointer hover:bg-gray-100"
+        onClick={() => navigate('/')}>
+            <FontAwesomeIcon icon={faChevronLeft} />
+        </button>
+
+      <div className="relative z-10 flex w-full max-w-md flex-col overflow-hidden rounded-lg bg-white shadow-lg lg:hidden">
+        <div className="bg-red-600 p-6 text-white">
           <div className="flex flex-col items-center justify-center">
-            <p className="mb-4 text-3xl font-bold">{isLogin ? "Welcome!" : "Hello Friend!"}</p>
-            <p className="mb-6 text-center text-sm">
-              {isLogin ? "Register with your personal details to compete in competitions!" : "Already have an account? Login to Continue Competing and Winning!"}
+            <p className="mb-3 font-kanit text-3xl font-medium">{isLogin ? "Welcome!" : "Hello Friend!"}</p>
+            <p className="mb-6 text-center text-md font-poppins">
+              {isLogin
+                ? "Register with your personal details to compete in competitions!"
+                : "Already have an account? Login to continue competing and winning!"}
             </p>
-            <button 
-              onClick={() => setIsLogin(!isLogin)} 
-              className="rounded-lg border-2 border-white px-10 py-2 font-medium hover:bg-white hover:text-[#DD3833]"
+            <button
+              onClick={() => setIsLogin(!isLogin)}
+              className="font-poppins font-semibold rounded-lg border-2 border-white px-10 py-2 hover:bg-white hover:text-[#DD3833]"
             >
               {isLogin ? "SIGN UP" : "LOGIN"}
             </button>
           </div>
         </div>
 
-        <div className="p-6 overflow-y-auto">
-          {isLogin ? (
-            <>
-              <p className="mb-6 text-center text-2xl font-bold">USER LOGIN</p>
-              <form onSubmit={handleLogin} className="space-y-6">
-                <InputField 
-                  id="emailOrPhone" 
-                  type="text" 
-                  value={emailOrPhone} 
-                  onChange={(e) => setEmailOrPhone(e.target.value)} 
-                  placeholder="Email or Phone" 
-                />
-                <InputField 
-                  id="password" 
-                  type="password" 
-                  value={password} 
-                  onChange={(e) => setPassword(e.target.value)} 
-                  placeholder="Password" 
-                />
-                {error && <p className="text-red-500 text-center">{error}</p>}
-                <div className="mt-2 text-center">
-                  <a href="#" className="text-base text-gray-500 hover:text-gray-700">Forgot Your Password?</a>
-                </div>
-                <div className="flex justify-center">
-                  <button type="submit" className="w-full rounded-lg bg-[#DD3833] py-3 text-lg text-white hover:bg-red-600 focus:outline-none">LOGIN</button>
-                </div>
-              </form>
-            </>
-          ) : (
-            <>
-              <p className="mb-6 text-center text-2xl font-bold">USER SIGNUP</p>
-              <form onSubmit={handleSignUp} className="space-y-6">
-                {["fullName", "mandarinName", "dob", "address", "phone", "email", "institution"].map((id) => (
-                  <InputField 
-                    key={id} 
-                    id={id} 
-                    type={id === "dob" ? "date" : "text"} 
-                    value={formData[id]} 
-                    onChange={handleChange} 
-                    placeholder={id.charAt(0).toUpperCase() + id.slice(1)} 
-                  />
-                ))}
-                <select 
-                  id="gender" 
-                  value={formData.gender} 
-                  onChange={handleChange} 
-                  className="w-full rounded-lg bg-gray-100 px-5 py-4 text-lg text-gray-700 focus:outline-none mt-4"
+        {/* Animated Container */}
+        <div
+          className={`transition-all duration-500 overflow-hidden ${
+            isLogin ? "max-h-[100vh] opacity-100" : "max-h-0 opacity-0"
+          }`}
+        >
+          <div className="p-6">
+            <p className="mb-6 font-poppins font-semibold text-center text-2xl">USER LOGIN</p>
+            <form onSubmit={handleLogin} className="space-y-6">
+              <InputField
+                id="email"
+                type="email"
+                value={emailLogin}
+                onChange={(e) => setEmailLogin(e.target.value)}
+                placeholder="Email"
+              />
+              
+              <p className="ml-1 mb-2 font-semibold font-poppins text-md xl:text-lg">Password</p>
+              <div className="w-full relative">
+                <input
+                    key='password'
+                    id='password'
+                    type={showPassword? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder='Password'
+                    className="p-2 font-poppins w-full pr-10 bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
+                />  
+                <button
+                  type="button"
+                  className="absolute cursor-pointer right-2 top-1.5 text-gray-500 w-5 h-5"
+                  onClick={() => setShowPassword(!showPassword)}
                 >
-                  <option value="">Select Gender</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                </select>
-                <input 
-                  ref={studentCardRef} 
-                  id="studentCard" 
-                  type="file" 
-                  className="w-full rounded-lg bg-gray-100 px-5 py-4 text-lg text-gray-700 focus:outline-none mt-4" 
+                  <FontAwesomeIcon icon={showPassword? faEyeSlash: faEye} />
+                </button>
+              </div>
+
+              <div className="mt-2 text-center">
+                <a href="#" className="text-base font-poppins underline text-gray-500 hover:text-gray-700">
+                  Forgot Your Password?
+                </a>
+              </div>
+              <div className="flex justify-center">
+                <button
+                  type="submit"
+                  className="w-full shadow-md font-semibold rounded-md font-poppins bg-red-600 py-3 text-lg text-white hover:bg-red-700 focus:outline-none"
+                >
+                  Login
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div
+          className={`transition-all duration-500 overflow-scroll ${
+            isLogin ? "max-h-0 opacity-0" : "max-h-[100vh] opacity-100"
+          }`}
+        >
+          <div className="p-6 mt-2 overflow-scroll ">
+            <p className="mb-4 text-center text-2xl font-poppins font-semibold">USER SIGNUP</p>
+            <form onSubmit={handleSignUp} className="space-y-6">
+              {["fullName", "mandarinName", "address", "phone", "email", "institution"].map((id) => (
+                <InputField
+                  key={id}
+                  id={id}
+                  type="text"
+                  value={formData[id]}
+                  onChange={handleChange}
+                  placeholder={
+                    id === "fullName" ? "Full Name" :
+                    id === "mandarinName" ? "Mandarin Name" :
+                    id.charAt(0).toUpperCase() + id.slice(1)
+                  }
                 />
-                <div className="flex justify-center mt-6">
-                  <button type="submit" className="w-full rounded-lg bg-[#DD3833] py-3 text-lg text-white hover:bg-red-600 focus:outline-none">Signup</button>
-                </div>
-              </form>
-            </>
-          )}
+              ))}
+
+              <p className="ml-1 mb-2 font-semibold font-poppins text-md xl:text-lg">Password</p>
+              <div className="w-full relative">
+                <input
+                    key='password'
+                    id='password'
+                    type={showPassword? 'text' : 'password'}
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder='Password'
+                    className="p-2 font-poppins w-full pr-10 bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
+                />  
+                <button
+                  type="button"
+                  className="absolute cursor-pointer right-2 top-1.5 text-gray-500 w-5 h-5"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  <FontAwesomeIcon icon={showPassword? faEyeSlash: faEye} />
+                </button>
+              </div>
+
+
+              <p className="ml-1 mb-2 font-semibold font-poppins text-md xl:text-lg">Date of Birth</p>
+              <div className="w-full relative">
+                <input
+                  type="date"
+                  name="createdStart"
+                  id="dob"
+                  className="p-2 font-poppins w-full pr-10 bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
+                  value={formData.dob}
+                  onChange={handleChange}
+                  ref={dobRef}
+                />
+                <button
+                  type="button"
+                  className="absolute cursor-pointer right-2 top-1 text-gray-500 w-5 h-5"
+                  onClick={() => dobRef.current?.showPicker()}
+                >
+                  <FontAwesomeIcon icon={faCalendar} />
+                </button>
+              </div>
+              
+              
+              <p className="ml-1 mb-2 font-semibold font-poppins text-md xl:text-lg">Gender</p>
+              <select
+                id="gender"
+                value={formData.gender}
+                onChange={handleChange}
+                className="w-full font-poppins bg-white placeholder:text-slate-400 text-slate-700 text-md border border-slate-300 rounded-md pl-3 pr-5 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow p-2"
+              >
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+              
+              <label className="block font-poppins text-md xl:text-lg mb-2 font-semibold mt-2">Upload Student Card</label>
+              <UploadImage image={image} setImage={setImage} imageName={imageName} setImageName={setImageName} inputId={'student-card-upload'}/>
+
+
+              <div className="flex justify-center mb-6 mt-10">
+                <button
+                  type="submit"
+                  className="w-full shadow-md rounded-lg bg-red-600 py-3 text-lg text-white hover:bg-red-700 focus:outline-none font-poppins font-semibold"
+                >
+                  Register
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
 
 
-      <div className="relative z-10 hidden w-[70%] h-[70%] flex-row overflow-hidden rounded-lg bg-white shadow-lg md:flex">
-        <div className={`absolute top-0 h-full w-1/2 bg-[#DD3833] p-6 text-white transition-all duration-500 ${isLogin ? "translate-x-full rounded-l-[80px]" : "translate-x-0 rounded-r-[80px]"}`}>
+      <div className="relative font-poppins z-10 hidden w-[70%] h-[70%] flex-row overflow-hidden rounded-lg bg-white shadow-lg lg:flex">
+        <div className={`absolute top-0 h-full w-1/2 bg-red-600 p-6 text-white transition-all duration-500 ${isLogin ? "translate-x-full rounded-l-[80px]" : "translate-x-0 rounded-r-[80px]"}`}>
           <div className="flex flex-col items-center justify-center h-full">
-            <p className="mb-4 text-3xl font-bold md:text-4xl">{isLogin ? "Welcome!" : "Hello Friend!"}</p>
-            <p className="mb-6 text-center text-sm md:text-base">
-              {isLogin ? "Register with your personal details to compete in competitions!" : "Already have an account? Login to Continue Competing and Winning!"}
+            <p className="mb-4 text-3xl font-kanit font-medium md:text-4xl">{isLogin ? "Welcome!" : "Hello Friend!"}</p>
+            <p className="mb-6 text-center text-sm md:text-base leading-7">
+              {isLogin ? "Register with your personal details to compete in competitions!" : "Already have an account? Login to continue competing and winning!"}
             </p>
-            <button onClick={() => setIsLogin(!isLogin)} className="rounded-lg border-2 border-white px-10 py-2 font-medium hover:bg-white hover:text-[#DD3833]">
+            <button onClick={() => setIsLogin(!isLogin)} className="font-semibold rounded-lg border-2 border-white px-10 py-2 cursor-pointer transition duration-300 ease hover:bg-white hover:text-red-600">
               {isLogin ? "SIGN UP" : "LOGIN"}
             </button>
           </div>
         </div>
         
-        <div className={`w-1/2 p-6 md:p-12 overflow-y-auto max-h-[60vh] transition-all duration-500 ease-in-out 
-          ${isLogin ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full pointer-events-none"}`}>
-          <p className="mt-8 mb-6 text-center text-2xl font-bold md:text-4xl">USER LOGIN</p>
+        <div className={`w-1/2 p-6 md:p-8 overflow-y-scroll max-h-[60vh] transition-all duration-500 ease-in-out 
+          ${isLogin ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full pointer-events-none"}`} style={{scrollbarWidth:"none", scrollbarColor:"#ccc transparent"}}>
+          <p className="mb-4 text-center font-poppins text-2xl font-semibold md:text-3xl">USER LOGIN</p>
           <form onSubmit={handleLogin} className="space-y-6 mt-6">
-            <InputField id="emailOrPhone" type="text" value={emailOrPhone} onChange={(e) => setEmailOrPhone(e.target.value)} placeholder="Email or Phone" />
-            <InputField id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
-            {error && <p className="text-red-500 text-center">{error}</p>}
+            <InputField id="email" type="email" value={emailLogin} onChange={(e) => setEmailLogin(e.target.value)} placeholder="Email" />
+            <p className="ml-1 mb-2 font-semibold font-poppins text-md xl:text-lg">Password</p>
+            <div className="w-full relative">
+              <input
+                  key='password'
+                  id='password'
+                  type={showPassword? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder='Password'
+                  className="p-2 font-poppins w-full pr-10 bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
+              />  
+              <button
+                type="button"
+                className="absolute cursor-pointer right-2 top-1.5 text-gray-500 w-5 h-5"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                <FontAwesomeIcon icon={showPassword? faEyeSlash: faEye} />
+              </button>
+            </div>            
+            
             <div className="mt-2 text-center">
-              <a href="#" className="text-base text-gray-500 hover:text-gray-700">Forgot Your Password?</a>
+              <a href="#" className="text-base text-gray-500 underline underline-offset-3 hover:text-gray-700">Forgot Your Password?</a>
             </div>
             <div className="flex justify-center">
-              <button type="submit" className="px-15 rounded-lg bg-[#DD3833] py-2 text-lg text-white hover:bg-red-600 focus:outline-none">LOGIN</button>
+              <button type="submit" className="px-15 transition ease duration-150 rounded-md bg-red-600 py-2 text-lg text-white hover:bg-red-700 focus:outline-none cursor-pointer shadow-md font-semibold">Login</button>
             </div>
           </form>
         </div>
 
-        <div className={`w-1/2 p-6 md:p-12 overflow-y-auto max-h-[60vh] transition-all duration-500 ease-in-out
-          ${isLogin ? "opacity-0 translate-x-full pointer-events-none" : "opacity-100 translate-x-0"}`}>
-          <p className="mt-8 mb-6 text-center text-2xl font-bold md:text-4xl">USER SIGNUP</p>
+        <div className={`w-1/2 p-4 md:p-8 overflow-y-auto max-h-[60vh] transition-all duration-500 ease-in-out
+          ${isLogin ? "opacity-0 translate-x-full pointer-events-none" : "opacity-100 translate-x-0"}`} style={{scrollbarWidth:"thin", scrollbarColor:"#ccc transparent"}}>
+          <p className="mb-4 text-center font-poppins text-2xl font-semibold md:text-3xl">USER SIGNUP</p>
           <form onSubmit={handleSignUp} className="space-y-6 mt-6">
-            {["fullName", "mandarinName", "dob", "address", "phone", "email", "institution"].map((id) => (
-              <InputField key={id} id={id} type={id === "dob" ? "date" : "text"} value={formData[id]} onChange={handleChange} placeholder={id.charAt(0).toUpperCase() + id.slice(1)} />
+            {["fullName", "mandarinName", "address", "phone", "email", "institution"].map((id) => (
+              <InputField key={id} id={id} type={"text"} value={formData[id]} onChange={handleChange} 
+              placeholder={
+                id === "fullName" ? "Full Name" :
+                id === "mandarinName" ? "Mandarin Name" :
+                id.charAt(0).toUpperCase() + id.slice(1)
+              } />
             ))}
-            <select id="gender" value={formData.gender} onChange={handleChange} className="w-full rounded-lg bg-gray-100 px-5 py-4 text-lg text-gray-700 focus:outline-none mt-4">
-              <option value="">Select Gender</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-            </select>
-            <input ref={studentCardRef} id="studentCard" type="file" className="w-full rounded-lg bg-gray-100 px-5 py-4 text-lg text-gray-700 focus:outline-none mt-4" />
-            <div className="flex justify-center mt-6">
-              <button type="submit" className="w-30 rounded-lg bg-[#DD3833] py-2 text-lg text-white hover:bg-red-600 focus:outline-none">Signup</button>
+
+              <p className="ml-1 mb-2 font-semibold font-poppins text-md xl:text-lg">Password</p>
+              <div className="w-full relative">
+                <input
+                    key='password'
+                    id='password'
+                    type={showPassword? 'text' : 'password'}
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder='Password'
+                    className="p-2 font-poppins w-full pr-10 bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
+                />  
+                <button
+                  type="button"
+                  className="absolute cursor-pointer right-2 top-1.5 text-gray-500 w-5 h-5"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  <FontAwesomeIcon icon={showPassword? faEyeSlash: faEye} />
+                </button>
+              </div>
+
+
+              <p className="ml-1 mb-2 font-semibold font-poppins text-md xl:text-lg">Date of Birth</p>
+              <div className="w-full relative">
+                <input
+                  type="date"
+                  name="createdStart"
+                  id="dob"
+                  className="p-2 font-poppins w-full pr-10 bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
+                  value={formData.dob}
+                  onChange={handleChange}
+                  ref={dobRef}
+                />
+                <button
+                  type="button"
+                  className="absolute cursor-pointer right-2 top-1 text-gray-500 w-5 h-5"
+                  onClick={() => dobRef.current?.showPicker()}
+                >
+                  <FontAwesomeIcon icon={faCalendar} />
+                </button>
+              </div>
+              
+              
+              <p className="ml-1 mb-2 font-semibold font-poppins text-md xl:text-lg">Gender</p>
+              <select
+                id="gender"
+                value={formData.gender}
+                onChange={handleChange}
+                className="w-full font-poppins bg-white placeholder:text-slate-400 text-slate-700 text-md border border-slate-300 rounded-md pl-3 pr-5 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow p-2"
+              >
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+              
+              <label className="block font-poppins text-md xl:text-lg mb-2 font-semibold mt-2">Upload Student Card</label>
+              <UploadImage image={image} setImage={setImage} imageName={imageName} setImageName={setImageName} inputId={'student-card-upload'}/>
+            
+            
+            
+            <div className="flex justify-center mt-10">
+              <button type="submit" className="px-15 transition ease duration-150 rounded-md bg-red-600 py-2 text-lg text-white hover:bg-red-700 shadow-md font-semibold cursor-pointer focus:outline-none">Sign up</button>
             </div>
           </form>
         </div>
