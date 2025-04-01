@@ -19,6 +19,8 @@ import TicketDetails from './pages/participant/TicketDetails.jsx';
 import AdminTicketDetails from './pages/admin/AdminTicketDetails';
 import Loading from './components/Loading';
 import { ToastContainer } from 'react-toastify';
+import VerifyEmailPage from './pages/VerifyEmail';
+import ForgotPasswordPage from './pages/ForgotPassword.jsx';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -71,6 +73,9 @@ const bgColor = matchedRoute
           <Routes>
             <Route path='/' element={<WelcomePage />} />
             <Route path='/login' element={<LoginRegisterPage />} />
+            <Route path='/verifyemail' element={<VerifyEmailPage />} />
+            <Route path='/forgotpassword' element={<ForgotPasswordPage />} />
+
             <Route path='/userhome' element={<HomePage />} />
             <Route path='/usercomp' element={<CompetitionPage />} />
             <Route path='/userhelp' element={<HelpPage />} />

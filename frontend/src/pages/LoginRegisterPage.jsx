@@ -6,21 +6,7 @@ import axios from "axios";
 import { useState, useRef, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-
-
-const InputField = ({ id, type = "text", value, onChange, placeholder }) => (
-  <div className="relative">
-    <p className="ml-1 mb-2 font-semibold font-poppins text-md xl:text-lg">{placeholder}</p>
-    <input
-      id={id}
-      type={type}
-      value={value}
-      onChange={onChange}
-      placeholder={placeholder}
-      className="font-poppins w-full bg-white placeholder:text-slate-400 active:bg-white text-slate-700 text-sm border border-slate-300 rounded-md pl-3 pr-5 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow p-2"
-    />
-  </div>
-);
+import InputField from "@/components/InputField";
 
 const LoginRegisterPage = () => {
   const navigate = useNavigate();
@@ -107,7 +93,7 @@ const LoginRegisterPage = () => {
         const { data } = await axios.post(backendUrl + 'api/auth/register', {participantDetails: registrationData});
         
         if(data.success) {
-            navigate('/user-verify-email');
+            navigate('/verifyemail');
         } else {
             toast.error(data.message);
         }
@@ -183,7 +169,7 @@ const LoginRegisterPage = () => {
               </div>
 
               <div className="mt-2 text-center">
-                <a href="#" className="text-base font-poppins underline text-gray-500 hover:text-gray-700">
+                <a href="/forgotpassword" className="text-base font-poppins underline text-gray-500 hover:text-gray-700">
                   Forgot Your Password?
                 </a>
               </div>
@@ -333,7 +319,7 @@ const LoginRegisterPage = () => {
             </div>            
             
             <div className="mt-2 text-center">
-              <a href="#" className="text-base text-gray-500 underline underline-offset-3 hover:text-gray-700">Forgot Your Password?</a>
+              <a href="/forgotpassword" className="text-base text-gray-500 underline underline-offset-3 hover:text-gray-700">Forgot Your Password?</a>
             </div>
             <div className="flex justify-center">
               <button type="submit" className="px-15 transition ease duration-150 rounded-md bg-red-600 py-2 text-lg text-white hover:bg-red-700 focus:outline-none cursor-pointer shadow-md font-semibold">Login</button>
