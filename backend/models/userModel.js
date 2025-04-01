@@ -6,7 +6,7 @@ const ParticipantSchema = new mongoose.Schema({
   Gender: { type: String },
   Address: { type: String },
   Institution: { type: String },
-  StudentCardPhoto: { type: String }, // URL
+  StudentCardPhoto: { type: String },
 });
 
 const AdminSchema = new mongoose.Schema({
@@ -17,7 +17,7 @@ const UserSchema = new mongoose.Schema({
     FullName: { type: String, required: true },
     PhoneNumber: { type: String, required: true},
     Email: { type: String, required: true, unique: true },
-    Password: { type: String, required: true }, // Hashed
+    Password: { type: String, required: true }, 
     Role: { type: String, required: true },
     Participant: { type: ParticipantSchema, default: null },
     Admin: { type: AdminSchema, default: null },
