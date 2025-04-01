@@ -18,6 +18,7 @@ import ParticipantDetails from './pages/admin/ParticipantDetails.jsx';
 import TicketDetails from './pages/participant/TicketDetails.jsx';
 import AdminTicketDetails from './pages/admin/AdminTicketDetails';
 import Loading from './components/Loading';
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -66,6 +67,7 @@ const bgColor = matchedRoute
         <Navbar />
 
         <main className="flex-1"> 
+          <ToastContainer/>
           <Routes>
             <Route path='/' element={<WelcomePage />} />
             <Route path='/login' element={<LoginRegisterPage />} />

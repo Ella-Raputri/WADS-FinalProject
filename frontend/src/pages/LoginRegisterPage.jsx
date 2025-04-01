@@ -3,6 +3,7 @@ import { faCalendar, faChevronLeft, faEye, faEyeSlash } from "@fortawesome/free-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const InputField = ({ id, type = "text", value, onChange, placeholder }) => (
   <div className="relative">
@@ -49,11 +50,11 @@ const LoginRegisterPage = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (!emailOrPhone || !password) {
-      setError("Enter Your Email and Password to Login");
+    if (!emailLogin || !password) {
+      toast.error("email not valid")
       return;
     }
-    setError("");
+    
     navigate("/userhome");
   };
 

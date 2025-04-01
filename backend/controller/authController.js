@@ -4,38 +4,89 @@ import userModel from '../models/userModel.js';
 import transporter from '../config/nodemailer.js'
 import {EMAIL_VERIFY_TEMPLATE, PASSWORD_RESET_TEMPLATE} from '../config/emailTemplates.js'
 
-export const register = async(req,res)=>{
-    const {name, email, password} = req.body;
+function isMandarin(text) {
+    const mandarinRegex = /[\u4e00-\u9fff\u3400-\u4dbf\uf900-\ufaff\u3300-\u33ff\ufe30-\ufe4f\uf900-\ufaff\u3200-\u32ff\u3100-\u312f\u31a0-\u31bf]/;
+    return mandarinRegex.test(text);
+}
 
-    if(!name || !email || !password){
-        return res.status(400).json({success:false, message:"Please fill all the required fields"})
+function isValidEmail(email) {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailPattern.test(email);
+}
+
+function isValidPhoneNumber(phone) {
+    const phonePattern = /^(\+\d{1,3}|0)\d{9,14}$/;
+    return phonePattern.test(phone);
+}
+
+function isValidPassword(password) {
+    const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    return passwordPattern.test(password);
+}
+
+export const register = async (req, res) => {
+    const { participantDetails } = req.body;
+    const { fullName, mandarinName, dob, gender, address, phone, email, institution, password, studentPhotoUrl } = participantDetails;
+
+    if (!fullName || !mandarinName || !dob || !gender || !address || !phone || !institution || !email || !password || !studentPhotoUrl) {
+        return res.status(400).json({ success: false, message: "Please fill all the required fields" });
+    }
+
+    if (!isMandarin(mandarinName) && mandarinName !== "-") {
+        return res.status(400).json({ success: false, message: "Mandarin name must be Chinese characters or '-'" });
+    }
+
+    if (!isValidEmail(email)) {
+        return res.status(400).json({ success: false, message: "Invalid email format" });
+    }
+
+    if (!isValidPhoneNumber(phone)) {
+        return res.status(400).json({ success: false, message: "Phone number must be formatted with +62XX or 0XX" });
+    }
+
+    if (!isValidPassword(password)) {
+        return res.status(400).json({ success: false, message: "Password must have at least 8 characters with at least one letter and one number" });
     }
 
     try {
-        const existingUser = await userModel.findOne({email});
-        if(existingUser){
-            return res.status(400).json({success:false, message:"User already exists"});
+        const existingUser = await userModel.findOne({ Email: email });
+        if (existingUser) {
+            return res.status(400).json({ success: false, message: "User already exists" });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const user = new userModel({name:name, email:email, password:hashedPassword});
-        await user.save();
-        
-        const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: '7d'});
-        res.cookie('token', token,{
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production'? 'none':'strict',
-            maxAge: 7 *24 *60 *60 *1000
+        const user = new userModel({
+            FullName: fullName,
+            PhoneNumber: phone,
+            Email: email,
+            Password: hashedPassword,
+            Role: "participant",
+            Participant: {
+                MandarinName: mandarinName,
+                DOB: dob,
+                Gender: gender,
+                Address: address,
+                Institution: institution,
+                StudentCardPhoto: studentPhotoUrl
+            },
         });
 
-        return res.status(200).json({success:true, message:"Account created successfully"})
+        await user.save();
 
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+
+        return res.status(200).json({ success: true, message: "Account created successfully", user });
 
     } catch (error) {
-        return res.status(500).json({success:false, message:error.message})
+        return res.status(500).json({ success: false, message: error.message });
     }
-}
+};
 
 
 export const login = async(req,res)=>{
@@ -45,12 +96,12 @@ export const login = async(req,res)=>{
     }
 
     try {
-        const user = await userModel.findOne({email});
+        const user = await userModel.findOne({ Email: email });
         if(!user){
             return res.status(400).json({success:false, message:'Invalid credentials'})
         }
 
-        const isMatch = await bcrypt.compare(password, user.password);
+        const isMatch = await bcrypt.compare(password, user.Password);
         if(!isMatch){
             return res.status(400).json({success:false, message:"Invalid credentials"})
         }
