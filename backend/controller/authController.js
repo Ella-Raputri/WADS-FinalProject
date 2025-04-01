@@ -26,32 +26,37 @@ function isValidPassword(password) {
 
 export const register = async (req, res) => {
     const { participantDetails } = req.body;
+    if (!participantDetails) {
+        return res.json({ success: false, message: "Please fill all the required fields" });
+    }
+    console.log(participantDetails)
+
     const { fullName, mandarinName, dob, gender, address, phone, email, institution, password, studentPhotoUrl } = participantDetails;
 
     if (!fullName || !mandarinName || !dob || !gender || !address || !phone || !institution || !email || !password || !studentPhotoUrl) {
-        return res.status(400).json({ success: false, message: "Please fill all the required fields" });
+        return res.json({ success: false, message: "Please fill all the required fields" });
     }
 
     if (!isMandarin(mandarinName) && mandarinName !== "-") {
-        return res.status(400).json({ success: false, message: "Mandarin name must be Chinese characters or '-'" });
+        return res.json({ success: false, message: "Mandarin name must be Chinese characters or '-'" });
     }
 
     if (!isValidEmail(email)) {
-        return res.status(400).json({ success: false, message: "Invalid email format" });
+        return res.json({ success: false, message: "Invalid email format" });
     }
 
     if (!isValidPhoneNumber(phone)) {
-        return res.status(400).json({ success: false, message: "Phone number must be formatted with +62XX or 0XX" });
+        return res.json({ success: false, message: "Phone number must be formatted with +62XX or 0XX" });
     }
 
     if (!isValidPassword(password)) {
-        return res.status(400).json({ success: false, message: "Password must have at least 8 characters with at least one letter and one number" });
+        return res.json({ success: false, message: "Password must have at least 8 characters with at least one letter and one number" });
     }
 
     try {
         const existingUser = await userModel.findOne({ Email: email });
         if (existingUser && existingUser.IsAccountVerified) {
-            return res.status(400).json({ success: false, message: "User already exists" });
+            return res.json({ success: false, message: "User already exists" });
         }
         if (existingUser && !existingUser.IsAccountVerified) {
             await userModel.findOneAndDelete({Email: email});
@@ -76,7 +81,7 @@ export const register = async (req, res) => {
 
         await user.save();
 
-        return res.status(200).json({ success: true, message: "Account created successfully", user });
+        return res.json({ success: true, message: "Account created successfully", user });
 
     } catch (error) {
         return res.status(500).json({ success: false, message: error.message });
@@ -87,18 +92,18 @@ export const register = async (req, res) => {
 export const login = async(req,res)=>{
     const {email,password} =req.body;
     if(!email || !password){
-        return res.status(400).json({success:false, message:"Please fill all the required fields"})
+        return res.json({success:false, message:"Please fill all the required fields"})
     }
 
     try {
         const user = await userModel.findOne({ Email: email });
         if(!user){
-            return res.status(400).json({success:false, message:'Invalid credentials'})
+            return res.json({success:false, message:'Invalid credentials'})
         }
 
         const isMatch = await bcrypt.compare(password, user.Password);
         if(!isMatch){
-            return res.status(400).json({success:false, message:"Invalid credentials"})
+            return res.json({success:false, message:"Invalid credentials"})
         }
 
         const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: '7d'});
@@ -109,7 +114,7 @@ export const login = async(req,res)=>{
             maxAge: 7 *24 *60 *60 *1000
         });
 
-        return res.status(200).json({success:true, message:"Logged in successfully"});
+        return res.json({success:true, message:"Logged in successfully"});
 
 
     } catch (error) {
