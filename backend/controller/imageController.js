@@ -1,22 +1,32 @@
-import fs from 'fs';  // Add this import
+import fs from 'fs';
 import { uploadToCloudinary } from '../config/upload.js';
 
-export const uploadImage = async (req, res) => {
-    if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
-  
-    try {
-      const fileUrl = await uploadToCloudinary(req.file.path);
-      
-      // Delete the local file after successful upload
-      fs.unlink(req.file.path, (err) => {
-        if (err) console.error('Error deleting local file:', err);
-      });
-      
-      res.json({ imageUrl: fileUrl });
-      
-    } catch (err) {
-      // Also delete the file if upload fails
-      fs.unlink(req.file.path, () => {});
-      res.status(500).json({ error: 'Failed to upload to Cloudinary' });
-    }
+export const uploadImage = async (req, res) => {  
+  if (!req.body.file) return res.json({ error: 'No file uploaded' });
+
+  try {
+    // Extract the base64 data from the data URL
+    const base64Data = req.body.file.replace(/^data:image\/\w+;base64,/, '');
+    const buffer = Buffer.from(base64Data, 'base64');
+    
+    // Create a temporary file path
+    const tempFilePath = `temp-${Date.now()}.png`; // or use the appropriate extension
+    
+    // Write the buffer to a temporary file
+    fs.writeFileSync(tempFilePath, buffer);
+    
+    // Upload to Cloudinary
+    const fileUrl = await uploadToCloudinary(tempFilePath);
+    
+    // Delete the temporary file after successful upload
+    fs.unlink(tempFilePath, (err) => {
+      if (err) console.error('Error deleting temporary file:', err);
+    });
+    
+    res.json({ imageUrl: fileUrl });
+    
+  } catch (err) {
+    console.error('Upload error:', err);
+    res.status(500).json({ error: 'Failed to upload to Cloudinary' });
   }
+}

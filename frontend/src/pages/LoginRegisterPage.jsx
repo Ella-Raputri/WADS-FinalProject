@@ -1,9 +1,12 @@
 import UploadImage from "@/components/UploadImage";
+import { AppContent } from "@/context/AppContext";
 import { faCalendar, faChevronLeft, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState, useRef } from "react";
+import axios from "axios";
+import { useState, useRef, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+
 
 const InputField = ({ id, type = "text", value, onChange, placeholder }) => (
   <div className="relative">
@@ -14,7 +17,7 @@ const InputField = ({ id, type = "text", value, onChange, placeholder }) => (
       value={value}
       onChange={onChange}
       placeholder={placeholder}
-      className="font-poppins w-full bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 pr-5 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow p-2"
+      className="font-poppins w-full bg-white placeholder:text-slate-400 active:bg-white text-slate-700 text-sm border border-slate-300 rounded-md pl-3 pr-5 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow p-2"
     />
   </div>
 );
@@ -40,6 +43,8 @@ const LoginRegisterPage = () => {
   const [image, setImage] =useState(null);
   const [imageName, setImageName] =useState("");
 
+  const {backendUrl, setIsLoggedIn, getUserData} = useContext(AppContent)
+
   const dobRef = useRef(null);
   const [showPassword, setShowPassword] =useState(false);  
 
@@ -48,36 +53,70 @@ const LoginRegisterPage = () => {
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    if (!emailLogin || !password) {
-      toast.error("email not valid")
-      return;
+  const handleLogin = async(e) => {
+    try {
+      e.preventDefault();
+      axios.defaults.withCredentials =true
+      const {data}=await axios.post(backendUrl+'api/auth/login', {email:emailLogin,password})
+      console.log(data)
+        
+      if(data.success){
+        setIsLoggedIn(true);
+        toast.success(data.message);
+        getUserData()
+        navigate('/userhome')
+      }
+      else{
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error('Error: '+ error.message)
     }
-    
-    navigate("/userhome");
   };
 
-  const handleSignUp = (e) => {
+  const handleSignUp = async(e) => {
     e.preventDefault();
-    // const studentCard = studentCardRef.current?.files[0];
-    if (
-      !formData.fullName ||
-      !formData.mandarinName ||
-      !formData.dob ||
-      !formData.gender ||
-      !formData.address ||
-      !formData.phone ||
-      !formData.email ||
-      !formData.institution ||
-      !studentCard
-    ) {
-      alert("Please fill in all fields");
-      return;
+
+    try {
+        const imageFormData = new FormData();
+        imageFormData.append('file', image); // 'image' should match the field name expected by multer
+
+        // 2. Upload image first
+        const { data: uploadData } = await axios.post(
+            backendUrl + 'api/image/upload', 
+            imageFormData, 
+            {
+                headers: { "Content-Type": "multipart/form-data" },
+                withCredentials: true,
+            }
+        );
+
+        if(!uploadData?.imageUrl) {
+            toast.error("Image upload failed");
+            return;
+        }
+
+        // 3. Prepare registration data
+        const registrationData = {
+            ...formData,
+            studentPhotoUrl: uploadData.imageUrl
+        };
+
+        // 4. Register user
+        axios.defaults.withCredentials =true
+        const { data } = await axios.post(backendUrl + 'api/auth/register', {participantDetails: registrationData});
+        
+        if(data.success) {
+            navigate('/user-verify-email');
+        } else {
+            toast.error(data.message);
+        }
+
+    } catch (error) {
+        console.error("Signup error:", error);
+        toast.error(error.response?.data?.message || error.message || "Signup failed");
     }
-    console.log("User Signed Up:", { ...formData, studentCard });
-    navigate("/userhome");
-  };
+};
 
   return (
     <div className="relative flex min-h-screen w-full items-center justify-center bg-cover bg-center px-4 py-8" style={{ backgroundImage: "url('/src/assets/Bg.webp')" }}>
