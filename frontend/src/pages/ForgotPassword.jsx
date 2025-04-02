@@ -1,16 +1,46 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import InputField from "@/components/InputField";
+import { toast } from "react-toastify";
+import { AppContent } from "@/context/AppContext";
+import axios from "axios";
 
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [showOtp, setShowOtp] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
   const [resendTimer, setResendTimer] = useState(30);
   const [canResend, setCanResend] = useState(false);
+  const [showPassword, setShowPassword] =useState(false);
+
   const navigate = useNavigate();
+  const {backendUrl} =useContext(AppContent);
+  const inputRefs = useRef([]);
+
+  const handleKeyDown = (e, index) => {
+    // Move focus to previous input on backspace if current is empty
+    if (e.key === 'Backspace' && !otp[index] && index > 0) {
+      inputRefs.current[index - 1]?.focus();
+    }
+  };
+
+  const handlePaste = (e) => {
+    e.preventDefault();
+    const pasteData = e.clipboardData.getData('text/plain').trim();
+    const pasteDigits = pasteData.replace(/\D/g, '').split('').slice(0, 6);
+    
+    if (pasteDigits.length === 6) {
+      const newOtp = [...otp];
+      pasteDigits.forEach((digit, i) => {
+        newOtp[i] = digit;
+      });
+      setOtp(newOtp);
+    }
+  };
 
   useEffect(() => {
     if (resendTimer > 0) {
@@ -21,29 +51,86 @@ const ForgotPasswordPage = () => {
     }
   }, [resendTimer]);
 
-  const handleResetRequest = (e) => {
+  useEffect(() => {
+    if (showOtp && inputRefs.current[0]) {
+      inputRefs.current[0].focus();
+    }
+  }, [showOtp]);
+
+  const sendingOtp =async()=>{
+    try {
+      const {data} =await axios.post(backendUrl+'api/auth/send-reset-otp', {email})
+      if(data.success){
+        setShowOtp(true)
+        setResendTimer(30);
+        setCanResend(false);
+        toast.success(data.message)
+      }
+      else toast.error(data.message)
+      
+    } catch (error) {
+      toast.error(error.message)
+    }
+  }
+
+  const handleResetRequest = async(e) => {
     e.preventDefault();
-    setShowOtp(true);
-    setResendTimer(30);
-    setCanResend(false);
-    alert("Password reset link has been sent to your email.");
+    sendingOtp();
   };
 
-  const handleResendCode = () => {
+  const handleResendCode = async() => {
     if (canResend) {
-      setResendTimer(30);
-      setCanResend(false);
-      alert("New OTP has been sent.");
+      sendingOtp();
     }
   };
 
   const handleOtpChange = (index, value) => {
+    // Only allow digits and empty string
     if (/^\d?$/.test(value)) {
       const newOtp = [...otp];
       newOtp[index] = value;
       setOtp(newOtp);
+  
+      // Auto-focus next input when a digit is entered
+      if (value && index < 5) {
+        inputRefs.current[index + 1]?.focus();
+      }
     }
   };
+
+  const onSubmitOtp =async(e)=>{
+    e.preventDefault()
+    const inputtedOtp = otp.join('')
+    
+    try {
+      console.log(email)
+      console.log(inputtedOtp)
+      const {data} =await axios.post(backendUrl+'api/auth/verify-otp-reset', {email:email, otp:inputtedOtp})
+      if(data.success){
+        setShowNewPassword(true)
+        toast.success(data.message)
+      }
+      else toast.error(data.message)
+      
+    } catch (error) {
+      toast.error(error.message)
+    }
+  }
+
+  const onSubmitNewPassword =async(e)=>{
+    e.preventDefault()
+    try {
+      const {data} = await axios.post(backendUrl+'api/auth/reset-password', {email:email,newPassword:newPassword})
+      if(data.success){
+        toast.success(data.message)
+        navigate('/login')
+      }
+      else toast.error(data.message)
+
+    } catch (error) {
+      toast.error(error.message)
+    }
+  }
 
   return (
     <div
@@ -68,7 +155,7 @@ const ForgotPasswordPage = () => {
         </div>
 
         <div className="p-6">
-          {!showOtp ? (
+          {!showOtp && !showNewPassword && (
             <form onSubmit={handleResetRequest} className="space-y-6">
               <InputField
                 id="email"
@@ -87,19 +174,25 @@ const ForgotPasswordPage = () => {
                 </button>
               </div>
             </form>
-          ) : (
-            <div className="space-y-6">
+          ) }
+
+
+          {showOtp && !showNewPassword && (
+            <form className="space-y-6" onSubmit={onSubmitOtp}>
               <p className="text-center text-gray-700 font-poppins">
                 Enter the 6-digit code sent to your email:
               </p>
-              <div className="flex justify-center space-x-2">
-                {otp.map((digit, index) => (
+              <div className="flex justify-center space-x-2" onPaste={handlePaste}>
+              {Array(6).fill(0).map((_, index) => (
                   <input
                     key={index}
                     type="text"
                     maxLength="1"
-                    value={digit}
+                    value={otp[index]}
+                    ref={(el) => (inputRefs.current[index] = el)}
                     onChange={(e) => handleOtpChange(index, e.target.value)}
+                    onKeyDown={(e) => handleKeyDown(e, index)}
+                    onPaste={handlePaste}
                     className="w-10 h-10 sm:w-12 sm:h-12 text-center text-xl font-semibold border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
                   />
                 ))}
@@ -127,8 +220,39 @@ const ForgotPasswordPage = () => {
                   </button>
               </div>
 
-            </div>
+            </form>
           )}
+
+          {showOtp && showNewPassword && (
+            <form onSubmit={onSubmitNewPassword} className="space-y-6">
+              <div className="w-full relative">
+                <InputField
+                  id="password"
+                  type={showPassword? 'text' : 'password'}
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder={"Enter new password"}
+                />
+
+                <button
+                  type="button"
+                  className="absolute cursor-pointer right-2 top-10 text-gray-500 w-5 h-5"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  <FontAwesomeIcon icon={showPassword? faEyeSlash: faEye} />
+                </button>
+              </div>
+
+              <div className="flex justify-center">
+                <button
+                  type="submit"
+                  className="w-full cursor-pointer shadow-md font-semibold rounded-md font-poppins bg-red-600 py-3 text-lg text-white hover:bg-red-700 focus:outline-none"
+                >
+                  Set New Password
+                </button>
+              </div>
+            </form>
+          ) }
 
           
         </div>
