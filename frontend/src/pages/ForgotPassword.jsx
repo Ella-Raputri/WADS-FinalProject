@@ -150,7 +150,9 @@ const ForgotPasswordPage = () => {
         <div className="bg-red-600 p-6 text-white text-center">
           <p className="mb-3 font-kanit text-3xl font-medium">Forgot Password</p>
           <p className="mb-3 text-md font-poppins">
-            {!showOtp? ("Enter your email to receive a password reset link.") : ("Insert the 6-number OTP sent to your email.")} 
+            {!showOtp && !showNewPassword && ("Enter your email to receive a password reset link.") }
+            {showOtp && !showNewPassword && ("Insert the 6-number OTP sent to your email.")} 
+            {showOtp && showNewPassword && ("Set a new password with at least 8 characters with the combination of letters and numbers.")} 
           </p>
         </div>
 
