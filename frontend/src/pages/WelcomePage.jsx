@@ -1,13 +1,23 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { motion } from "framer-motion";
 import { useNavigate } from 'react-router-dom';
 import Carousel from '../components/Carousel';
 import Tassle from '../components/Tassle';
+import { AppContent } from '@/context/AppContext';
 
 const WelcomePage = () => {
   const navigate = useNavigate();
   const competitionRef = useRef(null);
   const [animateCompetition, setAnimateCompetition] = useState(false);
+
+  const {isLoggedIn, userData} = useContext(AppContent);
+
+  useEffect(()=>{
+    if(isLoggedIn){
+      if(userData.role === 'admin') navigate('/admindashboard')
+      else if(userData.role === 'participant') navigate('/userhome')
+    }
+  }, [isLoggedIn, userData])
 
   useEffect(() => {
     const observer = new IntersectionObserver(

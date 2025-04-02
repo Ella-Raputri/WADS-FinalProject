@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import './App.css'
 import { BrowserRouter as Router, Route, Routes, useNavigate, useLocation, matchRoutes } from 'react-router-dom';
 import WelcomePage from './pages/WelcomePage.jsx'
@@ -21,6 +21,8 @@ import Loading from './components/Loading';
 import { ToastContainer } from 'react-toastify';
 import VerifyEmailPage from './pages/VerifyEmail';
 import ForgotPasswordPage from './pages/ForgotPassword.jsx';
+import { AppContent } from './context/AppContext';
+import ProtectedRoute from './lib/protectedRoute';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -57,41 +59,117 @@ function MainLayout() {
   const location = useLocation();
   const matchedRoute = matchRoutes(routes, location);
 
-const bgColor = matchedRoute
+  const bgColor = matchedRoute
   ? location.pathname.includes("admin")
     ? "#f7f7f7"
     : "white"
   : "#fcf1d4";
 
+
   return (
-    <div className={`flex flex-col min-h-screen`} style={{backgroundColor:bgColor}}>
-        <ScrollToTop />
-        <Navbar />
+    <div className={`flex flex-col min-h-screen`} style={{ backgroundColor: bgColor }}>
+      <ScrollToTop />
+      <Navbar />
 
-        <main className="flex-1"> 
-          <ToastContainer/>
-          <Routes>
-            <Route path='/' element={<WelcomePage />} />
-            <Route path='/login' element={<LoginRegisterPage />} />
-            <Route path='/verifyemail' element={<VerifyEmailPage />} />
-            <Route path='/forgotpassword' element={<ForgotPasswordPage />} />
+      <main className="flex-1">
+        <ToastContainer />
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<WelcomePage />} />
+          <Route path="/login" element={<LoginRegisterPage />} />
+          <Route path="/verifyemail" element={<VerifyEmailPage />} />
+          <Route path="/forgotpassword" element={<ForgotPasswordPage />} />
 
-            <Route path='/userhome' element={<HomePage />} />
-            <Route path='/usercomp' element={<CompetitionPage />} />
-            <Route path='/userhelp' element={<HelpPage />} />
-            <Route path='/usernewticket' element={<NewTicket />} />
-            <Route path='/userticketdetails' element={<TicketDetails />} />
+          {/* User-only Routes */}
+          <Route
+            path="/userhome"
+            element={
+              <ProtectedRoute allowedRoles={["participant"]}>
+                <HomePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/usercomp"
+            element={
+              <ProtectedRoute allowedRoles={["participant"]}>
+                <CompetitionPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/userhelp"
+            element={
+              <ProtectedRoute allowedRoles={["participant"]}>
+                <HelpPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/usernewticket"
+            element={
+              <ProtectedRoute allowedRoles={["participant"]}>
+                <NewTicket />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/userticketdetails"
+            element={
+              <ProtectedRoute allowedRoles={["participant","admin"]}>
+                <TicketDetails />
+              </ProtectedRoute>
+            }
+          />
 
-            <Route path='/admindashboard' element={<Dashboard />} />
-            <Route path='/admincomp' element={<CompManagement />} />
-            <Route path='/adminticket' element={<TicketManagement />} />
-            <Route path='/adminparticipantdetails' element={<ParticipantDetails />} />
-            <Route path='/adminticketdetails' element={<AdminTicketDetails />} />
+          {/* Admin-only Routes */}
+          <Route
+            path="/admindashboard"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admincomp"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <CompManagement />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/adminticket"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <TicketManagement />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/adminparticipantdetails"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <ParticipantDetails />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/adminticketdetails"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <AdminTicketDetails />
+              </ProtectedRoute>
+            }
+          />
 
-            <Route path='/*' element={<NotFound />} />
-          </Routes>
-        </main>
-        <Footer />
+          {/* Catch-all for 404 */}
+          <Route path="/*" element={<NotFound />} />
+        </Routes>
+      </main>
+
+      <Footer />
     </div>
   );
 }

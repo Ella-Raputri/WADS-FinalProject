@@ -27,7 +27,7 @@ const NewTicket = () => {
             </h1>
         </div>
 
-        <form className="space-y-4 font-poppins">
+        <form className="space-y-6 font-poppins">
             {/* Subject */}
             <div>
                 <label className="color-text-red font-semibold block mb-2 mt-5 ml-16 text-xl">Subject</label>
@@ -41,11 +41,24 @@ const NewTicket = () => {
             {/* Priority Dropdown */}
             <div>
                 <label className="ml-16 text-xl mt-8  color-text-red font-semibold block mb-2">Priority</label>
-                <select className="cursor-pointer ml-16 w-3/5 bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 pr-5 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow p-2">
+                <select className="cursor-pointer ml-16 w-3/5 bg-white placeholder:text-slate-400 text-slate-700 text-md border border-slate-300 rounded-md pl-3 pr-5 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow p-2">
                     <option value="low">Low</option>
                     <option value="medium">Medium</option>
                     <option value="high">High</option>
                     <option value="urgent">Urgent</option>
+                </select>
+            </div>
+
+            {/* Competition type */}
+            <div>
+                <label className="ml-16 text-xl mt-8  color-text-red font-semibold block mb-2">Competition Type</label>
+                <select className="cursor-pointer ml-16 w-3/5 bg-white placeholder:text-slate-400 text-slate-700 text-md border border-slate-300 rounded-md pl-3 pr-5 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow p-2">
+                    <option value="juniorsinging">Junior Singing</option>
+                    <option value="seniorsinging">Senior Singing</option>
+                    <option value="speech">Speech</option>
+                    <option value="storytelling">Storytelling</option>
+                    <option value="dubbing">Dubbing</option>
+                    <option value="posterdesign">Poster Design</option>
                 </select>
             </div>
 
@@ -61,7 +74,7 @@ const NewTicket = () => {
             </div>
 
             {/* Image Upload */}
-            <div className='ml-16 mt-10'>
+            <div className='ml-16 mt-4'>
                 <UploadImage image={image} imageName={imageName} setImage={setImage} setImageName={setImageName} />
             </div>
 

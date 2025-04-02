@@ -167,7 +167,8 @@ const TicketDetails = () => {
           <p className="font-poppins text-md max-w-10/12  break-all">
             test description
           </p>
-          <div className="mt-5 text-sm font-poppins leading-6 text-gray-500">
+          <div className="mt-5 text-sm font-poppins leading-7 text-gray-500">
+            <p><strong>Competition type:</strong> {data.comp_type}</p>
             <p><strong>Created at:</strong> {data.created_at}</p>
             <p><strong>Updated at:</strong> {data.updated_at}</p>
             <p><strong>Sender:</strong> albertsantoso@gmail.com</p>
