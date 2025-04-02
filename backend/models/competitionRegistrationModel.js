@@ -5,7 +5,11 @@ const CompetitionRegistrationSchema = new mongoose.Schema({
     CompTypeId: { type: mongoose.Schema.Types.ObjectId, ref: "CompetitionType", required: true },
     PaymentProof: { type: String, required: true },
     TwibbonProof: { type: String, required: true },
-    IsAccepted: { type: Boolean, default: false },
+    Status: { 
+      type: String, 
+      required: true, 
+      enum: ["Pending", "Accepted", "Rejected"] 
+    },
     AdminComment: { type: String }
   }, {timestamps: true});
   
