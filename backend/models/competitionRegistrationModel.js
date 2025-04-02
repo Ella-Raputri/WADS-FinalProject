@@ -10,7 +10,7 @@ const CompetitionRegistrationSchema = new mongoose.Schema({
       required: true, 
       enum: ["Pending", "Accepted", "Rejected"] 
     },
-    AdminComment: { type: String }
+    AdminComment: { type: String, default: '' }
   }, {timestamps: true});
   
 const competitionRegistrationModel = mongoose.models.CompetitionRegistration || mongoose.model('CompetitionRegistration', CompetitionRegistrationSchema);
