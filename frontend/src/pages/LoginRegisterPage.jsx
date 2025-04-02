@@ -3,7 +3,7 @@ import { AppContent } from "@/context/AppContext";
 import { faCalendar, faChevronLeft, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
-import { useState, useRef, useContext } from "react";
+import { useState, useRef, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import InputField from "@/components/InputField";
@@ -29,7 +29,7 @@ const LoginRegisterPage = () => {
   const [image, setImage] =useState(null);
   const [imageName, setImageName] =useState("");
 
-  const {backendUrl, setIsLoggedIn, getUserData} = useContext(AppContent)
+  const {backendUrl, setIsLoggedIn, getUserData, userData} = useContext(AppContent)
 
   const dobRef = useRef(null);
   const [showPassword, setShowPassword] =useState(false);  
@@ -38,6 +38,14 @@ const LoginRegisterPage = () => {
     const { id, value } = e.target;
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
+
+  useEffect(()=>{
+    if(userData){
+      console.log(userData.role)
+      if(userData.role === 'admin') navigate('/admindashboard') 
+      else if(userData.role === 'participant') navigate('/userhome')
+    }
+  },[userData])
 
   const handleLogin = async(e) => {
     try {
@@ -50,7 +58,6 @@ const LoginRegisterPage = () => {
         setIsLoggedIn(true);
         toast.success(data.message);
         getUserData()
-        navigate('/userhome')
       }
       else{
         toast.error(data.message);

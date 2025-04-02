@@ -1,12 +1,21 @@
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
 import { Bars3Icon, ChevronLeftIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { AppContent } from '@/context/AppContext';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const Navbar = () => {
-  const [userRole, setUserRole] = useState('participant'); // null (guest), 'participant', 'admin'
+  const [userRole, setUserRole] = useState(null); // null (guest), 'participant', 'admin'
   const location = useLocation();
   const navigate = useNavigate();
+
+  const {backendUrl, userData, setUserData, setIsLoggedIn} = useContext(AppContent)
+
+  useEffect(()=>{
+    if(userData) setUserRole(userData.role);
+  }, [userData])
 
   if (location.pathname === '/login') {
     return (
@@ -21,9 +30,22 @@ const Navbar = () => {
     );
   }
 
-  const logOut = () => {
-    setUserRole(null);
-    navigate('/');
+  const logOut = async() => {
+    try {
+      const {data} =await axios.post(backendUrl+'api/auth/logout')
+      if(data.success){
+        setUserRole(null)
+        setIsLoggedIn(false)
+        setUserData(null)
+
+        toast.success(data.message)
+        navigate('/')
+      }
+      else toast.error(data.message)
+
+    } catch (error) {
+      console.error(error.message)
+    }
   }
 
   const navigation = userRole === 'admin' ? [

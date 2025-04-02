@@ -13,7 +13,7 @@ const VerifyEmailPage = () => {
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
 
-  const {backendUrl} =useContext(AppContent);
+  const {backendUrl, getUserData} =useContext(AppContent);
   const inputRefs = useRef([]);
   const location = useLocation();
 
@@ -110,6 +110,7 @@ const VerifyEmailPage = () => {
       const {data} =await axios.post(backendUrl+'api/auth/verify-account', {email:email, otp:inputtedOtp})
       if(data.success){
         toast.success(data.message)
+        getUserData()
         navigate('/userhome')
       }
       else toast.error(data.message)
