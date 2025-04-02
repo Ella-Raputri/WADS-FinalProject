@@ -143,6 +143,11 @@ export const logout = async(req,res)=>{
 export const sendVerifyOtp =async(req,res) =>{
     try {
         const {email} = req.body;
+        console.log(email);
+        if(!email){
+            console.error("email is required");
+        }
+
         const user = await userModel.findOne({Email: email});
         if(user.IsAccountVerified){
             return res.json({success:false, message:"Account already verified"});
@@ -162,11 +167,11 @@ export const sendVerifyOtp =async(req,res) =>{
         const info = await transporter.sendMail(mailOptions);
         console.log("Message sent: %s", info.messageId)
 
-        return res.status(200).json({success:true, message:"Verification OTP has been sent"})
+        return res.json({success:true, message:"Verification OTP has been sent"})
 
 
     } catch (error) {
-        return res.status(500).json({success:false, message:error.message}) 
+        return res.json({success:false, message:error.message}) 
     }
 }
 
@@ -175,7 +180,7 @@ export const verifyEmail = async(req,res)=>{
     const {email, otp} = req.body;
 
     if(!otp){
-        return res.status(400).json({success:false, message:"Missing details"}) 
+        return res.json({success:false, message:"Missing details"}) 
     }
 
     try {

@@ -75,17 +75,25 @@ const LoginRegisterPage = () => {
                 headers: { "Content-Type": "multipart/form-data" },
                 withCredentials: true,
             }
-        );
+        ).catch(error => {
+            // Handle image upload failure
+            console.error("Image upload error:", error);
+            toast.error("Image upload failed. Please try again.");
+            throw error; // Stop execution if image upload fails
+        });
 
         if(!uploadData?.imageUrl) {
             toast.error("Image upload failed");
             return;
         }
 
+
+
         // 3. Prepare registration data
         const registrationData = {
             ...formData,
             studentPhotoUrl: uploadData.imageUrl
+            // studentPhotoUrl: "example.com"
         };
 
         // 4. Register user
@@ -93,7 +101,8 @@ const LoginRegisterPage = () => {
         const { data } = await axios.post(backendUrl + 'api/auth/register', {participantDetails: registrationData});
         
         if(data.success) {
-            navigate('/verifyemail');
+          navigate('/verifyemail', { state: { email: registrationData.email } });
+          console.log("passing emaill: "+registrationData.email);
         } else {
             toast.error(data.message);
         }

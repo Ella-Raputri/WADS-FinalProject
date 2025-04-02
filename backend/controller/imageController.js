@@ -2,7 +2,8 @@ import fs from 'fs';
 import { uploadToCloudinary } from '../config/upload.js';
 
 export const uploadImage = async (req, res) => {  
-  if (!req.body.file) return res.json({ error: 'No file uploaded' });
+  console.log("yuhu")
+  if (!req.body.file) return res.json({ message: 'No file uploaded' });
 
   try {
     // Extract the base64 data from the data URL

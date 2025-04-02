@@ -1,13 +1,22 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { AppContent } from "@/context/AppContext";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 const VerifyEmailPage = () => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [resendTimer, setResendTimer] = useState(30);
   const [canResend, setCanResend] = useState(false);
+  const [email, setEmail] = useState("");
   const navigate = useNavigate();
+
+  const {backendUrl} =useContext(AppContent);
+  const inputRefs = useRef([]);
+  const location = useLocation();
+
 
   useEffect(() => {
     if (resendTimer > 0) {
@@ -18,21 +27,97 @@ const VerifyEmailPage = () => {
     }
   }, [resendTimer]);
 
+  const sendingOtp =async()=>{
+    try {
+      axios.defaults.withCredentials = true;
+      const {data} =await axios.post(backendUrl+'api/auth/send-verify-otp', {email:email})
+      if(data.success){
+        setResendTimer(30);
+        setCanResend(false);
+        toast.success(data.message)
+      }
+      else toast.error(data.message)
+      
+    } catch (error) {
+      toast.error(error.message)
+    }
+  }
+
+  useEffect(() => {
+    if (location.state?.email) {
+      setEmail(location.state.email);
+      console.log(location.state.email);
+    }
+    else navigate('/login')
+  }, [location.state?.email]);
+
+  useEffect(() => {
+      if (email) {
+          console.log("Email before sending OTP: " + email);
+          sendingOtp();
+      }
+  }, [email]);
+
   const handleResendCode = () => {
     if (canResend) {
-      setResendTimer(30);
-      setCanResend(false);
-      alert("New OTP has been sent.");
+      sendingOtp();
     }
   };
 
   const handleOtpChange = (index, value) => {
+    // Only allow digits and empty string
     if (/^\d?$/.test(value)) {
       const newOtp = [...otp];
       newOtp[index] = value;
       setOtp(newOtp);
+  
+      // Auto-focus next input when a digit is entered
+      if (value && index < 5) {
+        inputRefs.current[index + 1]?.focus();
+      }
     }
   };
+
+  const handleKeyDown = (e, index) => {
+    // Move focus to previous input on backspace if current is empty
+    if (e.key === 'Backspace' && !otp[index] && index > 0) {
+      inputRefs.current[index - 1]?.focus();
+    }
+  };
+
+  const handlePaste = (e) => {
+    e.preventDefault();
+    const pasteData = e.clipboardData.getData('text/plain').trim();
+    const pasteDigits = pasteData.replace(/\D/g, '').split('').slice(0, 6);
+    
+    if (pasteDigits.length === 6) {
+      const newOtp = [...otp];
+      pasteDigits.forEach((digit, i) => {
+        newOtp[i] = digit;
+      });
+      setOtp(newOtp);
+    }
+  };
+
+  const onSubmitOtp = async(e)=>{
+    e.preventDefault()
+    const inputtedOtp = otp.join('')
+    axios.defaults.withCredentials = true;
+    
+    try {
+      console.log(email)
+      console.log(inputtedOtp)
+      const {data} =await axios.post(backendUrl+'api/auth/verify-account', {email:email, otp:inputtedOtp})
+      if(data.success){
+        toast.success(data.message)
+        navigate('/userhome')
+      }
+      else toast.error(data.message)
+      
+    } catch (error) {
+      toast.error(error.message)
+    }
+  }
 
   return (
     <div
@@ -41,12 +126,6 @@ const VerifyEmailPage = () => {
     >
       <div className="absolute inset-0 bg-black/30 backdrop-blur-xl"></div>
 
-      <button
-        className="bg-white absolute top-8 left-8 z-1000 text-slate-500 border shadow-md border-slate-300 w-10 h-10 flex items-center justify-center rounded-full hover:cursor-pointer hover:bg-gray-100"
-        onClick={() => navigate("/login")}
-      >
-        <FontAwesomeIcon icon={faChevronLeft} />
-      </button>
 
       <div className="relative z-10 flex w-full max-w-md flex-col overflow-hidden rounded-lg bg-white shadow-lg">
         <div className="bg-red-600 p-6 text-white text-center">
@@ -56,25 +135,28 @@ const VerifyEmailPage = () => {
           </p>
         </div>
 
-        <div className="p-6 space-y-6">
+        <form className="space-y-6 p-6" onSubmit={onSubmitOtp}>
           <p className="text-center text-gray-700 font-poppins">
             Enter the 6-digit code sent to your email:
           </p>
-          <div className="flex justify-center space-x-2">
-            {otp.map((digit, index) => (
+          <div className="flex justify-center space-x-2" onPaste={handlePaste}>
+          {Array(6).fill(0).map((_, index) => (
               <input
                 key={index}
                 type="text"
                 maxLength="1"
-                value={digit}
+                value={otp[index]}
+                ref={(el) => (inputRefs.current[index] = el)}
                 onChange={(e) => handleOtpChange(index, e.target.value)}
+                onKeyDown={(e) => handleKeyDown(e, index)}
+                onPaste={handlePaste}
                 className="w-10 h-10 sm:w-12 sm:h-12 text-center text-xl font-semibold border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
               />
             ))}
           </div>
 
           <div className="flex justify-center mb-8">
-            <p className="font-poppins text-md text-gray-600">Haven't got the code? &nbsp;</p>
+            <p className="font-poppins text-md text-gray-600" >Haven't got the code? &nbsp;</p>
             <p
               onClick={canResend ? handleResendCode : undefined}
               className={`font-poppins underline text-md ${
@@ -85,15 +167,17 @@ const VerifyEmailPage = () => {
             </p>
           </div>
 
+          
           <div className="flex justify-center">
             <button
-              type="submit"
-              className="w-full cursor-pointer shadow-md font-semibold rounded-md font-poppins bg-red-600 py-3 text-lg text-white hover:bg-red-700 focus:outline-none"
-            >
-              Submit OTP
-            </button>
+                type="submit"
+                className="w-full cursor-pointer shadow-md font-semibold rounded-md font-poppins bg-red-600 py-3 text-lg text-white hover:bg-red-700 focus:outline-none"
+              >
+                Submit OTP
+              </button>
           </div>
-        </div>
+
+        </form>
       </div>
     </div>
   );
