@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Table from '../../components/Table';
 import Pagination from '../../components/Pagination';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"; 
@@ -6,6 +6,7 @@ import { faFilter, faPlus } from "@fortawesome/free-solid-svg-icons";
 import AccordionFAQ from '../../components/AccordionFAQ';
 import { useNavigate } from 'react-router-dom';
 import FilterModal from '../../components/FilterModal';
+import { AppContent } from '@/context/AppContext';
 
 const HelpPage = () => {
   const cols = ["SUBJECT", "CREATED AT", "UPDATED AT", "PRIORITY", "STATUS"];
@@ -82,6 +83,7 @@ const HelpPage = () => {
   const [openFilter, setOpenFilter] =useState(false);
   const [filteredData, setFilteredData] = useState(data);
 
+  const {isLoggedIn} = useContext(AppContent);
 
   const itemsPerPage = 5;
   const totalResult = filteredData.length; 
@@ -151,7 +153,8 @@ const HelpPage = () => {
         <AccordionFAQ />
       </div>
 
-
+      {isLoggedIn && 
+      <div>
       <div className="flex justify-between items-center md:ml-20 mt-15 p-6 pb-0">
         <h1 className="mt-2 font-medium text-3xl font-kanit">
           Help Tickets
@@ -197,7 +200,10 @@ const HelpPage = () => {
       </div>
 
       {openFilter && <FilterModal isOpen={openFilter} onClose={()=>setOpenFilter(false)} onApply={handleFilter}/>}
-    </>
+      </div>
+      }
+      
+      </>
   );
 };
 

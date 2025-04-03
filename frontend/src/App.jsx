@@ -79,6 +79,8 @@ function MainLayout() {
           <Route path="/login" element={<LoginRegisterPage />} />
           <Route path="/verifyemail" element={<VerifyEmailPage />} />
           <Route path="/forgotpassword" element={<ForgotPasswordPage />} />
+          <Route path="/usercomp" element={<CompetitionPage />} />
+          <Route path="/userhelp" element={<HelpPage />} />
 
           {/* User-only Routes */}
           <Route
@@ -89,7 +91,7 @@ function MainLayout() {
               </ProtectedRoute>
             }
           />
-          <Route
+          {/* <Route
             path="/usercomp"
             element={
               <ProtectedRoute allowedRoles={["participant"]}>
@@ -104,7 +106,7 @@ function MainLayout() {
                 <HelpPage />
               </ProtectedRoute>
             }
-          />
+          /> */}
           <Route
             path="/usernewticket"
             element={

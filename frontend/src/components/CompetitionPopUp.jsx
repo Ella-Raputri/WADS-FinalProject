@@ -1,16 +1,19 @@
 import Modal from "react-modal";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import UploadTwibbonPayment from "./UploadTwibbonPayment";
+import { AppContent } from "@/context/AppContext";
+import { toast } from "react-toastify";
 
 
 export const CompetitionPopUp = ({ competition, isRegistered, isOpen, onClose }) => {
     let requirement_arr = competition.rules.split("\n");
 
-    const [uploadOpen, setUploadOpen] = useState(false);  // State for upload pop-up
+    const [uploadOpen, setUploadOpen] = useState(false); 
     const navigate = useNavigate();
+    const {isLoggedIn} = useContext(AppContent);
 
     useEffect(() => {
         if (isOpen || uploadOpen) {
@@ -44,6 +47,16 @@ export const CompetitionPopUp = ({ competition, isRegistered, isOpen, onClose })
         };
       }, [isOpen, uploadOpen]);
 
+    const handleRegisterCompetition = ()=>{
+      if(isLoggedIn){
+        setUploadOpen(true)
+      }
+      else {
+        toast.warning("Please log in or register an account first.")
+        navigate('/login')
+      }
+    }
+
     return (
         <>
         {/* Main Competition Modal */}
@@ -72,7 +85,7 @@ export const CompetitionPopUp = ({ competition, isRegistered, isOpen, onClose })
                   ))}
               </ul>
               <button 
-                onClick={() => setUploadOpen(true)} 
+                onClick={handleRegisterCompetition} 
                 className={`w-30 h-9 mt-8 ${isRegistered ? "bg-[#319340]" : "bg-red-600 cursor-pointer hover:bg-red-700 shadow-md"} font-poppins font-semibold rounded-md text-white text-center block mx-auto mb-2`}
               >
                 {isRegistered ? "Registered" : "Register"}
