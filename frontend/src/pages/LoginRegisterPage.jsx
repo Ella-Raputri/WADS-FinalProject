@@ -72,7 +72,7 @@ const LoginRegisterPage = () => {
 
     try {
         const imageFormData = new FormData();
-        imageFormData.append('file', image); // 'image' should match the field name expected by multer
+        imageFormData.append('file', image); 
 
         // 2. Upload image first
         const { data: uploadData } = await axios.post(
@@ -102,6 +102,7 @@ const LoginRegisterPage = () => {
             studentPhotoUrl: uploadData.imageUrl
             // studentPhotoUrl: "example.com"
         };
+        registrationData.email = formData.email.toLowerCase()
 
         // 4. Register user
         axios.defaults.withCredentials =true

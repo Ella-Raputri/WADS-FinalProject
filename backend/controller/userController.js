@@ -11,8 +11,12 @@ export const getUserData =async(req,res)=>{
         return res.json({
             success:true, 
             userData: {
-                name:user.FullName,
-                role:user.Role,
+                name: user.FullName,
+                phone: user.PhoneNumber,
+                email: user.Email,
+                role: user.Role,
+                participant: user.Participant,   //di dalam sini ada info ttg nama mandarin, dob, gender, address, institution, studentcardphotoURL
+                admin: user.Admin,               //di dalam sini ada info ttg compType admin
                 isAccountVerified: user.IsAccountVerified,
             }
         })

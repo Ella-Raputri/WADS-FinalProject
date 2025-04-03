@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { SecheduleList } from '../../components/ScheduleList';
 import { UpcomingCompetitionsList } from '../../components/UpcomingCompetitionsList';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -6,6 +6,7 @@ import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { UserData } from '../../components/UserData';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import { EditAccount } from '@/components/EditAccount';
+import { AppContent } from '@/context/AppContext';
 
 const HomePage = () => {
   let upcomingCompetitions = [
@@ -66,8 +67,21 @@ endDate: new Date(2026, 0, 15)
   let sortedCompetitions = upcomingCompetitions.sort((a, b) => a.startDate - b.startDate);
   const [isEditingAccount, setIsEditingAccount] = useState(false);
 
-  const [userName, setUsername] = useState("Santoso")
-  const [mandarinName, setMandarinName] = useState("Xi Xi Xi")
+  //userData isinya ada apa aja, silakan lihat ke userController.js ~
+  const {userData} = useContext(AppContent);
+  
+  //berikut adalah isi dari participant field dari userData
+  // MandarinName: { type: String },
+  // DOB: { type: Date },
+  // Gender: { type: String },
+  // Address: { type: String },
+  // Institution: { type: String },
+  // StudentCardPhoto: { type: String },
+
+  const [userName, setUsername] = useState(userData.name)
+  const [mandarinName, setMandarinName] = useState(userData.participant.MandarinName)
+
+  //yang di bawah ini, silakan lanjutkan :D
   const [email, setEmail] = useState("Santoso@gmail.com")
   const [dateOfBirth, setDateOfBirth] = useState("2002-01-02");
   const [gender, setGender] = useState("Male");
