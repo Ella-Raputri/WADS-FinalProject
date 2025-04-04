@@ -6,6 +6,7 @@ import connectDB from './config/mongodb.js'
 import authRouter from './routes/authRoutes.js'
 import userRouter from './routes/userRoutes.js';
 import imageRouter from './routes/imageRoutes.js'
+import adminDashboardRouter from './routes/adminDashboardRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 4000
@@ -26,7 +27,7 @@ app.use(cookieParser());
 app.get('/', (req, res) => res.send("API get working"));
 app.use('/api/auth', authRouter)
 app.use('/api/user', userRouter)
-
+app.use('/api/admindashboard', adminDashboardRouter)
 
 app.listen(PORT, ()=>console.log(`server started on ${PORT}`));
 
