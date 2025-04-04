@@ -1,0 +1,33 @@
+import ticketModel from "../models/ticketModel.js";
+
+export const uploadNewTicket =async(req,res)=>{
+    const {userId, newTicketDetails} = req.body;
+    
+    if(!newTicketDetails.subject || !newTicketDetails.description){
+        return res.json({success:false, message:"Please fill in the subject and description."})
+    }
+
+    try {
+        let imageLink =''
+        if(newTicketDetails.imageUrl) imageLink=newTicketDetails.imageUrl
+
+        const newTicket = new ticketModel({
+            Subject: newTicketDetails.subject,
+            PriorityType: newTicketDetails.priorityType,
+            Status: "Open",
+            Description: newTicketDetails.description,
+            Image: imageLink,
+            SenderId: userId,
+            CompTypeId: newTicketDetails.compTypeId
+        });
+
+        await newTicket.save();
+        return res.json({ success: true, message: "Ticket created successfully" });
+
+    } catch (error) {
+        return res.status(500).json({success:false, message:error.message})
+    }
+    
+    
+    
+}
