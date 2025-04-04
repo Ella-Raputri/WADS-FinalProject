@@ -13,10 +13,10 @@ const TicketSchema = new mongoose.Schema({
       enum: ["Open", "Closed", "In Progress", "Resolved"] 
     },
     Description: { type: String },
+    Image: { type: String, default: null },
     SenderId: { type: mongoose.Schema.Types.ObjectId, ref: "user", required: true},
     HandledBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
-    CompTypeId: { type: mongoose.Schema.Types.ObjectId, ref: "CompetitionType", required: true }
-
+    CompTypeId: { type: mongoose.Schema.Types.ObjectId, ref: "CompetitionType", required: true },
   }, {timestamps: true});
   
 const ticketModel = mongoose.models.ticket || mongoose.model('ticket', TicketSchema);

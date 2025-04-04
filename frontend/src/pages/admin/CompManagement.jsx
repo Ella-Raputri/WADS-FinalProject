@@ -165,7 +165,7 @@ const CompManagement = () => {
 
       <div className="md:ml-20 mb-30 p-4 pt-0 pl-0">
         {currentData.length > 0 ? (
-          <Table key={tracker} columns={cols} data={currentData} />
+          <Table key={tracker} columns={cols} data={currentData} isTicketTable={false}/>
         ) : (
           <div className="text-center font-semibold text-gray-500 p-5">No data available</div>
         )}
