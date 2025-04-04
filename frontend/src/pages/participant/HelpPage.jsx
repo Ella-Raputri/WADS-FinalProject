@@ -7,75 +7,32 @@ import AccordionFAQ from '../../components/AccordionFAQ';
 import { useNavigate } from 'react-router-dom';
 import FilterModal from '../../components/FilterModal';
 import { AppContent } from '@/context/AppContext';
+import axios from 'axios';
 
 const HelpPage = () => {
   const cols = ["SUBJECT", "CREATED AT", "UPDATED AT", "PRIORITY", "STATUS"];
-  const data = [
-    { subject: "Email not sending", created_at: "2025-02-25", updated_at: "2025-02-26", priority: "High", status: "Open" , comp_type:"Senior Singing"},
-    { subject: "Bug in profile update", created_at: "2025-02-24", updated_at: "2025-02-25", priority: "Low", status: "Closed" , comp_type:"Speech"},
-    { subject: "Fix login issue", created_at: "2024-02-28", updated_at: "2024-02-28", priority: "High", status: "Open" , comp_type:"Storytelling"},
-    { subject: "Update dashboard UI", created_at: "2024-02-27", updated_at: "2024-02-28", priority: "Medium", status: "In Progress", comp_type:"Storytelling" },
-    { subject: "Optimize database queries", created_at: "2024-02-26", updated_at: "2024-02-27", priority: "Low", status: "Closed" , comp_type:"Poster Design"},
-    { subject: "Cannot connect", created_at: "2024-02-26", updated_at: "2024-02-27", priority: "Urgent", status: "Resolved" , comp_type:"Speech"},
-    { subject: "Email not sending", created_at: "2024-02-25", updated_at: "2024-02-26", priority: "High", status: "Open" , comp_type:"Storytelling"},
-    { subject: "Bug in profile update", created_at: "2024-02-24", updated_at: "2024-02-25", priority: "Low", status: "Closed" , comp_type:"Speech"},
-    { subject: "Fix login issue", created_at: "2024-02-28", updated_at: "2024-02-28", priority: "High", status: "Open" , comp_type:"Dubbing"},
-    { subject: "Update dashboard UI", created_at: "2024-02-27", updated_at: "2024-02-28", priority: "Medium", status: "In Progress" , comp_type:"Speech"},
-    { subject: "Optimize database queries", created_at: "2024-02-26", updated_at: "2024-02-27", priority: "Low", status: "Closed" , comp_type:"Speech"},
-    { subject: "Cannot connect", created_at: "2024-02-26", updated_at: "2024-02-27", priority: "Urgent", status: "Resolved" , comp_type:"Junior Singing"},
-    { subject: "Email not sending", created_at: "2024-02-25", updated_at: "2024-02-26", priority: "High", status: "Open" , comp_type:"Storytelling"},
-    { subject: "Bug in profile update", created_at: "2024-02-24", updated_at: "2024-02-25", priority: "Low", status: "Closed" , comp_type:"Dubbing"},
-    { subject: "Fix login issue", created_at: "2024-02-28", updated_at: "2024-02-28", priority: "High", status: "Open" , comp_type:"Speech"},
-    { subject: "Update dashboard UI", created_at: "2024-02-27", updated_at: "2024-02-28", priority: "Medium", status: "In Progress" , comp_type:"Dubbing"},
-    { subject: "Email not sending", created_at: "2025-02-25", updated_at: "2025-02-26", priority: "High", status: "Open" , comp_type:"Senior Singing"},
-    { subject: "Bug in profile update", created_at: "2025-02-24", updated_at: "2025-02-25", priority: "Low", status: "Closed" , comp_type:"Speech"},
-    { subject: "Fix login issue", created_at: "2024-02-28", updated_at: "2024-02-28", priority: "High", status: "Open" , comp_type:"Storytelling"},
-    { subject: "Update dashboard UI", created_at: "2024-02-27", updated_at: "2024-02-28", priority: "Medium", status: "In Progress", comp_type:"Storytelling" },
-    { subject: "Optimize database queries", created_at: "2024-02-26", updated_at: "2024-02-27", priority: "Low", status: "Closed" , comp_type:"Poster Design"},
-    { subject: "Cannot connect", created_at: "2024-02-26", updated_at: "2024-02-27", priority: "Urgent", status: "Resolved" , comp_type:"Speech"},
-    { subject: "Email not sending", created_at: "2024-02-25", updated_at: "2024-02-26", priority: "High", status: "Open" , comp_type:"Storytelling"},
-    { subject: "Bug in profile update", created_at: "2024-02-24", updated_at: "2024-02-25", priority: "Low", status: "Closed" , comp_type:"Speech"},
-    { subject: "Fix login issue", created_at: "2024-02-28", updated_at: "2024-02-28", priority: "High", status: "Open" , comp_type:"Dubbing"},
-    { subject: "Update dashboard UI", created_at: "2024-02-27", updated_at: "2024-02-28", priority: "Medium", status: "In Progress" , comp_type:"Speech"},
-    { subject: "Optimize database queries", created_at: "2024-02-26", updated_at: "2024-02-27", priority: "Low", status: "Closed" , comp_type:"Speech"},
-    { subject: "Cannot connect", created_at: "2024-02-26", updated_at: "2024-02-27", priority: "Urgent", status: "Resolved" , comp_type:"Junior Singing"},
-    { subject: "Email not sending", created_at: "2024-02-25", updated_at: "2024-02-26", priority: "High", status: "Open" , comp_type:"Storytelling"},
-    { subject: "Bug in profile update", created_at: "2024-02-24", updated_at: "2024-02-25", priority: "Low", status: "Closed" , comp_type:"Dubbing"},
-    { subject: "Fix login issue", created_at: "2024-02-28", updated_at: "2024-02-28", priority: "High", status: "Open" , comp_type:"Speech"},
-    { subject: "Update dashboard UI", created_at: "2024-02-27", updated_at: "2024-02-28", priority: "Medium", status: "In Progress" , comp_type:"Dubbing"},
-    { subject: "Email not sending", created_at: "2025-02-25", updated_at: "2025-02-26", priority: "High", status: "Open" , comp_type:"Senior Singing"},
-    { subject: "Bug in profile update", created_at: "2025-02-24", updated_at: "2025-02-25", priority: "Low", status: "Closed" , comp_type:"Speech"},
-    { subject: "Fix login issue", created_at: "2024-02-28", updated_at: "2024-02-28", priority: "High", status: "Open" , comp_type:"Storytelling"},
-    { subject: "Update dashboard UI", created_at: "2024-02-27", updated_at: "2024-02-28", priority: "Medium", status: "In Progress", comp_type:"Storytelling" },
-    { subject: "Optimize database queries", created_at: "2024-02-26", updated_at: "2024-02-27", priority: "Low", status: "Closed" , comp_type:"Poster Design"},
-    { subject: "Cannot connect", created_at: "2024-02-26", updated_at: "2024-02-27", priority: "Urgent", status: "Resolved" , comp_type:"Speech"},
-    { subject: "Email not sending", created_at: "2024-02-25", updated_at: "2024-02-26", priority: "High", status: "Open" , comp_type:"Storytelling"},
-    { subject: "Bug in profile update", created_at: "2024-02-24", updated_at: "2024-02-25", priority: "Low", status: "Closed" , comp_type:"Speech"},
-    { subject: "Fix login issue", created_at: "2024-02-28", updated_at: "2024-02-28", priority: "High", status: "Open" , comp_type:"Dubbing"},
-    { subject: "Update dashboard UI", created_at: "2024-02-27", updated_at: "2024-02-28", priority: "Medium", status: "In Progress" , comp_type:"Speech"},
-    { subject: "Optimize database queries", created_at: "2024-02-26", updated_at: "2024-02-27", priority: "Low", status: "Closed" , comp_type:"Speech"},
-    { subject: "Cannot connect", created_at: "2024-02-26", updated_at: "2024-02-27", priority: "Urgent", status: "Resolved" , comp_type:"Junior Singing"},
-    { subject: "Email not sending", created_at: "2024-02-25", updated_at: "2024-02-26", priority: "High", status: "Open" , comp_type:"Storytelling"},
-    { subject: "Bug in profile update", created_at: "2024-02-24", updated_at: "2024-02-25", priority: "Low", status: "Closed" , comp_type:"Dubbing"},
-    { subject: "Fix login issue", created_at: "2024-02-28", updated_at: "2024-02-28", priority: "High", status: "Open" , comp_type:"Speech"},
-    { subject: "Update dashboard UI", created_at: "2024-02-27", updated_at: "2024-02-28", priority: "Medium", status: "In Progress" , comp_type:"Dubbing"},
-    { subject: "Email not sending", created_at: "2025-02-25", updated_at: "2025-02-26", priority: "High", status: "Open" , comp_type:"Senior Singing"},
-    { subject: "Bug in profile update", created_at: "2025-02-24", updated_at: "2025-02-25", priority: "Low", status: "Closed" , comp_type:"Speech"},
-    { subject: "Fix login issue", created_at: "2024-02-28", updated_at: "2024-02-28", priority: "High", status: "Open" , comp_type:"Storytelling"},
-    { subject: "Update dashboard UI", created_at: "2024-02-27", updated_at: "2024-02-28", priority: "Medium", status: "In Progress", comp_type:"Storytelling" },
-    { subject: "Optimize database queries", created_at: "2024-02-26", updated_at: "2024-02-27", priority: "Low", status: "Closed" , comp_type:"Poster Design"},
-    { subject: "Cannot connect", created_at: "2024-02-26", updated_at: "2024-02-27", priority: "Urgent", status: "Resolved" , comp_type:"Speech"},
-    { subject: "Email not sending", created_at: "2024-02-25", updated_at: "2024-02-26", priority: "High", status: "Open" , comp_type:"Storytelling"},
-    { subject: "Bug in profile update", created_at: "2024-02-24", updated_at: "2024-02-25", priority: "Low", status: "Closed" , comp_type:"Speech"},
-    { subject: "Fix login issue", created_at: "2024-02-28", updated_at: "2024-02-28", priority: "High", status: "Open" , comp_type:"Dubbing"},
-    { subject: "Update dashboard UI", created_at: "2024-02-27", updated_at: "2024-02-28", priority: "Medium", status: "In Progress" , comp_type:"Speech"},
-    { subject: "Optimize database queries", created_at: "2024-02-26", updated_at: "2024-02-27", priority: "Low", status: "Closed" , comp_type:"Speech"},
-    { subject: "Cannot connect", created_at: "2024-02-26", updated_at: "2024-02-27", priority: "Urgent", status: "Resolved" , comp_type:"Junior Singing"},
-    { subject: "Email not sending", created_at: "2024-02-25", updated_at: "2024-02-26", priority: "High", status: "Open" , comp_type:"Storytelling"},
-    { subject: "Bug in profile update", created_at: "2024-02-24", updated_at: "2024-02-25", priority: "Low", status: "Closed" , comp_type:"Dubbing"},
-    { subject: "Fix login issue", created_at: "2024-02-28", updated_at: "2024-02-28", priority: "High", status: "Open" , comp_type:"Speech"},
-    { subject: "Update dashboard UI", created_at: "2024-02-27", updated_at: "2024-02-28", priority: "Medium", status: "In Progress" , comp_type:"Dubbing"},
-  ];
+  const [data, setData] = useState([]);
+  const {backendUrl} = useContext(AppContent);
+
+  const fetchTickets = async () => {
+    try {
+        const response = await axios.get(`${backendUrl}api/ticket/getAllTickets`);
+        console.log("📡 Fetched Tickets:", response.data);
+
+        if (response.data.success) {
+            setData(response.data.tickets);
+            setFilteredData(response.data.tickets)
+        } else {
+            console.warn("No tickets found:", response.data.message);
+        }
+    } catch (error) {
+        console.error("Error fetching tickets:", error);
+    } 
+};
+
+  useEffect(()=>{
+    fetchTickets()
+  },[backendUrl])
 
   const [currentPage, setCurrentPage] = useState(1);
   const [currentData, setCurrentData] = useState([]);
@@ -179,7 +136,7 @@ const HelpPage = () => {
 
       <div className="md:ml-20 mb-30 p-4 pt-0 pl-0">
         {currentData.length > 0 ? (
-          <Table key={tracker} columns={cols} data={currentData} role={"participant"}/>
+          <Table key={tracker} columns={cols} data={currentData} role={"participant"} isTicketTable={true}/>
         ) : (
           <div className="text-center font-semibold text-gray-500 p-5">No data available</div>
         )}

@@ -27,7 +27,19 @@ export const uploadNewTicket =async(req,res)=>{
     } catch (error) {
         return res.status(500).json({success:false, message:error.message})
     }
-    
-    
-    
+}
+
+
+export const getAllTickets = async(req,res)=>{
+    try {
+        const {userId} = req.body;
+        const tickets = await ticketModel.find({SenderId: userId});
+
+        return res.json({success:true, tickets})
+        
+
+    } catch (error) {
+        return res.status(500).json({success:false, message:error.message}) 
+        
+    }
 }

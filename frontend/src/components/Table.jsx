@@ -3,8 +3,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSortUp, faSortDown, faExternalLink } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
+import { convertToTimeZone } from '@/lib/utils';
 
-function Table({ columns, data, role }) { 
+function Table({ columns, data, role, isTicketTable}) { 
     const [sortedData, setSortedData] = useState(data);
     const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
 
@@ -86,40 +87,77 @@ function Table({ columns, data, role }) {
                     </tr>
                 </thead>
                 <tbody>
-                    {sortedData.map((item, index) => (
+                    {isTicketTable && sortedData.map((item, index) => (
                         <tr key={index} className="border-b border-gray-500 hover:bg-gray-50 ">
                             {columns.map((col, colIndex) => (
                                 col!=="id" &&(
                                 <td key={colIndex} className={`px-4 py-3 text-sm font-poppins text-gray-700 ${col === 'Subject' ? 'w-2/5' : ''}`}>
-                                    {col === 'PRIORITY' && item[col.toLowerCase()] === 'Urgent' && (
+                                    {col ==='SUBJECT' && item['Subject']}
+                                    
+                                    {col === 'PRIORITY' && item['PriorityType'] === 'Urgent' && (
                                         <div className="inline-flex mr-2 w-2.5 h-2.5 bg-red-600"></div>
                                     )}
-                                    {col === 'PRIORITY' && item[col.toLowerCase()] === 'High' && (
+                                    {col === 'PRIORITY' && item['PriorityType'] === 'High' && (
                                         <div className="inline-flex mr-2 w-2.5 h-2.5 bg-amber-600"></div>
                                     )}
-                                    {col === 'PRIORITY' && item[col.toLowerCase()] === 'Medium' && (
+                                    {col === 'PRIORITY' && item['PriorityType'] === 'Medium' && (
                                         <div className="inline-flex mr-2 w-2.5 h-2.5 bg-yellow-400"></div>
                                     )}
-                                    {col === 'PRIORITY' && item[col.toLowerCase()] === 'Low' && (
+                                    {col === 'PRIORITY' && item['PriorityType'] === 'Low' && (
                                         <div className="inline-flex mr-2 w-2.5 h-2.5 bg-green-500"></div>
                                     )}
+                                    {col === 'PRIORITY' && item['PriorityType']}
 
                                     {col === 'STATUS' && (
                                         <div className="flex items-center space-x-2">
                                             <div className={`font-semibold inline-flex w-24 md:w-30 rounded-2xl text-white p-1 justify-center
-                                                ${item[col.toLowerCase()] === 'Open' || item[col.toLowerCase()] === 'Rejected' ? 'bg-red-400' :
-                                                item[col.toLowerCase()] === 'Closed' || item[col.toLowerCase()] === 'Accepted' ? 'bg-lime-500' :
-                                                item[col.toLowerCase()] === 'In Progress' || item[col.toLowerCase()] === 'Pending' ? 'bg-amber-500' :
+                                                ${item['Status'] === 'Open' || item['Status'] === 'Rejected' ? 'bg-red-400' :
+                                                item['Status'] === 'Closed' || item['Status'] === 'Accepted' ? 'bg-lime-500' :
+                                                item['Status'] === 'In Progress' || item['Status'] === 'Pending' ? 'bg-amber-500' :
                                                 'bg-sky-400' // Resolved
                                                 }`}
                                             >
-                                                {item[col.toLowerCase()]}
+                                                {item['Status']}
                                             </div>
                                             <FontAwesomeIcon onClick={() => handleRowClick(item)} className="text-xs md:text-sm cursor-pointer hover:text-red-600" icon={faExternalLink} />
                                         </div>
                                     )}
 
-                                    {col !== 'STATUS' && item[col.replace(/\s+/g, '_').toLowerCase()]}
+                                    {col ==='CREATED AT' && convertToTimeZone(item['createdAt'])}
+                                    {col ==='UPDATED AT' && convertToTimeZone(item['updatedAt'])}
+                                    
+                                </td>
+                            )))}
+                        </tr>
+                    ))}
+
+
+                    {!isTicketTable && sortedData.map((item, index) => (
+                        <tr key={index} className="border-b border-gray-500 hover:bg-gray-50 ">
+                            {columns.map((col, colIndex) => (
+                                col!=="id" &&(
+                                <td key={colIndex} className={`px-4 py-3 text-sm font-poppins text-gray-700 ${col === 'Subject' ? 'w-2/5' : ''}`}>
+                                    {col ==='NAME' && item['name']}
+                                    
+                                    {col === 'EMAIL' && item['email']}
+
+                                    {col === 'STATUS' && (
+                                        <div className="flex items-center space-x-2">
+                                            <div className={`font-semibold inline-flex w-24 md:w-30 rounded-2xl text-white p-1 justify-center
+                                                ${item['status'] === 'Open' || item['status'] === 'Rejected' ? 'bg-red-400' :
+                                                item['status'] === 'Closed' || item['status'] === 'Accepted' ? 'bg-lime-500' :
+                                                item['status'] === 'In Progress' || item['status'] === 'Pending' ? 'bg-amber-500' :
+                                                'bg-sky-400' // Resolved
+                                                }`}
+                                            >
+                                                {item['status']}
+                                            </div>
+                                            <FontAwesomeIcon onClick={() => handleRowClick(item)} className="text-xs md:text-sm cursor-pointer hover:text-red-600" icon={faExternalLink} />
+                                        </div>
+                                    )}
+
+                                    {col ==='PHONE NUMBER' && (item['phone_number'])}
+                                    
                                 </td>
                             )))}
                         </tr>
