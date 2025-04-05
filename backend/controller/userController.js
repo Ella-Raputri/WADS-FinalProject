@@ -18,6 +18,7 @@ export const getUserData =async(req,res)=>{
                 participant: user.Participant,   //di dalam sini ada info ttg nama mandarin, dob, gender, address, institution, studentcardphotoURL
                 admin: user.Admin,               //di dalam sini ada info ttg compType admin
                 isAccountVerified: user.IsAccountVerified,
+                id: user._id
             }
         })
         
@@ -43,6 +44,7 @@ export const getUserDataFromId = async(req,res) =>{
                 participant: user.Participant,   //di dalam sini ada info ttg nama mandarin, dob, gender, address, institution, studentcardphotoURL
                 admin: user.Admin,               //di dalam sini ada info ttg compType admin
                 isAccountVerified: user.IsAccountVerified,
+                id:user._id
             }
         })
 

@@ -1,0 +1,11 @@
+import express from 'express';
+import userAuth from '../middleware/userAuth.js';
+import { getAllParticipantAdminMessage, sendParticipantAdminMessage, sendParticipantSystemMessage } from '../controller/messageController.js';
+
+const messageRouter = express.Router();
+
+messageRouter.get('/getParticipantAdminMessage',userAuth, getAllParticipantAdminMessage);
+messageRouter.post('/sendParticipantAdminMessage',userAuth, sendParticipantAdminMessage);
+messageRouter.post('/sendParticipantSystemMessage', userAuth, sendParticipantSystemMessage);
+
+export default messageRouter

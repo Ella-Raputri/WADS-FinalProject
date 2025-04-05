@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { faChevronLeft, faImage, faMessage, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -6,44 +6,31 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import ChatBox from "@/components/Chatbox";
 import UploadImage from "@/components/UploadImage";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { AppContent } from "@/context/AppContext";
+import { convertToTimeZone } from "@/lib/utils";
 
 const AdminTicketDetails = () => {
-    const nameskrg = "ellis";
-
-  const [messages, setMessages] = useState([
-    {
-      subject: "ella",
-      message:
-        "i think we have to check the server",
-      timestamp: "2025-02-21 11:00",
-      sender: "ella",
-      image:'',
-    },
-    {
-    subject: "ellis",
-    message:
-        "Ok, gotta check it now.",
-    timestamp: "2025-02-21 11:00",
-    sender: "ellis",
-    image:'',
-    },
-    {
-    subject: "rafael",
-    message:
-        "ok, do i need to help with anything?",
-    timestamp: "2025-02-21 11:01",
-    sender: "rafael",
-    image:'',
-    },
-  ]);
-
+  const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const [imageUploaded, setImageUploaded] =useState(null);
   const [imageName, setImageName] = useState("");
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const [data, setData] = useState(null);
+  const [user, setUser] =useState(null);
+  const [compData,setCompData] =useState(null);
+  const [senderData, setSenderData] =useState(null);
+  const {backendUrl} = useContext(AppContent);
+  const [isLoading, setIsLoading] =useState(true);
 
   const messagesEndRef = useRef(null);
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messages.length > 0) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
   }, [messages]);
 
 
@@ -67,24 +54,61 @@ const AdminTicketDetails = () => {
     setImageName("");
   };
 
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [data, setData] = useState(null);
-  const [user, setUser] =useState(null);
-
+  const fetchData = async () => {
+    if (!data || !data.CompTypeId || !data.SenderId) return; // Ensure valid data
+  
+    const needsFetching = !data.compData || !data.senderData || messages.length === 0;
+    if (!needsFetching) return; // Skip if all data is available
+  
+    try {
+      console.log("Fetching data...");
+      
+      const [compResponse, senderResponse, messageResponse] = await Promise.all([
+        axios.get(`${backendUrl}api/competition/getCompetitionDetails?compId=${data.CompTypeId}`),
+        axios.get(`${backendUrl}api/user/fetchUserDetails?userId=${data.SenderId}`),
+        axios.get(`${backendUrl}api/message/getParticipantAdminMessage?ticketId=${data._id}`)
+      ]);
+  
+      setData(prev => ({
+        ...prev,
+        compData: compResponse.data.success ? compResponse.data.comp : null,
+        senderData: senderResponse.data.success ? senderResponse.data.userData : null
+      }));
+      
+      setCompData(compResponse.data.success ? compResponse.data.comp : null);
+      setSenderData(senderResponse.data.success ? senderResponse.data.userData : null);
+      setMessages(messageResponse.data.adminUserChat || []);
+      setIsLoading(false);
+  
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  
   useEffect(() => {
         if (location.state?.data && location.state?.user) {
             setData(location.state.data);
             setUser(location.state.user);
         }
     }, [location.state?.data, location.state?.user]);
+  
+  useEffect(()=>{
+    if(data){
+      fetchData();
+      setIsLoading(false);
+    }
+  }, [data])
 
-  if (!data) {
-      return <p className="text-center text-lg text-gray-600">Loading...</p>;
-  }
+  useEffect(()=>{
+    console.log(data);
+  },[data])
 
-
+  
   return (
+    <div>
+      {isLoading && <p className="mt-96 text-center text-lg text-gray-600">Loading...</p>}
+
+    {!isLoading &&
     <div className="mt-25 ml-4 mr-8 md:ml-20 ">
     
     <div className="flex place-self-center items-center justify-between w-11/12">
@@ -107,35 +131,35 @@ const AdminTicketDetails = () => {
       <div className="border-b pb-4 mb-4 flex flex-col md:flex-row justify-between">
         <div>
           <h2 className="text-xl text-gray-500 font-kanit font-semibold">SUBJECT</h2>
-          <p className="font-poppins text-md"> {data.subject} </p>
+          <p className="font-poppins text-md"> {data.Subject} </p>
           <h2 className="text-xl mt-5 text-gray-500 font-kanit font-semibold">DESCRIPTION</h2>
           <p className="font-poppins text-md">
             test description
           </p>
           <div className="mt-5 text-sm font-poppins leading-6 text-gray-500">
-            <p><strong>Competition type:</strong> {data.comp_type}</p>
-            <p><strong>Created at:</strong> {data.created_at}</p>
-            <p><strong>Updated at:</strong> {data.updated_at}</p>
-            <p><strong>Sender:</strong> albertsantoso@gmail.com</p>
+            <p><strong>Competition type:</strong> {data.compData?.Name || "Loading..."}</p>
+            <p><strong>Created at:</strong> {convertToTimeZone(data.CreatedAt)}</p>
+            <p><strong>Updated at:</strong> {data.updatedAt}</p>
+            <p><strong>Sender:</strong> {data.senderData?.name || "Loading..."}</p>
             <p><strong>Handled by:</strong> Ella, Ellis, Rafael</p>
           </div>
         </div>
 
         <div className="flex flex-col items-start md:items-end mt-8 md:mt-0">
           <div className={`font-poppins border-2  w-min py-0.5 px-3 text-md  font-medium  
-            ${data.status === 'Open' ? 'border-red-400 text-red-500' :
-              data.status === 'Closed' ? 'border-lime-500 text-lime-600' :
-              data.status === 'In Progress' ? 'border-amber-500 text-amber-600' :
+            ${data.Status === 'Open' ? 'border-red-400 text-red-500' :
+              data.Status === 'Closed' ? 'border-lime-500 text-lime-600' :
+              data.Status === 'In Progress' ? 'border-amber-500 text-amber-600' :
               'border-sky-400 text-sky-500' // Resolved
               }`}>
-            {data.status}</div>
+            {data.Status}</div>
           <div className="flex items-center mt-2 mr-3 font-poppins">
             <div className={`inline-flex mr-2 w-2.5 h-2.5 
-              ${data.priority === 'Urgent' ? 'bg-red-600' :
-                data.priority === 'Low' ? 'bg-green-500' :
-                data.priority === 'High' ? 'bg-amber-600' :
+              ${data.PriorityType === 'Urgent' ? 'bg-red-600' :
+                data.PriorityType === 'Low' ? 'bg-green-500' :
+                data.PriorityType === 'High' ? 'bg-amber-600' :
                 'bg-yellow-400' // medium
-                }`}></div>{data.priority} 
+                }`}></div>{data.PriorityType} 
           </div>
         </div>
       </div>
@@ -147,7 +171,7 @@ const AdminTicketDetails = () => {
 
         <div className="pr-8 min-h-[60vh] max-h-[60vh] md:max-h-[70vh] md:min-h-[70vh] overflow-y-scroll chat-container">
             {messages.map((msg, index) => (
-                <ChatBox msg={msg} index={index} role={nameskrg} key={index} />
+                <ChatBox msg={msg} index={index} user={user} key={index} />
             ))}
             {/* This empty div will be used as the scroll target */}
             <div ref={messagesEndRef}></div>
@@ -196,7 +220,8 @@ const AdminTicketDetails = () => {
 
 
     </div>
-    
+    }
+    </div>
   );
 };
 

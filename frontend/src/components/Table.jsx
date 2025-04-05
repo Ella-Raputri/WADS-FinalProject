@@ -33,6 +33,8 @@ function Table({ columns, data, isTicketTable}) {
     };
 
     const {userData} = useContext(AppContent)
+    console.log("userdata")
+    console.log(userData)
 
     const navigate = useNavigate();
     const handleRowClick = (row)=>{

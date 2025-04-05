@@ -43,3 +43,33 @@ export const getAllTickets = async(req,res)=>{
         
     }
 }
+
+export const getAllTicketsByCompetitionType = async(req,res)=>{
+    try {
+        const compId = req.query.compId;  
+        const tickets = await ticketModel.find({CompTypeId: compId});
+
+        return res.json({success:true, tickets})
+        
+
+    } catch (error) {
+        return res.status(500).json({success:false, message:error.message}) 
+        
+    }
+}
+
+
+export const updateTicketStatus = async(req,res)=>{
+    const {request} =req.body;
+
+    try {
+        const ticket = await ticketModel.findById(request.ticketId);
+        ticket.Status = request.status;
+        await ticket.save();
+
+        return res.json({success:true, message:"Ticket status updated successfully"})
+
+    } catch (error) {
+        return res.status(500).json({success:false, message:error.message}) 
+    }
+}

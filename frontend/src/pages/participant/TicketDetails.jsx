@@ -9,37 +9,10 @@ import UploadImage from "@/components/UploadImage";
 import { convertToTimeZone } from "@/lib/utils";
 import axios from "axios";
 import { AppContent } from "@/context/AppContext";
+import { toast } from "react-toastify";
 
 const TicketDetails = () => {
-  const [messages, setMessages] = useState([
-    {
-      subject: "Response to Website Down",
-      message:
-        "Hello A. Thank you for the information. We will investigate and inform you soon for the latest info.",
-      timestamp: "2025-02-21 11:00",
-      status: "in-progress",
-      sender: "ellis",
-      image:"",
-    },
-    {
-      subject: "Resolve for Website Down",
-      message:
-        "Hello A. We have fixed our issue. You can try the competition page again. Do not hesitate if you have any problem. Thank you. pneumonoultramicroscopicsilicovolcanoconiosis aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa asdh uwq 8i2ydshuwuhfde ",
-      timestamp: "2025-02-21 11:31",
-      status: "resolved",
-      sender: "ellis",
-      image:"",
-    },
-    {
-      subject: "Thank you",
-      message: "Thank you.",
-      timestamp: "2025-02-21 11:35",
-      status: "closed",
-      sender: "NFCssories",
-      image:"",
-    },
-  ]);
-
+  const [messages, setMessages] = useState([]);
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [imageUploaded, setImageUploaded] =useState(null);
@@ -49,38 +22,71 @@ const TicketDetails = () => {
   const location = useLocation();
   const [data, setData] = useState(null);
   const [user, setUser] =useState(null);
-  const [compData, setCompData] = useState(null);
-  const [senderData, setSenderData] =useState(null);
+  const [fetchNum, setFetchNum] =useState(0);
 
   const messagesEndRef = useRef(null);
   const {backendUrl} = useContext(AppContent);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messages.length > 0) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
   }, [messages]);
 
 
-  const handleSend = (e) => {
+  const handleSend = async(e) => {
     e.preventDefault();
+    axios.defaults.withCredentials =true
 
-    if (!message.trim() && !imageUploaded) return; // Prevent sending empty messages
+    let newMessage = {
+        ticketId: data._id,
+        compTypeId: data.CompTypeId,
+        subject: subject || "No Subject",
+        message: message
+    }
 
-    const newMessage = {
-      subject: subject || "No Subject",
-      message: message,
-      timestamp: new Date().toISOString().slice(0, 16).replace("T", " "), // Format: YYYY-MM-DD HH:mm
-      status: "sent",
-      sender: user.name,
-      image: imageUploaded
-    };
+    try {
+        if(imageUploaded){
+            const imageFormData = new FormData();
+            imageFormData.append('file', imageUploaded); 
 
-    setMessages((prevMessages) => [...prevMessages, newMessage]);
+            // 2. Upload image first
+            const { data: uploadData } = await axios.post(
+                backendUrl + 'api/image/upload', 
+                imageFormData, 
+                {
+                    headers: { "Content-Type": "multipart/form-data" },
+                    withCredentials: true,
+                }
+            ).catch(error => {
+                // Handle image upload failure
+                console.error("Image upload error:", error);
+                toast.error("Image upload failed. Please try again.");
+                throw error; // Stop execution if image upload fails
+            });
 
-    // Clear input fields
-    setSubject("");
-    setMessage("");
-    setImageUploaded(null);
-    setImageName("");
+            newMessage = {
+                ...newMessage,
+                imageUrl: uploadData.imageUrl
+            };
+        }
+
+        const { data } = await axios.post(backendUrl + 'api/message/sendParticipantAdminMessage', {request: newMessage});
+        
+        if(data.success) {
+            fetchMessages()   //TODO: BUTUH WEBSOCKET HRSNYA
+            setSubject("");
+            setMessage("");
+            setImageUploaded(null);
+            setImageName("");
+        } else {
+            toast.error(data.message);
+        }
+
+    } catch (error) {
+        console.error(error)
+    }    
   };
 
   const handlePreviousLink=(e)=>{
@@ -89,74 +95,110 @@ const TicketDetails = () => {
     else navigate('/adminticketdetails', { state: { data: data, user: user } });
   }
 
-  const handleClickResolveClose=(e)=>{
-    e.preventDefault();
-
-    if(data.status==='Resolved' || data.status==='Closed') return;
+  const handleClickResolveClose=async(e)=>{
+    if(data.Status==='Resolved' || data.Status==='Closed') return;
 
     const up = user.role === 'admin' ? 'Resolved' : 'Closed';
-        setData(prevData => ({
-            ...prevData,
-            status: up
-    }));
 
     const systemMessage = {
+      ticketId: data._id,
+      compTypeId: data.CompTypeId,
       subject: "Ticket Status Updated",
       message: `The ticket status has been changed to ${up.toLowerCase()}.`,
-      timestamp: new Date().toISOString().slice(0, 16).replace("T", " "),
-      status: "system",
-      sender: "System",
     };
-  
-    setMessages((prevMessages) => [...prevMessages, systemMessage]);
+
+    const response = await axios.post(backendUrl + 'api/message/sendParticipantSystemMessage', {request: systemMessage});    
+    if(response.data.success) {
+        fetchMessages()   //TODO: BUTUH WEBSOCKET HRSNYA
+    } else {
+        toast.error(response.data.message);
+    }
+
+    const response2 = await axios.put(backendUrl + 'api/ticket/updateTicketStatus', {request: {ticketId: data._id, status: up}});    
+    if(response2.data.success) {
+        toast.success(response2.data.message);
+        const updatedData = { ...data, Status: up };
+        setData(updatedData);
+        navigate(location.pathname, { state: { data: updatedData, user } });
+    } else {
+        toast.error(response2.data.message);
+    }
   }
 
+  const fetchMessages = async()=>{
+    try {
+      const response = await axios.get(`${backendUrl}api/message/getParticipantAdminMessage?ticketId=${data._id}`);
+      setMessages(response.data.adminUserChat);
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const fetchData = async () => {
+    if (!data || !data.CompTypeId || !data.SenderId) return; // Ensure valid data
+  
+    const needsFetching = !data.compData || !data.senderData || messages.length === 0;
+    if (!needsFetching) return; // Skip if all data is available
+    if(fetchNum>=5) return;
+  
+    try {
+      console.log("Fetching data...");
+      setFetchNum(fetchNum+1);
+      
+      const [compResponse, senderResponse, messageResponse] = await Promise.all([
+        axios.get(`${backendUrl}api/competition/getCompetitionDetails?compId=${data.CompTypeId}`),
+        axios.get(`${backendUrl}api/user/fetchUserDetails?userId=${data.SenderId}`),
+        axios.get(`${backendUrl}api/message/getParticipantAdminMessage?ticketId=${data._id}`)
+      ]);
+  
+      setData(prev => ({
+        ...prev,
+        compData: compResponse.data.success ? compResponse.data.comp : null,
+        senderData: senderResponse.data.success ? senderResponse.data.userData : null
+      }));
+
+      console.log("fecthed data:")
+      console.log(data)
+
+      setMessages(messageResponse.data.adminUserChat || []);
+      setIsLoading(false);
+  
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  
+
   useEffect(() => {
-      if (location.state?.data && location.state?.user) {
-          setData(location.state.data);
-          setUser(location.state.user);
-      }
+    if (!data && location.state?.data && location.state?.user) {
+      setData(location.state.data);
+      setUser(location.state.user);
+    }
   }, [location.state?.data, location.state?.user]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (data && data.CompTypeId && data.SenderId && (!data.compData || !data.senderData)) {
-        try {
-          const [compResponse, senderResponse] = await Promise.all([
-            axios.get(backendUrl + `api/competition/getCompetitionDetails?compId=${data.CompTypeId}`),
-            axios.get(backendUrl + `api/user/fetchUserDetails?userId=${data.SenderId}`)
-          ]);
-
-          console.log(senderResponse)
-          
-          setData(prev => ({
-            ...prev,
-            compData: compResponse.data.success ? compResponse.data.comp : null,
-            senderData: senderResponse.data.success ? senderResponse.data.userData : null
-          }));
-          setCompData(compResponse)
-          setSenderData(senderResponse)
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
-      }
-    };
-    fetchData();
-  }, [data, backendUrl]);
+  
 
   useEffect(()=>{
-    console.log(data);
+    if(data){
+      console.log(data)
+      fetchData();
+      setIsLoading(false);
+      console.log(messages)
+    }
   },[data])
 
-  if (!data && !compData && !senderData) {
-      return <p className="text-center text-lg text-gray-600">Loading...</p>;
-  }
+  useEffect(() => {
+      if (data) {
+          fetchData(); // Fetch latest data whenever data changes
+      }
+  }, [data?.Status]); // Watch for status changes
+
 
 
   return (
     <div>
+      {isLoading && <p className="mt-96 text-center text-lg text-gray-600">Loading...</p>}
 
-    {compData && senderData &&
+    {!isLoading &&
     <div className="mt-25 ml-4 mr-8 md:ml-20 ">
       <div className="flex place-self-center items-center justify-between w-11/12">
         {/* Back Button (Left) */}
@@ -166,12 +208,19 @@ const TicketDetails = () => {
         </button>
   
         {/* Message Button (Right) */}
-        <button className={`text-white shadow-md font-poppins font-semibold px-3 py-2 flex items-center justify-center rounded-md hover:cursor-pointer 
-         ${user.role==='admin'? 'bg-sky-400 hover:bg-sky-500': 'bg-green-500 hover:bg-green-600'}`}
-          onClick={handleClickResolveClose}>
-            <FontAwesomeIcon className="text-lg font-black" icon={faCheck} /> &ensp;  
-            {user.role==='admin'? 'Resolve' : 'Close' }
+        <button 
+          className={`text-white shadow-md font-poppins font-semibold px-3 py-2 flex items-center justify-center rounded-md 
+            ${user.role === 'admin' ? 'bg-sky-400 ' : 'bg-green-500 '}
+            ${user.role==='admin' && data.Status!=='Resolved' && data.Status !=='Closed' && 'hover:bg-sky-500'}
+            ${user.role==='participant' && data.Status !=='Closed' && 'hover:bg-green-600'}
+            ${data.Status === 'Closed' || (user.role === 'admin' && data.Status === 'Resolved') ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+          onClick={handleClickResolveClose}
+          disabled={data.Status === 'Closed' || (user.role === 'admin' && data.Status === 'Resolved')}
+        >
+          <FontAwesomeIcon className="text-lg font-black" icon={faCheck} /> &ensp;  
+          {user.role === 'admin' ? 'Resolve' : 'Close'}
         </button>
+
       </div>
 
 
@@ -185,10 +234,10 @@ const TicketDetails = () => {
             {data.Description}
           </p>
           <div className="mt-5 text-sm font-poppins leading-7 text-gray-500">
-            <p><strong>Competition type:</strong> {data.compData.Name}</p>
+            <p><strong>Competition type:</strong> {data.compData?.Name || "Loading..."}</p>
             <p><strong>Created at:</strong> {convertToTimeZone(data.CreatedAt)}</p>
             <p><strong>Updated at:</strong> test</p>
-            <p><strong>Sender:</strong> {data.senderData.name} </p>
+            <p><strong>Sender:</strong> {data.senderData?.name || "Loading..."} </p>
             <p><strong>Handled by:</strong> Ella, Ellis, Rafael</p>
           </div>
         </div>
@@ -217,9 +266,9 @@ const TicketDetails = () => {
 
     {/* chat dengan user */}
     <div className='m-auto max-w-10/12 p-4 mt-10'>
-      <div className="pr-8 min-h-[60vh] max-h-[60vh] md:max-h-[70vh] md:min-h-[70vh] overflow-y-scroll chat-container">
+      <div className="pr-8 max-h-[60vh] md:max-h-[70vh] overflow-y-scroll chat-container">
             {messages.map((msg, index) => (
-                <ChatBox msg={msg} index={index} role={user.name} key={index} />
+                <ChatBox msg={msg} index={index} user={user} key={index} />
             ))}
             {/* This empty div will be used as the scroll target */}
             <div ref={messagesEndRef}></div>
@@ -227,6 +276,7 @@ const TicketDetails = () => {
 
 
       <Card className="max-w-6xl mt-6 py-8 mb-8 mx-auto font-poppins">
+      <form onSubmit={handleSend}>
         <CardContent>
             <input
               type="text"
@@ -253,15 +303,14 @@ const TicketDetails = () => {
               />
               
               <Button 
-                onClick={handleSend} 
+                type='submit'
                 className="px-6 py-5 text-md bg-white text-slate-500 border shadow-md border-slate-300 hover:bg-gray-100 cursor-pointer sm:ml-4"
               >
                 Send <FontAwesomeIcon icon={faPaperPlane} />
               </Button>
             </div>
-
-          
         </CardContent>
+        </form>
       </Card>  
       
     </div>

@@ -1,8 +1,15 @@
 import { Card, CardContent } from "@/components/ui/card";
+import { convertToTimeZone } from "@/lib/utils";
+import { useEffect } from "react";
 
-export default function ChatBox({ msg, index, role }) {
-  const isSystemMessage = msg.sender === "System";
-  const isUserMessage = msg.sender === role;    //kalau true, berarti itu 本人 
+export default function ChatBox({ msg, index, user }) {
+  const isSystemMessage = msg.SenderId === "system";
+  const isUserMessage = msg.SenderId === user.id;    //kalau true, berarti itu 本人 
+
+  // useEffect(()=>{
+  //   console.log(user)
+  //   console.log(msg)
+  // },[user, msg])
 
   return (
     <div className="max-w-6xl mt-6 mx-auto font-poppins" lang="en">
@@ -19,19 +26,19 @@ export default function ChatBox({ msg, index, role }) {
                   : "bg-gray-200 text-black"
               }`}
             >
-              {!isSystemMessage && <h3 className="font-semibold">{msg.subject}</h3>}
-              {msg.image && (
+              {!isSystemMessage && <h3 className="font-semibold">{msg.Subject}</h3>}
+              {msg.Image && (
                 <img 
-                  src={msg.image} 
+                  src={msg.Image} 
                   alt="Attached" 
                   className="mt-2 max-w-full max-h-72 object-contain rounded-lg shadow-md"
                 />
               )}
-              {msg.message && (<p className="mt-2">{msg.message}</p>)}
+              {msg.Message && (<p className="mt-2">{msg.Message}</p>)}
 
-              {msg.timestamp && (
+              {msg.createdAt && (
                 <p className={`text-xs mt-2 text-right ${isSystemMessage ? "text-white" : isUserMessage? "text-white": "text-gray-700"}`}>
-                  {msg.timestamp}
+                  {convertToTimeZone(msg.createdAt)}
                 </p>
               )}
             </CardContent>
