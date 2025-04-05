@@ -3,14 +3,8 @@
 import { useEffect, useState, useRef } from "react";
 import { Pie, PieChart, Cell, Tooltip } from "recharts";
 
-const finalChartData = [
-  { priority: "Urgent", count: 30, color: "#DC2626", darkColor: "#B91C1C" },
-  { priority: "High", count: 50, color: "#D97706", darkColor: "#B45309" },
-  { priority: "Medium", count: 70, color: "#FACC15", darkColor: "#EAB308" },
-  { priority: "Low", count: 100, color: "#22C55E", darkColor: "#15803D" },
-];
 
-export function DonutChart() {
+export function DonutChart({finalChartData}) {
   const [chartSize, setChartSize] = useState(250);
   const [isVisible, setIsVisible] = useState(false);
   const [shouldAnimate, setShouldAnimate] = useState(false);

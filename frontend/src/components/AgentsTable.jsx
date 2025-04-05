@@ -2,23 +2,16 @@ import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import FilterAgent from "./FilterAgent";
-
-const data = [
-  { name: "Ella Raputri", tickets: 85, status: "Online" },
-  { name: "Ella Raputri", tickets: 8, status: "Offline" },
-  { name: "Ella Raputri", tickets: 7, status: "Offline" },
-  { name: "Ella Raputri", tickets: 86, status: "Offline" },
-  { name: "Ella Raputri", tickets: 86, status: "Offline" },
-  { name: "Ella Raputri", tickets: 88, status: "Offline" },
-  { name: "Ella Raputri", tickets: 89, status: "Offline" },
-  { name: "Ella Raputri", tickets: 97, status: "Offline" },
-  { name: "Ella Raputri", tickets: 77, status: "Offline" },
-];
+import { useEffect } from "react";
 
 
-export function AgentsTable() {
+export function AgentsTable({data}) {
   const [openFilter, setOpenFilter] =useState(false);
   const [filteredData, setFilteredData] = useState(data);
+
+  useEffect(() => {
+    setFilteredData(data);
+  }, [data]);  
 
   const handleFilter = (newFilters) => {
     setOpenFilter(false);

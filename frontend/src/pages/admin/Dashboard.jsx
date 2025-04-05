@@ -21,9 +21,62 @@ const Dashboard = () => {
   const [firstRespTime, setFirstRespTime] = useState([0,0]);
   const [fullResolveTime, setFullResolveTime] = useState([0,0]);
 
+  const [vertBarChartData, setVertBarChartData] = useState([]);
+  const [donutChartData, setDonutChartData] = useState([]);
+  const [horizBarChartData, setHorizBarChartData] = useState([]);
+  const [agentTableData, setAgentTableData] = useState([]);
+
+  
+  const priorityColors = {
+    Urgent: { color: "#DC2626", darkColor: "#B91C1C" },
+    High: { color: "#D97706", darkColor: "#B45309" },
+    Medium: { color: "#FACC15", darkColor: "#EAB308" },
+    Low: { color: "#22C55E", darkColor: "#15803D" },
+  };
+
+  const transformPriorityData = (apiData) => {
+    return ["Urgent", "High", "Medium", "Low"].map(priority => ({
+      priority,
+      count: apiData[priority] ?? 0,
+      ...priorityColors[priority]
+    }));
+  };
+
+  const transformAgentData = (apiData) => {
+    return apiData.map(agent => ({
+      name: agent.agentName,
+      tickets: agent.ticketCount,
+      status: "Offline"
+    }));
+  };
+
+  const statusColors = {
+    "Open": { color: "bg-red-400"},
+    "In Progress": { color: "bg-amber-500" },
+    "Resolved": { color: "bg-sky-400" },
+    "Closed": { color: "bg-lime-500"},
+  };
+
+  const transformStatusData = (apiData) => {
+    const total = Object.values(apiData).reduce((sum, count) => sum + count, 0);
+
+    return ["Open", "In Progress", "Resolved", "Closed"].map(status => {
+      const count = apiData[status] ?? 0;
+      const percentage = total > 0 ? Math.round((count / total) * 100) : 0;
+
+      return {
+        status,
+        count,
+        width: `${percentage}%`, 
+        ...statusColors[status],
+      };
+    });
+  };
+
   useEffect(() => {
     handleDateChange(date);
   }, [])
+  
 
   const handleDateChange = async (newDate) => {
     setDate(newDate);
@@ -57,10 +110,29 @@ const Dashboard = () => {
       const minutes = Math.round(totalMins % 60);
       setFullResolveTime([hours, minutes]);
 
-      
+      const { data: dailyChartData } = await axios.get(`${backendUrl}api/admindashboard/receiveresolvebar`, {
+        params: { date: formattedDate, compTypeId }
+      });
+      setVertBarChartData(dailyChartData);
+
+      const { data: emergencyChartData } = await axios.get(`${backendUrl}api/admindashboard/ticketbyemergency`, {
+        params: { date: formattedDate, compTypeId }
+      });
+      setDonutChartData(transformPriorityData(emergencyChartData));
+
+      const { data: agentData } = await axios.get(`${backendUrl}api/admindashboard/agenttickets`, {
+        params: { date: formattedDate, compTypeId }
+      });
+      setAgentTableData(transformAgentData(agentData));
+
+      const { data: statusChartData } = await axios.get(`${backendUrl}api/admindashboard/ticketbystatus`, {
+        params: { date: formattedDate, compTypeId }
+      });
+      setHorizBarChartData(transformStatusData(statusChartData));
+
     } 
     catch (error) {
-      toast.error("Error fetching total tickets:", error);
+      toast.error("Error fetching data:", error);
       console.log(error);
     }
   };
@@ -118,7 +190,7 @@ const Dashboard = () => {
         <div className="p-6 bg-white shadow rounded-lg lg:row-span-2 overflow-x-auto">
           <div className="min-w-[300px]">
             <h2 className="font-kanit font-medium text-2xl mb-5 text-gray-500">Resolved Ticket vs Received Ticket</h2>
-            <BarChartMulti/>
+            <BarChartMulti chartData={vertBarChartData}/>
           </div>          
         </div>
         <div className="p-6 bg-white shadow rounded-lg">
@@ -127,19 +199,19 @@ const Dashboard = () => {
         </div>
         <div className="p-6 bg-white shadow rounded-lg">
           <h2 className="font-kanit font-medium text-2xl mb-4 text-gray-500">Tickets by Emergency</h2>
-          <DonutChart/>
+          <DonutChart finalChartData={donutChartData}/>
         </div>
       </div>
 
 
       <div className="font-poppins lg:ml-18 ml-15 grid grid-cols-1 lg:grid-cols-2 gap-6 mr-15 mt-8 mb-20">
-        <AgentsTable/>
+        <AgentsTable data={agentTableData}/>
         
         <div className="p-6 bg-white shadow rounded-lg flex justify-center"> {/* Center the chart */}
           <div className="w-full flex justify-center">
             <div className="w-[96%] ">
               <h2 className="font-kanit font-medium text-2xl mb-6 text-gray-500">Tickets by Status</h2>
-              <StatusChart />
+              <StatusChart ticketData={horizBarChartData}/>
             </div>
           </div>
         </div>
