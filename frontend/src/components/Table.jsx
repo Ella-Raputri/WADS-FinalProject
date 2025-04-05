@@ -1,11 +1,12 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSortUp, faSortDown, faExternalLink } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { convertToTimeZone } from '@/lib/utils';
+import { AppContent } from '@/context/AppContext';
 
-function Table({ columns, data, role, isTicketTable}) { 
+function Table({ columns, data, isTicketTable}) { 
     const [sortedData, setSortedData] = useState(data);
     const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
 
@@ -31,24 +32,15 @@ function Table({ columns, data, role, isTicketTable}) {
         setSortConfig({ key: columnKey, direction });
     };
 
-    const cthuser = {
-        name: "John Doe",
-        email: "john.doe@example.com",
-        role: "participant",
-      };
-      const cthadmin = {
-        name: "ellis",
-        email: "john.doe@example.com",
-        role: "admin"
-      };
+    const {userData} = useContext(AppContent)
 
     const navigate = useNavigate();
     const handleRowClick = (row)=>{
         console.log("clicked");
         if (columns.includes("SUBJECT")) {
-            if(role==="admin") navigate(`/adminticketdetails`, {state: {data:row,  user:cthadmin}}); 
-            if(role ==="participant") navigate(`/userticketdetails`,  { state: { data:row, user:cthuser } }); 
-            console.log("row: "+ row);
+            if(userData.role==="admin") navigate(`/adminticketdetails`, {state: {data:row,  user:userData}}); 
+            if(userData.role ==="participant") navigate(`/userticketdetails`,  { state: { data:row, user:userData } }); 
+            console.log(row);
             return;
         } else if (columns.includes("NAME")) {
             navigate(`/adminparticipantdetails`, { state: { data:row } });
@@ -123,8 +115,8 @@ function Table({ columns, data, role, isTicketTable}) {
                                         </div>
                                     )}
 
-                                    {col ==='CREATED AT' && convertToTimeZone(item['createdAt'])}
-                                    {col ==='UPDATED AT' && convertToTimeZone(item['updatedAt'])}
+                                    {col ==='CREATED AT' && convertToTimeZone(item['CreatedAt'])}
+                                    {col ==='UPDATED AT' && (item['updatedAt'])}
                                     
                                 </td>
                             )))}

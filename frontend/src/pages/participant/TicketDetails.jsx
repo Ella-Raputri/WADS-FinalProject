@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { faCheck, faChevronLeft, faClipboardCheck, faImage, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -6,6 +6,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import ChatBox from "@/components/Chatbox";
 import UploadImage from "@/components/UploadImage";
+import { convertToTimeZone } from "@/lib/utils";
+import axios from "axios";
+import { AppContent } from "@/context/AppContext";
 
 const TicketDetails = () => {
   const [messages, setMessages] = useState([
@@ -32,7 +35,7 @@ const TicketDetails = () => {
       message: "Thank you.",
       timestamp: "2025-02-21 11:35",
       status: "closed",
-      sender: "John Doe",
+      sender: "NFCssories",
       image:"",
     },
   ]);
@@ -42,34 +45,20 @@ const TicketDetails = () => {
   const [imageUploaded, setImageUploaded] =useState(null);
   const [imageName, setImageName] = useState("");
 
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [data, setData] = useState(null);
+  const [user, setUser] =useState(null);
+  const [compData, setCompData] = useState(null);
+  const [senderData, setSenderData] =useState(null);
+
   const messagesEndRef = useRef(null);
+  const {backendUrl} = useContext(AppContent);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const shortenFileName = (name) => {
-    const maxLength = 50; // Adjust the length as needed
-    const ext = name.split(".").pop(); // Get file extension
-    const baseName = name.substring(0, name.lastIndexOf(".")); // Remove extension
-
-    if (baseName.length > maxLength) {
-        return `${baseName.substring(0, 20)}...${baseName.slice(-4)}.${ext}`;
-    }
-    return name;
-  };
-
-  const handleUploadImage = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImageUploaded(reader.result);
-        setImageName(shortenFileName(file.name)); // Shorten filename
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   const handleSend = (e) => {
     e.preventDefault();
@@ -100,11 +89,6 @@ const TicketDetails = () => {
     else navigate('/adminticketdetails', { state: { data: data, user: user } });
   }
 
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [data, setData] = useState(null);
-  const [user, setUser] =useState(null);
-
   const handleClickResolveClose=(e)=>{
     e.preventDefault();
 
@@ -134,12 +118,45 @@ const TicketDetails = () => {
       }
   }, [location.state?.data, location.state?.user]);
 
-  if (!data) {
+  useEffect(() => {
+    const fetchData = async () => {
+      if (data && data.CompTypeId && data.SenderId && (!data.compData || !data.senderData)) {
+        try {
+          const [compResponse, senderResponse] = await Promise.all([
+            axios.get(backendUrl + `api/competition/getCompetitionDetails?compId=${data.CompTypeId}`),
+            axios.get(backendUrl + `api/user/fetchUserDetails?userId=${data.SenderId}`)
+          ]);
+
+          console.log(senderResponse)
+          
+          setData(prev => ({
+            ...prev,
+            compData: compResponse.data.success ? compResponse.data.comp : null,
+            senderData: senderResponse.data.success ? senderResponse.data.userData : null
+          }));
+          setCompData(compResponse)
+          setSenderData(senderResponse)
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      }
+    };
+    fetchData();
+  }, [data, backendUrl]);
+
+  useEffect(()=>{
+    console.log(data);
+  },[data])
+
+  if (!data && !compData && !senderData) {
       return <p className="text-center text-lg text-gray-600">Loading...</p>;
   }
 
 
   return (
+    <div>
+
+    {compData && senderData &&
     <div className="mt-25 ml-4 mr-8 md:ml-20 ">
       <div className="flex place-self-center items-center justify-between w-11/12">
         {/* Back Button (Left) */}
@@ -162,35 +179,35 @@ const TicketDetails = () => {
       <div className="border-b pb-4 mb-4 flex flex-col md:flex-row justify-between">
         <div>
           <h2 className="text-xl text-gray-500 font-kanit font-semibold">SUBJECT</h2>
-          <p className="font-poppins text-md  break-all"> {data.subject} </p>
+          <p className="font-poppins text-md  break-all"> {data.Subject} </p>
           <h2 className="text-xl mt-5 text-gray-500 font-kanit font-semibold">DESCRIPTION</h2>
-          <p className="font-poppins text-md max-w-10/12  break-all">
-            test description
+          <p className="font-poppins text-md break-all">
+            {data.Description}
           </p>
           <div className="mt-5 text-sm font-poppins leading-7 text-gray-500">
-            <p><strong>Competition type:</strong> {data.comp_type}</p>
-            <p><strong>Created at:</strong> {data.created_at}</p>
-            <p><strong>Updated at:</strong> {data.updated_at}</p>
-            <p><strong>Sender:</strong> albertsantoso@gmail.com</p>
+            <p><strong>Competition type:</strong> {data.compData.Name}</p>
+            <p><strong>Created at:</strong> {convertToTimeZone(data.CreatedAt)}</p>
+            <p><strong>Updated at:</strong> test</p>
+            <p><strong>Sender:</strong> {data.senderData.name} </p>
             <p><strong>Handled by:</strong> Ella, Ellis, Rafael</p>
           </div>
         </div>
 
         <div className="flex flex-col items-start md:items-end mt-8 md:mt-0">
           <div className={`font-poppins border-2  py-0.5 px-3 text-md  font-medium  
-            ${data.status === 'Open' ? 'border-red-400 text-red-500' :
-              data.status === 'Closed' ? 'border-lime-500 text-lime-600' :
-              data.status === 'In Progress' ? 'border-amber-500 text-amber-600' :
+            ${data.Status === 'Open' ? 'border-red-400 text-red-500' :
+              data.Status === 'Closed' ? 'border-lime-500 text-lime-600' :
+              data.Status === 'In Progress' ? 'border-amber-500 text-amber-600' :
               'border-sky-400 text-sky-500' // Resolved
               }`}>
-            {data.status}</div>
+            {data.Status}</div>
           <div className="flex items-center mt-2 mr-3 font-poppins">
             <div className={`inline-flex mr-2 w-2.5 h-2.5  
-              ${data.priority === 'Urgent' ? 'bg-red-600' :
-                data.priority === 'Low' ? 'bg-green-500' :
-                data.priority === 'High' ? 'bg-amber-600' :
+              ${data.PriorityType === 'Urgent' ? 'bg-red-600' :
+                data.PriorityType === 'Low' ? 'bg-green-500' :
+                data.PriorityType === 'High' ? 'bg-amber-600' :
                 'bg-yellow-400' // medium
-                }`}></div>{data.priority} 
+                }`}></div>{data.PriorityType} 
           </div>
         </div>
       </div>
@@ -253,7 +270,9 @@ const TicketDetails = () => {
 
 
     </div>
-    
+
+            }
+    </div>
   );
 };
 
