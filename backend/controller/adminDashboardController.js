@@ -194,7 +194,7 @@ export const getFullResolveTime = async (req, res) => {
         ]);
 
         return res.status(200).json({
-            avgFullResolveTime: result.length > 0 ? result[0].avgFullResolveTime : 0
+            avgFullResolveTime: result.length > 0 ? (result[0].avgFullResolveTime)/60000 : 0
         });
         
     } 

@@ -17,7 +17,11 @@ const TicketSchema = new mongoose.Schema({
     SenderId: { type: mongoose.Schema.Types.ObjectId, ref: "user", required: true},
     HandledBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
     CompTypeId: { type: mongoose.Schema.Types.ObjectId, ref: "CompetitionType", required: true },
-  }, {timestamps: true});
+    CreatedAt: { type: Date, default: Date.now },
+    BecomeInProgressAt: { type: Date, default: null },
+    BecomeResolvedAt: { type: Date, default: null },
+    BecomeClosedAt: { type: Date, default: null }
+  });
   
 const ticketModel = mongoose.models.ticket || mongoose.model('ticket', TicketSchema);
 
