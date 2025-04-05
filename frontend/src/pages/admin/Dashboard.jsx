@@ -3,7 +3,7 @@ import { BarChartMulti } from "@/components/BarChartMulti";
 import { DonutChart } from "@/components/DonutChart";
 import GaugeChart from "@/components/GaugeChart";
 import { StatusChart } from "@/components/StatusChart";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { MdOutlineFileDownload } from "react-icons/md";
@@ -15,33 +15,53 @@ import axios from "axios";
 const Dashboard = () => {
   const {userData, backendUrl} = useContext(AppContent);
   const [date, setDate] = useState(new Date());
-  const [totalTickets, setTotalTickets] = useState(0);
 
-  const getWeekRange = (date) => {
-    const start = new Date(date);
-    start.setDate(start.getDate() - start.getDay()); 
-    const end = new Date(start);
-    end.setDate(end.getDate() + 6);
-    return { start, end };
-  };
+  const [totalTickets, setTotalTickets] = useState(0);
+  const [totalParticipants, setTotalParticipants] = useState(0);
+  const [firstRespTime, setFirstRespTime] = useState([0,0]);
+  const [fullResolveTime, setFullResolveTime] = useState([0,0]);
+
+  useEffect(() => {
+    handleDateChange(date);
+  }, [])
 
   const handleDateChange = async (newDate) => {
     setDate(newDate);
-    const { start } = getWeekRange(newDate);
-    const formattedDate = start.toISOString().split("T")[0]; 
+    const formattedDate = newDate.toISOString().split("T")[0]; 
     const compTypeId = userData.admin.CompTypeId;
-    console.log("Fetching total tickets for week starting from:", formattedDate);
 
     try {
-      const { data } = await axios.get(`${backendUrl}/api/admindashboard/totaltickets`, {
+      const { data: dataTotalTicket } = await axios.get(`${backendUrl}api/admindashboard/totaltickets`, {
         params: { date: formattedDate, compTypeId }
       });
-        
-      console.log("Total Tickets:", data.totalTickets);
-      setTotalTickets(data.totalTickets);
+      setTotalTickets(dataTotalTicket.totalTickets);
+      
+      const { data: dataTotalParticipant } = await axios.get(`${backendUrl}api/admindashboard/totalparticipants`, {
+        params: { date: formattedDate, compTypeId }
+      });
+      setTotalParticipants(dataTotalParticipant.totalParticipants);
+
+      const { data: dataFirstResp } = await axios.get(`${backendUrl}api/admindashboard/firstresponsetime`, {
+        params: { date: formattedDate, compTypeId }
+      });
+      const totalMinsFirstResp = dataFirstResp.avgFirstRespTime;
+      const hoursFirstResp = Math.floor(totalMinsFirstResp / 60); 
+      const minutesFirstResp = Math.round(totalMinsFirstResp % 60);
+      setFirstRespTime([hoursFirstResp, minutesFirstResp]);
+
+      const { data: dataFullResolve } = await axios.get(`${backendUrl}api/admindashboard/fullresolvetime`, {
+        params: { date: formattedDate, compTypeId }
+      });
+      const totalMins = dataFullResolve.avgFullResolveTime;
+      const hours = Math.floor(totalMins / 60); 
+      const minutes = Math.round(totalMins % 60);
+      setFullResolveTime([hours, minutes]);
+
+      
     } 
     catch (error) {
       toast.error("Error fetching total tickets:", error);
+      console.log(error);
     }
   };
 
@@ -68,15 +88,14 @@ const Dashboard = () => {
         </div>
       </div>
 
-
       <div className="font-poppins lg:ml-18 ml-15 mr-15 grid grid-cols-1 lg:grid-cols-[0.8fr_1.0fr_1.2fr] gap-6">
         <div className="p-6   bg-white shadow rounded-lg ">
           <h2 className="font-kanit font-medium text-2xl mb-4 text-gray-500">Total Participants</h2>
-          <h2 className="text-5xl font-medium mb-0">23</h2>
+          <h2 className="text-5xl font-medium mb-0">{totalParticipants}</h2>
         </div>
         <div className="p-6   bg-white shadow rounded-lg">
           <h2 className="font-kanit font-medium text-2xl mb-4 text-gray-500">First Response Time</h2>
-          <h2 className="text-5xl font-medium mb-0">1<span className="text-2xl">h</span> 23<span className="text-2xl">m</span></h2>
+          <h2 className="text-5xl font-medium mb-0">{firstRespTime[0]}<span className="text-2xl ml-1">h</span> {firstRespTime[1]}<span className="text-2xl ml-1">m</span></h2>
         </div>
         <div className="hidden lg:flex p-6 bg-white shadow rounded-lg lg:row-span-2 justify-center items-center">
           <Calendar 
@@ -91,11 +110,10 @@ const Dashboard = () => {
         </div>
         <div className="p-6   bg-white shadow rounded-lg">
           <h2 className="font-kanit font-medium text-2xl mb-4 text-gray-500">Full Resolve Time</h2>
-          <h2 className="text-5xl font-medium mb-0">1<span className="text-2xl">h</span> 23<span className="text-2xl">m</span></h2>
+          <h2 className="text-5xl font-medium mb-0">{fullResolveTime[0]}<span className="text-2xl ml-1">h</span> {fullResolveTime[1]}<span className="text-2xl ml-1">m</span></h2>
         </div>
       </div>
 
-      
       <div className="font-poppins lg:ml-18 ml-15 grid grid-cols-1 lg:grid-cols-[2.0fr_1.0fr] gap-6 mr-15 mt-8">
         <div className="p-6 bg-white shadow rounded-lg lg:row-span-2 overflow-x-auto">
           <div className="min-w-[300px]">
