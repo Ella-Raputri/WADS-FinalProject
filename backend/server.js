@@ -9,6 +9,7 @@ import imageRouter from './routes/imageRoutes.js'
 import adminDashboardRouter from './routes/adminDashboardRoutes.js';
 import compRouter from './routes/competitionRoutes.js';
 import ticketRouter from './routes/ticketRouter.js';
+import competitionRegistrationRouter from './routes/competitionRegistrationRoute.js';
 
 const app = express();
 const PORT = process.env.PORT || 4000
@@ -32,6 +33,7 @@ app.use('/api/user', userRouter)
 app.use('/api/admindashboard', adminDashboardRouter)
 app.use('/api/competition', compRouter)
 app.use('/api/ticket', ticketRouter)
+app.use("/api/competitionRegistration", competitionRegistrationRouter);
 
 app.listen(PORT, ()=>console.log(`server started on ${PORT}`));
 

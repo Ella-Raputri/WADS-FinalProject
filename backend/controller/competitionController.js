@@ -18,3 +18,17 @@ export const getCompetitionIdByName = async (req, res) => {
     }
 };
 
+
+export const getCompetitionDetails = async(req,res) =>{
+    try {
+        const compId = req.query.compId;  
+        const comp = await competitionTypeModel.findById(compId);
+        
+        return res.json({success:true, comp})
+
+    } catch (error) {
+        console.error("Error fetching competition:", error);
+        return res.status(500).json({ success: false, message: error.message });
+    }
+}
+
