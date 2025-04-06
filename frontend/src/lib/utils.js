@@ -20,3 +20,11 @@ export function convertToTimeZone (isoString) {
   }).format(dateObj).replace(/\//g, '-'); // Replace "/" with "-" for consistency
 };
 
+export function convertToCSV (data, columns) {
+  const header = columns.join(",");
+  const rows = data.map(row =>
+    columns.map(field => `"${row[field] ?? ""}"`).join(",")
+  );
+  return [header, ...rows].join("\n");
+};
+

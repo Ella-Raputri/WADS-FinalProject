@@ -11,6 +11,9 @@ import { useContext } from "react";
 import { toast } from "react-toastify";
 import { AppContent } from "@/context/AppContext";
 import axios from "axios";
+import JSZip from "jszip";
+import { saveAs } from "file-saver";
+import { convertToCSV } from "@/lib/utils";
 
 const Dashboard = () => {
   const {userData, backendUrl} = useContext(AppContent);
@@ -77,10 +80,16 @@ const Dashboard = () => {
     handleDateChange(date);
   }, [])
   
-
+  const formatDateLocal = (date) => {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+  
   const handleDateChange = async (newDate) => {
     setDate(newDate);
-    const formattedDate = newDate.toISOString().split("T")[0]; 
+    const formattedDate = formatDateLocal(newDate); 
     const compTypeId = userData.admin.CompTypeId;
 
     try {
@@ -137,6 +146,25 @@ const Dashboard = () => {
     }
   };
 
+  const handleDownload = async () => {
+    const zip = new JSZip();
+  
+    const csv1 = convertToCSV(vertBarChartData, ["dayName", "received", "resolved"]);
+    zip.file("resolved_vs_received.csv", csv1);
+  
+    const csv2 = convertToCSV(donutChartData, ["priority", "count"]);
+    zip.file("tickets_by_emergency.csv", csv2);
+  
+    const csv3 = convertToCSV(horizBarChartData, ["status", "count"]);
+    zip.file("tickets_by_status.csv", csv3);
+  
+    const csv4 = convertToCSV(agentTableData, ["name", "tickets", "status"]);
+    zip.file("agent_ticket_data.csv", csv4);
+  
+    const blob = await zip.generateAsync({ type: "blob" });
+    saveAs(blob, "dashboard_data.zip");
+  };
+  
 
   return (
     <>
@@ -144,7 +172,8 @@ const Dashboard = () => {
         <h1 className="text-3xl lg:text-5xl font-kanit font-medium flex-grow text-center sm:text-left">
           Hello, {userData.name}!
         </h1>
-        <button className="md:px-4 flex justify-center py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl shadow-md cursor-pointer w-full sm:w-auto">
+        <button className="md:px-4 flex justify-center py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl 
+          shadow-md cursor-pointer w-full sm:w-auto" onClick={handleDownload}>
            <span className="sm:hidden font-poppins text-md font-semibold">Download &nbsp;</span> 
            <MdOutlineFileDownload className="text-2xl lg:text-3xl"/>
         </button>
