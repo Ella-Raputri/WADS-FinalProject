@@ -21,8 +21,7 @@ const AdminTicketDetails = () => {
 
   const [data, setData] = useState(null);
   const [user, setUser] =useState(null);
-  const [compData,setCompData] =useState(null);
-  const [senderData, setSenderData] =useState(null);
+  const [fetchNum, setFetchNum] = useState(0);
   const {backendUrl} = useContext(AppContent);
   const [isLoading, setIsLoading] =useState(true);
 
@@ -34,39 +33,99 @@ const AdminTicketDetails = () => {
   }, [messages]);
 
 
-  const handleSend = (e) => {
+  const handleSend = async (e) => {
     e.preventDefault();
+    axios.defaults.withCredentials = true;
 
-    if (!message.trim() && !imageUploaded) return; // Prevent sending empty messages
-
-    const newMessage = {
-      subject: user.name,
-      message: message,
-      timestamp: new Date().toISOString().slice(0, 16).replace("T", " "), // Format: YYYY-MM-DD HH:mm
-      sender: user.name,
-      image: imageUploaded,
+    let newMessage = {
+        ticketId: data._id,
+        message: message
     };
 
-    setMessages((prevMessages) => [...prevMessages, newMessage]);
+    try {
+        if (imageUploaded) {
+            const imageFormData = new FormData();
+            imageFormData.append('file', imageUploaded);
 
-    setMessage("");
-    setImageUploaded(null);
-    setImageName("");
-  };
+            try {
+                // Upload image first
+                const { data: uploadData } = await axios.post(
+                    backendUrl + 'api/image/upload',
+                    imageFormData,
+                    {
+                        headers: { "Content-Type": "multipart/form-data" },
+                        withCredentials: true,
+                    }
+                );
+
+                newMessage = {
+                    ...newMessage,
+                    imageUrl: uploadData.imageUrl
+                };
+            } catch (error) {
+                console.error("Image upload error:", error);
+                toast.error("Image upload failed. Please try again.");
+                return; // Stop execution if image upload fails
+            }
+        }
+
+        const { data } = await axios.post(backendUrl + 'api/message/sendAdminCollabMessage', { request: newMessage });
+
+        if (data.success) {
+            await fetchMessagesWithAdminNames(); // Ensure admin names are fetched
+            setMessage("");
+            setImageUploaded(null);
+            setImageName("");
+        } else {
+            toast.error(data.message);
+        }
+    } catch (error) {
+        console.error("Message send error:", error);
+        toast.error("Failed to send message. Please try again.");
+    }
+};
+
+// Fetch messages and attach admin names
+const fetchMessagesWithAdminNames = async () => {
+    try {
+        const response = await axios.get(`${backendUrl}api/message/getAdminCollabMessage?ticketId=${data._id}`);
+        const messages = response.data.adminCollabChat || [];
+
+        // Fetch admin names for all messages
+        const messagesWithAdminNames = await Promise.all(
+            messages.map(async (msg) => {
+                try {
+                    const adminResponse = await axios.get(`${backendUrl}api/user/fetchUserDetails?userId=${msg.AdminId}`);
+                    return { ...msg, AdminName: adminResponse.data.userData?.name || "Unknown" };
+                } catch (error) {
+                    console.error(`Error fetching admin name for AdminId ${msg.AdminId}:`, error);
+                    return { ...msg, AdminName: "Unknown" };
+                }
+            })
+        );
+
+        setMessages(messagesWithAdminNames);
+    } catch (error) {
+        console.error("Error fetching messages:", error);
+    }
+};
+
 
   const fetchData = async () => {
     if (!data || !data.CompTypeId || !data.SenderId) return; // Ensure valid data
   
     const needsFetching = !data.compData || !data.senderData || messages.length === 0;
     if (!needsFetching) return; // Skip if all data is available
+    if(fetchNum>=5) return;
   
     try {
       console.log("Fetching data...");
+      setFetchNum(fetchNum+1);
       
       const [compResponse, senderResponse, messageResponse] = await Promise.all([
         axios.get(`${backendUrl}api/competition/getCompetitionDetails?compId=${data.CompTypeId}`),
         axios.get(`${backendUrl}api/user/fetchUserDetails?userId=${data.SenderId}`),
-        axios.get(`${backendUrl}api/message/getParticipantAdminMessage?ticketId=${data._id}`)
+        axios.get(`${backendUrl}api/message/getAdminCollabMessage?ticketId=${data._id}`)
       ]);
   
       setData(prev => ({
@@ -75,9 +134,20 @@ const AdminTicketDetails = () => {
         senderData: senderResponse.data.success ? senderResponse.data.userData : null
       }));
       
-      setCompData(compResponse.data.success ? compResponse.data.comp : null);
-      setSenderData(senderResponse.data.success ? senderResponse.data.userData : null);
-      setMessages(messageResponse.data.adminUserChat || []);
+      const messagesWithAdminNames = await Promise.all(
+        (messageResponse.data.adminCollabChat || []).map(async (msg) => {
+          try {
+            const response = await axios.get(`${backendUrl}api/user/fetchUserDetails?userId=${msg.AdminId}`);
+            return { ...msg, AdminName: response.data.userData?.name || "Unknown" }; // Handle missing names
+          } catch (error) {
+            console.error(`Error fetching admin name for AdminId ${msg.AdminId}:`, error);
+            return { ...msg, AdminName: "Unknown" };
+          }
+        })
+      );
+      
+      console.log(messagesWithAdminNames)
+      setMessages(messagesWithAdminNames);
       setIsLoading(false);
   
     } catch (error) {
@@ -167,7 +237,7 @@ const AdminTicketDetails = () => {
     </div>
     
     {/* chat sesama admin */}
-    <div className='m-auto border border-black max-w-9/12 p-4 mt-10'>
+    <div className='m-auto mb-8 border border-black max-w-9/12 p-4 mt-10'>
 
         <div className="pr-8 min-h-[60vh] max-h-[60vh] md:max-h-[70vh] md:min-h-[70vh] overflow-y-scroll chat-container">
             {messages.map((msg, index) => (
@@ -180,6 +250,7 @@ const AdminTicketDetails = () => {
 
 
         <Card className="max-w-6xl mt-6 py-8 mb-8 mx-auto font-poppins">
+          <form onSubmit={handleSend}>
         <CardContent>
             <input
                 type="text"
@@ -200,16 +271,14 @@ const AdminTicketDetails = () => {
               />
               
               <Button 
-                onClick={handleSend} 
+                type='submit'
                 className="px-6 py-5 text-md bg-white text-slate-500 border shadow-md border-slate-300 hover:bg-gray-100 cursor-pointer sm:ml-4"
               >
                 Send <FontAwesomeIcon icon={faPaperPlane} />
               </Button>
-            </div>
-
-    
-            
+            </div>            
         </CardContent>
+        </form>
         </Card>
     </div>
 

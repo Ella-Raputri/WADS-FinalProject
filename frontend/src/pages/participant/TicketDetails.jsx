@@ -207,7 +207,7 @@ const TicketDetails = () => {
             <FontAwesomeIcon icon={faChevronLeft} />
         </button>
   
-        {/* Message Button (Right) */}
+        {/* status Button (Right) */}
         <button 
           className={`text-white shadow-md font-poppins font-semibold px-3 py-2 flex items-center justify-center rounded-md 
             ${user.role === 'admin' ? 'bg-sky-400 ' : 'bg-green-500 '}

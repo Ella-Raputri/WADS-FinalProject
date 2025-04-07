@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 export default function ChatBox({ msg, index, user }) {
   const isSystemMessage = msg.SenderId === "system";
-  const isUserMessage = msg.SenderId === user.id;    //kalau true, berarti itu 本人 
+  const isUserMessage = (msg.SenderId === user.id) || (msg.AdminId===user.id);    //kalau true, berarti itu 本人 
 
   // useEffect(()=>{
   //   console.log(user)
@@ -26,7 +26,7 @@ export default function ChatBox({ msg, index, user }) {
                   : "bg-gray-200 text-black"
               }`}
             >
-              {!isSystemMessage && <h3 className="font-semibold">{msg.Subject}</h3>}
+              {!isSystemMessage && <h3 className="font-semibold">{msg.Subject? msg.Subject : msg.AdminName}</h3>}
               {msg.Image && (
                 <img 
                   src={msg.Image} 
