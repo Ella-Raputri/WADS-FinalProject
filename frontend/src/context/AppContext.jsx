@@ -66,7 +66,6 @@ export const AppContextProvider = (props) => {
     // Clean up socket connection when user logs out
     const cleanupSocket = () => {
         if (socket) {
-            socket.emit("userLoggedOut", { userId: userData?._id });
             socket.disconnect();
             setSocket(null);
         }

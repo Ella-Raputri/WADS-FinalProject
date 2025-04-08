@@ -6,7 +6,7 @@ import userModel from "../models/userModel.js"
 export const getAllParticipantAdminMessage = async(req,res)=>{
     try {
         const ticketId = req.query.ticketId;
-        const adminUserChat = await adminUserChatModel.find({TicketId: ticketId});
+        const adminUserChat = await adminUserChatModel.find({TicketId: ticketId}).populate("SenderId", "FullName Email Role").exec();
 
         return res.json({success:true, adminUserChat})
         

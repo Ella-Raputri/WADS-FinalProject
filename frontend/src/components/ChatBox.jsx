@@ -2,14 +2,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { convertToTimeZone } from "@/lib/utils";
 import { useEffect } from "react";
 
-export default function ChatBox({ msg, index, user }) {
-  const isSystemMessage = msg.SenderId === "system";
-  const isUserMessage = (msg.SenderId === user.id) || (msg.AdminId===user.id);    //kalau true, berarti itu 本人 
+export default function ChatBox({ msg, index, user, adminPage }) {
+  const isSystemMessage = (msg.SenderId) && (msg.SenderId._id === "system");
+  const isUserMessage = (user.role==='admin' && msg.AdminId===user.id) || (!adminPage && msg.SenderId._id === user.id) ;    //kalau true, berarti itu 本人 
 
-  // useEffect(()=>{
-  //   console.log(user)
-  //   console.log(msg)
-  // },[user, msg])
+  useEffect(()=>{
+    console.log(user)
+    console.log(msg)
+  },[user, msg])
 
   return (
     <div className="max-w-6xl mt-6 mx-auto font-poppins" lang="en">

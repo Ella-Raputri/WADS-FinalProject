@@ -22,7 +22,7 @@ const AdminTicketDetails = () => {
   const [data, setData] = useState(null);
   const [user, setUser] =useState(null);
   const [fetchNum, setFetchNum] = useState(0);
-  const {backendUrl, socket} = useContext(AppContent);
+  const {backendUrl, socket,initializeSocket} = useContext(AppContent);
   const [isLoading, setIsLoading] =useState(true);
 
   const messagesEndRef = useRef(null);
@@ -33,25 +33,39 @@ const AdminTicketDetails = () => {
   }, [messages]);
 
   useEffect(() => {
-      if (!data || !data._id ||!socket) return;
+        if (!user || !user.id) return; // Ensure user data is available
   
-      socket.emit("joinAdminRoom", "admin"+data._id); // Join room
-      console.log("joined admin room");
-      
-    }, [data]);
+        if (!socket) {
+            console.log("🔄 Initializing socket...");
+            initializeSocket(user.id);
+        }
+    }, [user, socket]); // Run when userData or socket changes
   
-  useEffect(()=>{
-    if(!socket) return;
-
-    socket.on("newAdminRoomMessage", (newMessage) => {
-      console.log("ada new admin room message")
-      setMessages((prevMessages) => [...prevMessages, newMessage]); // Update chat
-    });
-
-    return () => {
-      socket.off("newAdminRoomMessage"); // Cleanup on unmount
-    };
-  }, [])
+    useEffect(() => {
+        if (!data || !data._id || !socket) return;
+  
+        console.log("🔄 Joining admin Room:", "admin"+data._id);
+        socket.emit("joinAdminRoom", "admin"+data._id);
+  
+        return () => {
+            console.log("⚠️ Leaving adminRoom:", "admin"+data._id);
+            socket.off("joinAdminRoom");
+        };
+    }, [socket, data]); // Run when socket or data changes
+  
+  
+    useEffect(()=>{
+      if(!socket) return;
+  
+      socket.on("newAdminRoomMessage", (newMessage) => {
+        console.log("ada new admin room message")
+        setMessages((prevMessages) => [...prevMessages, newMessage]); // Update chat
+      });
+  
+      return () => {
+        socket.off("newAdminRoomMessage"); // Cleanup on unmount
+      };
+    }, [socket])
 
 
   const handleSend = async (e) => {
@@ -183,8 +197,8 @@ const fetchMessagesWithAdminNames = async () => {
   
   useEffect(() => {
         if (location.state?.data && location.state?.user) {
-            setData(location.state.data);
             setUser(location.state.user);
+            setData(location.state.data);
         }
     }, [location.state?.data, location.state?.user]);
   
@@ -237,7 +251,7 @@ const fetchMessagesWithAdminNames = async () => {
             <p><strong>Created at:</strong> {convertToTimeZone(data.CreatedAt)}</p>
             <p><strong>Updated at:</strong> {data.updatedAt}</p>
             <p><strong>Sender:</strong> {data.senderData?.name || "Loading..."}</p>
-            <p><strong>Handled by:</strong> Ella, Ellis, Rafael</p>
+            {/* <p><strong>Handled by:</strong> Ella, Ellis, Rafael</p> */}
           </div>
         </div>
 
@@ -267,7 +281,7 @@ const fetchMessagesWithAdminNames = async () => {
 
         <div className="pr-8 min-h-[60vh] max-h-[60vh] md:max-h-[70vh] md:min-h-[70vh] overflow-y-scroll chat-container">
             {messages.map((msg, index) => (
-                <ChatBox msg={msg} index={index} user={user} key={index} />
+                <ChatBox msg={msg} index={index} user={user} key={index} adminPage={true}/>
             ))}
             {/* This empty div will be used as the scroll target */}
             <div ref={messagesEndRef}></div>

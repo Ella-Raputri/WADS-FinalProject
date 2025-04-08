@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useHref, useLocation, useNavigate } from "react-router-dom";
 import { faCheck, faChevronLeft, faClipboardCheck, faImage, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Card, CardContent } from "@/components/ui/card";
@@ -19,6 +19,7 @@ const TicketDetails = () => {
   const [message, setMessage] = useState("");
   const [imageUploaded, setImageUploaded] =useState(null);
   const [imageName, setImageName] = useState("");
+  const [adminNames, setAdminNames] =useState([]);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -27,7 +28,7 @@ const TicketDetails = () => {
   const [fetchNum, setFetchNum] =useState(0);
 
   const messagesEndRef = useRef(null);
-  const {backendUrl, socket} = useContext(AppContent);
+  const {backendUrl, socket, initializeSocket} = useContext(AppContent);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -37,12 +38,26 @@ const TicketDetails = () => {
   }, [messages]);
 
   useEffect(() => {
-    if (!data || !data._id ||!socket) return;
+      if (!user || !user.id) return; // Ensure user data is available
 
-    socket.emit("joinRoom", data._id); // Join room
-    console.log("joined room");
-    
-  }, [data]);
+      if (!socket) {
+          console.log("🔄 Initializing socket...");
+          initializeSocket(user.id);
+      }
+  }, [user, socket]); // Run when userData or socket changes
+
+  useEffect(() => {
+      if (!data || !data._id || !socket) return;
+
+      console.log("🔄 Joining Room:", data._id);
+      socket.emit("joinRoom", data._id);
+
+      return () => {
+          console.log("⚠️ Leaving Room:", data._id);
+          socket.off("joinRoom");
+      };
+  }, [socket, data]); // Run when socket or data changes
+
 
   useEffect(()=>{
     if(!socket) return;
@@ -50,12 +65,16 @@ const TicketDetails = () => {
     socket.on("newRoomMessage", (newMessage) => {
       console.log("ada new room message")
       setMessages((prevMessages) => [...prevMessages, newMessage]); // Update chat
+      if(newMessage.SenderId.Role==='admin'){
+        const newAdminNames = [...adminNames, newMessage.SenderId.FullName];
+        setAdminNames([...new Set(newAdminNames)]);
+      }
     });
 
     return () => {
       socket.off("newRoomMessage"); // Cleanup on unmount
     };
-  }, [])
+  }, [socket])
 
 
   const handleSend = async(e) => {
@@ -119,7 +138,7 @@ const TicketDetails = () => {
   }
 
   const handleClickResolveClose=async(e)=>{
-    if(data.Status==='Resolved' || data.Status==='Closed') return;
+    if((data.Status==='Resolved' && user.role==='admin') || data.Status==='Closed') return;
 
     const up = user.role === 'admin' ? 'Resolved' : 'Closed';
 
@@ -191,6 +210,9 @@ const TicketDetails = () => {
       console.log(data)
 
       setMessages(messageResponse.data.adminUserChat || []);
+      const admins = messageResponse.data.adminUserChat.filter(msg => msg.SenderId && msg.SenderId.Role === "admin").map(msg => msg.SenderId.FullName); 
+       setAdminNames([...new Set(admins)]);
+
       setIsLoading(false);
   
     } catch (error) {
@@ -201,8 +223,8 @@ const TicketDetails = () => {
 
   useEffect(() => {
     if (!data && location.state?.data && location.state?.user) {
-      setData(location.state.data);
       setUser(location.state.user);
+      setData(location.state.data);
     }
   }, [location.state?.data, location.state?.user]);
   
@@ -268,7 +290,7 @@ const TicketDetails = () => {
             <p><strong>Created at:</strong> {convertToTimeZone(data.CreatedAt)}</p>
             <p><strong>Updated at:</strong> test</p>
             <p><strong>Sender:</strong> {data.senderData?.name || "Loading..."} </p>
-            <p><strong>Handled by:</strong> Ella, Ellis, Rafael</p>
+            <p><strong>Handled by:</strong> {adminNames.join(", ")} </p>
           </div>
         </div>
 
@@ -298,7 +320,7 @@ const TicketDetails = () => {
     <div className='m-auto max-w-10/12 p-4 mt-10'>
       <div className="pr-8 max-h-[60vh] md:max-h-[70vh] overflow-y-scroll chat-container">
             {messages.map((msg, index) => (
-                <ChatBox msg={msg} index={index} user={user} key={index} />
+                <ChatBox msg={msg} index={index} user={user} key={index} adminPage={false}/>
             ))}
             {/* This empty div will be used as the scroll target */}
             <div ref={messagesEndRef}></div>
