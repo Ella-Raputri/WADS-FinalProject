@@ -13,7 +13,7 @@ const VerifyEmailPage = () => {
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
 
-  const {backendUrl, getUserData} =useContext(AppContent);
+  const {backendUrl, getUserData, initializeSocket} =useContext(AppContent);
   const inputRefs = useRef([]);
   const location = useLocation();
 
@@ -111,6 +111,7 @@ const VerifyEmailPage = () => {
       if(data.success){
         toast.success(data.message)
         getUserData()
+        initializeSocket(data.userData._id);
         navigate('/userhome')
       }
       else toast.error(data.message)

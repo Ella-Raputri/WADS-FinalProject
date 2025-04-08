@@ -114,7 +114,7 @@ export const login = async(req,res)=>{
             maxAge: 7 *24 *60 *60 *1000
         });
 
-        return res.json({success:true, message:"Logged in successfully"});
+        return res.json({success:true, message:"Logged in successfully", userData:user});
 
 
     } catch (error) {
@@ -212,7 +212,7 @@ export const verifyEmail = async(req,res)=>{
             maxAge: 7 * 24 * 60 * 60 * 1000,
         });
 
-        return res.json({success:true, message:'Email Verified Successfully'})
+        return res.json({success:true, message:'Email Verified Successfully', userData:user})
 
 
     } catch (error) {

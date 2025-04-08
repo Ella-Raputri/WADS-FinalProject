@@ -37,6 +37,7 @@
     "react-router-dom": "^7.2.0",
     "react-toastify": "^11.0.5",
     "recharts": "^2.15.1",
+    "socket.io-client": "^4.8.1",
     "swiper": "^11.2.5",
     "tailwind-animate": "^0.2.10",
     "tailwind-merge": "^3.0.2",

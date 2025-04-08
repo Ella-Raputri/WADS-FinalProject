@@ -11,7 +11,7 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const {backendUrl, userData, setUserData, setIsLoggedIn} = useContext(AppContent)
+  const {backendUrl, userData, setUserData, setIsLoggedIn, cleanupSocket} = useContext(AppContent)
 
   useEffect(()=>{
     if(userData) setUserRole(userData.role);
@@ -37,7 +37,7 @@ const Navbar = () => {
         setUserRole(null)
         setIsLoggedIn(false)
         setUserData(null)
-
+        cleanupSocket()
         toast.success(data.message)
         navigate('/')
       }

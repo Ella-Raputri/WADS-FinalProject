@@ -11,6 +11,8 @@ import axios from "axios";
 import { AppContent } from "@/context/AppContext";
 import { toast } from "react-toastify";
 
+
+
 const TicketDetails = () => {
   const [messages, setMessages] = useState([]);
   const [subject, setSubject] = useState("");
@@ -25,7 +27,7 @@ const TicketDetails = () => {
   const [fetchNum, setFetchNum] =useState(0);
 
   const messagesEndRef = useRef(null);
-  const {backendUrl} = useContext(AppContent);
+  const {backendUrl, socket} = useContext(AppContent);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -33,6 +35,27 @@ const TicketDetails = () => {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
+
+  useEffect(() => {
+    if (!data || !data._id ||!socket) return;
+
+    socket.emit("joinRoom", data._id); // Join room
+    console.log("joined room");
+    
+  }, [data]);
+
+  useEffect(()=>{
+    if(!socket) return;
+
+    socket.on("newRoomMessage", (newMessage) => {
+      console.log("ada new room message")
+      setMessages((prevMessages) => [...prevMessages, newMessage]); // Update chat
+    });
+
+    return () => {
+      socket.off("newRoomMessage"); // Cleanup on unmount
+    };
+  }, [])
 
 
   const handleSend = async(e) => {
@@ -75,7 +98,7 @@ const TicketDetails = () => {
         const { data } = await axios.post(backendUrl + 'api/message/sendParticipantAdminMessage', {request: newMessage});
         
         if(data.success) {
-            fetchMessages()   //TODO: BUTUH WEBSOCKET HRSNYA
+            fetchMessages()
             setSubject("");
             setMessage("");
             setImageUploaded(null);
@@ -109,7 +132,7 @@ const TicketDetails = () => {
 
     const response = await axios.post(backendUrl + 'api/message/sendParticipantSystemMessage', {request: systemMessage});    
     if(response.data.success) {
-        fetchMessages()   //TODO: BUTUH WEBSOCKET HRSNYA
+        fetchMessages()   
     } else {
         toast.error(response.data.message);
     }
@@ -128,7 +151,14 @@ const TicketDetails = () => {
   const fetchMessages = async()=>{
     try {
       const response = await axios.get(`${backendUrl}api/message/getParticipantAdminMessage?ticketId=${data._id}`);
-      setMessages(response.data.adminUserChat);
+      const latestMessages = response.data.adminUserChat; 
+      // setMessages(latestMessages);
+
+      if (latestMessages.length > 0) {
+          const lastMessage = latestMessages[latestMessages.length - 1]; 
+          socket.emit("sendRoomMessage", { roomId: data._id, message: lastMessage });
+      }   
+
     } catch (error) {
       console.error(error)
     }

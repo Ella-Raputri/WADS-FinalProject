@@ -1,5 +1,7 @@
+import { getReceiverSocketId } from "../config/socket.js";
 import adminCollabChatModel from "../models/adminCollabChatModel.js";
 import adminUserChatModel from "../models/adminUserChatModel.js";
+import userModel from "../models/userModel.js"
 
 export const getAllParticipantAdminMessage = async(req,res)=>{
     try {
@@ -32,8 +34,8 @@ export const sendParticipantAdminMessage =async(req,res)=>{
             Message: request.message,
             Image: imageLink
         });
-
         await newMessage.save();
+
         return res.json({ success: true, message: "Message created successfully" });
 
     } catch (error) {

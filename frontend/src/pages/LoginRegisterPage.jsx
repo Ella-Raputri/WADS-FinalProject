@@ -7,6 +7,7 @@ import { useState, useRef, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import InputField from "@/components/InputField";
+import { io } from "socket.io-client";
 
 const LoginRegisterPage = () => {
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ const LoginRegisterPage = () => {
   const [image, setImage] =useState(null);
   const [imageName, setImageName] =useState("");
 
-  const {backendUrl, setIsLoggedIn, getUserData, userData} = useContext(AppContent)
+  const {backendUrl, setIsLoggedIn, getUserData, userData, initializeSocket} = useContext(AppContent)
 
   const dobRef = useRef(null);
   const [showPassword, setShowPassword] =useState(false);  
@@ -54,10 +55,11 @@ const LoginRegisterPage = () => {
       const {data}=await axios.post(backendUrl+'api/auth/login', {email:emailLogin,password})
       console.log(data)
         
-      if(data.success){
-        setIsLoggedIn(true);
-        toast.success(data.message);
-        getUserData()
+      if (data.success) {
+          setIsLoggedIn(true);
+          getUserData();
+          initializeSocket(data.userData._id);
+          toast.success(data.message);
       }
       else{
         toast.error(data.message);

@@ -11,16 +11,18 @@ import compRouter from './routes/competitionRoutes.js';
 import ticketRouter from './routes/ticketRouter.js';
 import competitionRegistrationRouter from './routes/competitionRegistrationRoute.js';
 import messageRouter from './routes/messageRoutes.js';
+import {app, server} from './config/socket.js'
 
-const app = express();
-const PORT = process.env.PORT || 4000
+const PORT = process.env.PORT || 4000;
 connectDB();
 
-
-app.use(cors({
-    origin: 'http://localhost:5173',
-    credentials: true
-}));
+// ✅ Fix: Enable CORS with credentials
+app.use(
+    cors({
+        origin: "http://localhost:5173", // ✅ Allow frontend
+        credentials: true, // ✅ Allow cookies & credentials
+    })
+);
 
 app.use('/api/image', imageRouter)
 
@@ -37,7 +39,7 @@ app.use('/api/ticket', ticketRouter)
 app.use("/api/competitionRegistration", competitionRegistrationRouter);
 app.use("/api/message", messageRouter);
 
-app.listen(PORT, ()=>console.log(`server started on ${PORT}`));
+server.listen(PORT, ()=>console.log(`server started on ${PORT}`));
 
 
 

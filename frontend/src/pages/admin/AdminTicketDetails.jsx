@@ -22,7 +22,7 @@ const AdminTicketDetails = () => {
   const [data, setData] = useState(null);
   const [user, setUser] =useState(null);
   const [fetchNum, setFetchNum] = useState(0);
-  const {backendUrl} = useContext(AppContent);
+  const {backendUrl, socket} = useContext(AppContent);
   const [isLoading, setIsLoading] =useState(true);
 
   const messagesEndRef = useRef(null);
@@ -31,6 +31,27 @@ const AdminTicketDetails = () => {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
+
+  useEffect(() => {
+      if (!data || !data._id ||!socket) return;
+  
+      socket.emit("joinAdminRoom", "admin"+data._id); // Join room
+      console.log("joined admin room");
+      
+    }, [data]);
+  
+  useEffect(()=>{
+    if(!socket) return;
+
+    socket.on("newAdminRoomMessage", (newMessage) => {
+      console.log("ada new admin room message")
+      setMessages((prevMessages) => [...prevMessages, newMessage]); // Update chat
+    });
+
+    return () => {
+      socket.off("newAdminRoomMessage"); // Cleanup on unmount
+    };
+  }, [])
 
 
   const handleSend = async (e) => {
@@ -104,7 +125,12 @@ const fetchMessagesWithAdminNames = async () => {
             })
         );
 
-        setMessages(messagesWithAdminNames);
+        // setMessages(messagesWithAdminNames);
+        if (messagesWithAdminNames.length > 0) {
+            const lastMessage = messagesWithAdminNames[messagesWithAdminNames.length - 1]; 
+            socket.emit("sendAdminRoomMessage", { roomId: "admin"+data._id, message: lastMessage });
+        }   
+
     } catch (error) {
         console.error("Error fetching messages:", error);
     }
