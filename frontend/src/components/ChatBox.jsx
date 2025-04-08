@@ -3,7 +3,7 @@ import { convertToTimeZone } from "@/lib/utils";
 import { useEffect } from "react";
 
 export default function ChatBox({ msg, index, user, adminPage }) {
-  const isSystemMessage = (msg.SenderId) && (msg.SenderId._id === "system");
+  const isSystemMessage = (!adminPage) && (msg.SenderId.FullName === "System");
   const isUserMessage = (user.role==='admin' && msg.AdminId===user.id) || (!adminPage && msg.SenderId._id === user.id) ;    //kalau true, berarti itu 本人 
 
   useEffect(()=>{
