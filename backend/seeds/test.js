@@ -5,17 +5,33 @@ import ticketModel from "../models/ticketModel.js";
 
 config();
 
-
-const getDistinctSenderIds = async () => {
+const updateResolvedTickets = async () => {
   try {
     await connectDB();
-    const senderIds = await ticketModel.distinct("SenderId");
-    console.log("Distinct SenderIds:", senderIds);
+
+    const result = await ticketModel.updateMany(
+      { Status: "Resolved", BecomeResolvedAt: null },
+      { $set: { BecomeResolvedAt: new Date() } }
+    );
+
+    console.log(`Updated ${result.modifiedCount} tickets.`);
   } catch (error) {
-    console.error("Error fetching distinct SenderIds:", error);
+    console.error("Error updating BecomeResolvedAt:", error);
   }
 };
 
-getDistinctSenderIds();
+updateResolvedTickets();
+
+// const getDistinctSenderIds = async () => {
+//   try {
+//     await connectDB();
+//     const senderIds = await ticketModel.distinct("SenderId");
+//     console.log("Distinct SenderIds:", senderIds);
+//   } catch (error) {
+//     console.error("Error fetching distinct SenderIds:", error);
+//   }
+// };
+
+// getDistinctSenderIds();
 
 

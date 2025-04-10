@@ -205,82 +205,82 @@ export const getFullResolveTime = async (req, res) => {
 };
 
 export const getReceivedResolvedBar = async (req, res) => {
-  try {
-    const { date, compTypeId } = req.query;
-    if (!date) {
-      return res.status(400).json({ message: "Date parameter is required" });
-    }
-
-    const selectedDate = new Date(date);
-    const weekStart = new Date(selectedDate);
-    weekStart.setDate(weekStart.getDate() - weekStart.getDay()); // Sunday (0)
-    weekStart.setHours(0, 0, 0, 0);
-
-    const weekEnd = new Date(weekStart);
-    weekEnd.setDate(weekEnd.getDate() + 6); // Saturday
-    weekEnd.setHours(23, 59, 59, 999);
-
-    const match = {
-      $and: [
-        {
-          $or: [
-            { CreatedAt: { $gte: weekStart, $lte: weekEnd } },
-            { BecomeResolvedAt: { $gte: weekStart, $lte: weekEnd } }
-          ]
+    try {
+        const { date, compTypeId } = req.query;
+        if (!date) {
+            return res.status(400).json({ message: "Date parameter is required" });
         }
-      ]
-    };
 
-    if (compTypeId) {
-      if (!mongoose.isValidObjectId(compTypeId)) {
-        return res.status(400).json({ message: "Invalid compTypeId format" });
-      }
-      match.$and.push({ CompTypeId: new mongoose.Types.ObjectId(compTypeId) });
-    }
+        const selectedDate = new Date(date);
+        const weekStart = new Date(selectedDate);
+        weekStart.setDate(weekStart.getDate() - weekStart.getDay()); 
+        weekStart.setHours(0, 0, 0, 0);
 
-    const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    const initChartData = dayNames.map(day => ({ dayName: day, received: 0, resolved: 0 }));
+        const weekEnd = new Date(weekStart);
+        weekEnd.setDate(weekEnd.getDate() + 6); 
+        weekEnd.setHours(23, 59, 59, 999);
 
-    const tickets = await ticketModel.aggregate([
-      { $match: match },
-      {
-        $project: {
-          createdDay: {
-            $cond: [
-              { $and: [{ $gte: ["$CreatedAt", weekStart] }, { $lte: ["$CreatedAt", weekEnd] }] },
-              { $dayOfWeek: "$CreatedAt" },
-              null
+        const match = {
+        $and: [
+            {
+            $or: [
+                { CreatedAt: { $gte: weekStart, $lte: weekEnd } },
+                { BecomeResolvedAt: { $gte: weekStart, $lte: weekEnd } }
             ]
-          },
-          resolvedDay: {
-            $cond: [
-              { $and: [{ $gte: ["$BecomeResolvedAt", weekStart] }, { $lte: ["$BecomeResolvedAt", weekEnd] }] },
-              { $dayOfWeek: "$BecomeResolvedAt" },
-              null
-            ]
-          }
+            }
+        ]
+        };
+
+        if (compTypeId) {
+            if (!mongoose.isValidObjectId(compTypeId)) {
+                return res.status(400).json({ message: "Invalid compTypeId format" });
+            }
+            match.$and.push({ CompTypeId: new mongoose.Types.ObjectId(compTypeId) });
         }
-      }
-    ]);
 
-    for (const ticket of tickets) {
-      if (ticket.createdDay) {
-        const index = (ticket.createdDay + 5) % 7; 
-        initChartData[index].received += 1;
-      }
-      if (ticket.resolvedDay) {
-        const index = (ticket.resolvedDay + 5) % 7; 
-        initChartData[index].resolved += 1;
-      }
+        const initChartData = [];
+        for (let i = 0; i < 7; i++) {
+            const currentDate = new Date(weekStart);
+            currentDate.setDate(weekStart.getDate() + i);
+            const formattedDate = currentDate.toISOString().split("T")[0].slice(5, 10);; 
+            initChartData.push({
+                date: formattedDate,
+                received: 0,
+                resolved: 0
+            });
+        }
+
+        const tickets = await ticketModel.aggregate([
+            { $match: match },
+            {
+                $project: {
+                CreatedAt: 1,
+                BecomeResolvedAt: 1
+                }
+            }
+        ]);
+
+        for (const ticket of tickets) {
+        if (ticket.CreatedAt >= weekStart && ticket.CreatedAt <= weekEnd) {
+            const createdDate = ticket.CreatedAt.toISOString().split("T")[0].slice(5, 10);
+            const found = initChartData.find(d => d.date === createdDate);
+            if (found) found.received += 1;
+        }
+        if (ticket.BecomeResolvedAt >= weekStart && ticket.BecomeResolvedAt <= weekEnd) {
+            const resolvedDate = ticket.BecomeResolvedAt.toISOString().split("T")[0].slice(5, 10);
+            const found = initChartData.find(d => d.date === resolvedDate);
+            if (found) found.resolved += 1;
+        }
+        }
+
+        return res.status(200).json(initChartData);
+    } 
+    catch (error) {
+        console.error("Error fetching weekly ticket chart:", error);
+        return res.status(500).json({ message: "Internal Server Error" });
     }
-
-    return res.status(200).json(initChartData);
-  } 
-  catch (error) {
-    console.error("Error fetching weekly ticket chart:", error);
-    return res.status(500).json({ message: "Internal Server Error" });
-  }
 };
+  
 
 export const getTicketbyEmergency = async (req, res) => {
     try {

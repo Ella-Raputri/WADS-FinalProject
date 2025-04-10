@@ -65,6 +65,13 @@ export const updateTicketStatus = async(req,res)=>{
     try {
         const ticket = await ticketModel.findById(request.ticketId);
         ticket.Status = request.status;
+        
+        if(request.status == "Closed"){
+            ticket.BecomeClosedAt = new Date();
+        }
+        else if(request.status == "Resolved"){
+            ticket.BecomeResolvedAt = new Date();
+        }
         await ticket.save();
 
         return res.json({success:true, message:"Ticket status updated successfully"})

@@ -28,8 +28,8 @@ export function BarChartMulti({chartData}) {
         {showChart && (
           <BarChart data={chartData} barCategoryGap={20}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
-            <XAxis dataKey="dayName" tickLine={false} axisLine={false} />
-            <YAxis />
+            <XAxis dataKey="date" tickLine={false} axisLine={false} />
+            <YAxis allowDecimals={false} />
             <Tooltip
               content={({ active, payload }) =>
                 active && payload?.length ? (
