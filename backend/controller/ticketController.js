@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+import adminUserChatModel from "../models/adminUserChatModel.js";
 import ticketModel from "../models/ticketModel.js";
 
 export const uploadNewTicket =async(req,res)=>{
@@ -29,7 +31,6 @@ export const uploadNewTicket =async(req,res)=>{
     }
 }
 
-
 export const getAllTickets = async(req,res)=>{
     try {
         const {userId} = req.body;
@@ -58,7 +59,6 @@ export const getAllTicketsByCompetitionType = async(req,res)=>{
     }
 }
 
-
 export const updateTicketStatus = async(req,res)=>{
     const {request} =req.body;
 
@@ -80,3 +80,26 @@ export const updateTicketStatus = async(req,res)=>{
         return res.status(500).json({success:false, message:error.message}) 
     }
 }
+
+export const getUpdatedAtByTicketId = async (req, res) => {
+    try {
+        const { ticketId } = req.query;        
+        if (!ticketId || !mongoose.isValidObjectId(ticketId)) {
+            return res.status(400).json({ message: "Invalid or missing ticketId" });
+        }
+      
+        const latestChat = await adminUserChatModel.findOne({ TicketId: ticketId })
+        .sort({ updatedAt: -1 }).select("updatedAt");     
+      
+        if (!latestChat) {
+            const created = await ticketModel.findById(ticketId).select("CreatedAt");
+            return res.status(200).json({ latestUpdatedAt: created.CreatedAt });
+        }
+        return res.status(200).json({ latestUpdatedAt: latestChat.updatedAt });
+        
+    } 
+    catch (error) {
+        console.error("Error fetching updatedat:", error);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+};

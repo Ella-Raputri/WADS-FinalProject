@@ -28,7 +28,7 @@ const TicketManagement = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-      console.log("Updated currentData:", currentData);
+      //console.log("Updated currentData:", currentData);
       setTracker(Math.random);
   }, [currentData]); 
 
@@ -36,7 +36,7 @@ const TicketManagement = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = Math.min(startIndex + itemsPerPage, totalResult);
     setCurrentData(filteredData.slice(startIndex, endIndex));
-    console.log(currentPage)
+    //console.log(currentPage)
   }, [currentPage, filteredData]); 
 
   const handleFilter = (newFilters) => {
@@ -64,12 +64,12 @@ const TicketManagement = () => {
       const isPriorityMatch = priority ? ticket.PriorityType.toLowerCase() === priority : true;
       const isStatusMatch = status ? ticket.Status.toLowerCase() === status : true;
       
-      console.log("iterating ticket:");
-      console.log(ticket);
-      console.log(isWithinCreateRange)
-      console.log(isWithinUpdateRange)
-      console.log(isPriorityMatch)
-      console.log(isStatusMatch)
+      // console.log("iterating ticket:");
+      // console.log(ticket);
+      // console.log(isWithinCreateRange)
+      // console.log(isWithinUpdateRange)
+      // console.log(isPriorityMatch)
+      // console.log(isStatusMatch)
   
       return isWithinCreateRange && isWithinUpdateRange && isPriorityMatch && isStatusMatch;
     });
@@ -97,7 +97,7 @@ const TicketManagement = () => {
   const fetchTickets = async () => {
     try {
         const response = await axios.get(`${backendUrl}api/ticket/getTicketByCompId?compId=${userData.admin.CompTypeId}`);
-        console.log("📡 Fetched Tickets:", response.data);
+        // console.log("📡 Fetched Tickets:", response.data);
 
         if (response.data.success) {
             setData(response.data.tickets);
