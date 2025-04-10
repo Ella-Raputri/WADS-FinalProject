@@ -47,6 +47,7 @@ const Dashboard = () => {
 
   const transformAgentData = (apiData) => {
     return apiData.map(agent => ({
+      id: agent.agentId,
       name: agent.agentName,
       tickets: agent.ticketCount,
       status: "Offline"
