@@ -100,7 +100,9 @@ const Navbar = () => {
                       className={`${userRole === 'admin' ? 'text-white red-hover' : 'bg-white text-neutral-600 hover:bg-neutral-100 hover:text-black'} 
                       hover:rounded-sm px-3 py-2 text-md mt-1 font-medium font-poppins 
                       ${location.pathname === item.href ? 'underline decoration-2 font-bold' : ''}
-                      ${(location.pathname=='/usernewticket' && item.href==='/userhelp')?  'underline decoration-2 font-bold' : ''}`
+                      ${(location.pathname=='/usernewticket' && item.href==='/userhelp')?  'underline decoration-2 font-bold' : ''}
+                      ${(location.pathname=='/userticketdetails' && item.href==='/userhelp')?  'underline decoration-2 font-bold' : ''}
+                      ${(location.pathname=='/adminparticipantdetails' && item.href==='/admincomp')?  'underline decoration-2 font-bold' : ''}`
                     }
                     >
                       {item.name}
@@ -141,8 +143,11 @@ const Navbar = () => {
                   to={item.href}
                   className={`block ${userRole === 'admin'? 'text-white red-hover' 
                 : 'bg-white text-neutral-600 hover:bg-neutral-100 hover:text-black'} 
-                  hover:rounded-sm ${location.pathname === item.href ? 'underline decoration-2 font-bold' : ''}
-    px-3 py-2 rounded-md text-base font-medium`}
+                  hover:rounded-sm px-3 py-2 rounded-md text-base font-medium
+                  ${location.pathname === item.href ? 'underline decoration-2 font-bold' : ''}
+                      ${(location.pathname=='/usernewticket' && item.href==='/userhelp')?  'underline decoration-2 font-bold' : ''}
+                      ${(location.pathname=='/userticketdetails' && item.href==='/userhelp')?  'underline decoration-2 font-bold' : ''}
+                      ${(location.pathname=='/adminparticipantdetails' && item.href==='/admincomp')?  'underline decoration-2 font-bold' : ''}`}
                 >
                   {item.name}
                 </DisclosureButton>

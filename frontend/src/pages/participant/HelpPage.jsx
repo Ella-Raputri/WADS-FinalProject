@@ -71,8 +71,8 @@ const HelpPage = () => {
     const dateUpdateEnd = updatedEnd ? new Date(updatedEnd) : null;
   
     const filtered = data.filter(ticket => {
-      const createdAt = new Date(ticket.created_at);
-      const updatedAt = new Date(ticket.updated_at);
+      const createdAt = new Date(ticket.CreatedAt);
+      const updatedAt = new Date(ticket.updated_at);    //TODO
   
       const isWithinCreateRange =
         (!dateCreateStart || createdAt >= dateCreateStart) &&
@@ -82,8 +82,8 @@ const HelpPage = () => {
         (!dateUpdateStart || updatedAt >= dateUpdateStart) &&
         (!dateUpdateEnd || updatedAt <= dateUpdateEnd);
   
-      const isPriorityMatch = priority ? ticket.priority.toLowerCase() === priority : true;
-      const isStatusMatch = status ? ticket.status.toLowerCase() === status : true;
+      const isPriorityMatch = priority ? ticket.PriorityType.toLowerCase() === priority : true;
+      const isStatusMatch = status ? ticket.Status.toLowerCase() === status : true;
       
       console.log("iterating ticket:");
       console.log(ticket);

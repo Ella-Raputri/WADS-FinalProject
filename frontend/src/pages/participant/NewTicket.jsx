@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { faChevronLeft, faImage } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import UploadImage from '@/components/UploadImage';
 import { AppContent } from '@/context/AppContext';
 import axios from 'axios';
@@ -73,9 +73,12 @@ const NewTicket = () => {
         }
     }
 
+    const location =useLocation();
+
 
   return (
     <div className='mt-25 ml-4 mr-8 md:ml-20 ' >
+        {console.log("location:",location)}
         
         <div className='flex'>
             <button className="bg-white text-slate-500 border shadow-md border-slate-300 w-10 h-10 flex items-center justify-center rounded-full hover:cursor-pointer hover:bg-gray-100"

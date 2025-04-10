@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import Modal from "react-modal";
 import { faCalendar, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { toast } from "react-toastify";
 
 Modal.setAppElement("#root");
 
@@ -67,33 +68,33 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
       const endDateUpdate = filters.updatedEnd;
 
       if ((startDateCreate && !endDateCreate) || (endDateCreate && !startDateCreate)) {
-        alert("Please select both start and end dates for the creation time.");
+        toast.error("Please select both start and end dates for the creation time.");
         return;
       }
       if ((startDateUpdate && !endDateUpdate) || (endDateUpdate && !startDateUpdate)) {
-        alert("Please select both start and end dates for the updated time.");
+        toast.error("Please select both start and end dates for the updated time.");
         return;
       }
     
       const startCreate = new Date(startDateCreate);
       const endCreate = new Date(endDateCreate);
       if (startCreate > endCreate) {
-        alert("Start date cannot be later than the end date (creation time).");
+        toast.error("Start date cannot be later than the end date (creation time).");
         return;
       }
       if (startCreate > today || endCreate > today) {
-        alert("Dates cannot be in the future (creation time).");
+        toast.error("Dates cannot be in the future (creation time).");
         return;
       }
 
       const startUpdate = new Date(startDateUpdate);
       const endUpdate = new Date(endDateUpdate);
       if (startUpdate > endUpdate) {
-        alert("Start date cannot be later than the end date (update time).");
+        toast.error("Start date cannot be later than the end date (update time).");
         return;
       }
       if (startUpdate > today || endUpdate > today) {
-        alert("Dates cannot be in the future (update time).");
+        toast.error("Dates cannot be in the future (update time).");
         return;
       }
     
