@@ -11,6 +11,7 @@ const VerifyEmailPage = () => {
   const [resendTimer, setResendTimer] = useState(30);
   const [canResend, setCanResend] = useState(false);
   const [email, setEmail] = useState("");
+  const [wrongOtp, setWrongOtp] =useState(0);
   const navigate = useNavigate();
 
   const {backendUrl, getUserData, initializeSocket} =useContext(AppContent);
@@ -61,6 +62,7 @@ const VerifyEmailPage = () => {
   const handleResendCode = () => {
     if (canResend) {
       sendingOtp();
+      setWrongOtp(0);
     }
   };
 
@@ -100,7 +102,12 @@ const VerifyEmailPage = () => {
   };
 
   const onSubmitOtp = async(e)=>{
-    e.preventDefault()
+    e.preventDefault();
+    if(wrongOtp >=3) {
+      toast.error("Too many times of wrong OTP, please resend a new OTP");
+      return;
+    }
+
     const inputtedOtp = otp.join('')
     axios.defaults.withCredentials = true;
     
@@ -114,7 +121,13 @@ const VerifyEmailPage = () => {
         initializeSocket(data.userData._id);
         navigate('/userhome')
       }
-      else toast.error(data.message)
+      else {
+        if(wrongOtp <3){
+          toast.error(data.message)
+          setWrongOtp(wrongOtp+1);
+        }
+        else toast.error("Too many times of wrong OTP, please resend a new OTP");
+      }
       
     } catch (error) {
       toast.error(error.message)

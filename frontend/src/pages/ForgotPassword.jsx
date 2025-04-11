@@ -16,6 +16,7 @@ const ForgotPasswordPage = () => {
   const [resendTimer, setResendTimer] = useState(30);
   const [canResend, setCanResend] = useState(false);
   const [showPassword, setShowPassword] =useState(false);
+  const [wrongOtp, setWrongOtp] =useState(0);
 
   const navigate = useNavigate();
   const {backendUrl} =useContext(AppContent);
@@ -81,6 +82,7 @@ const ForgotPasswordPage = () => {
   const handleResendCode = async() => {
     if (canResend) {
       sendingOtp();
+      setWrongOtp(0);
     }
   };
 
@@ -100,6 +102,11 @@ const ForgotPasswordPage = () => {
 
   const onSubmitOtp =async(e)=>{
     e.preventDefault()
+    if(wrongOtp >=3) {
+      toast.error("Too many times of wrong OTP, please resend a new OTP");
+      return;
+    }
+
     const inputtedOtp = otp.join('')
     
     try {
@@ -110,7 +117,13 @@ const ForgotPasswordPage = () => {
         setShowNewPassword(true)
         toast.success(data.message)
       }
-      else toast.error(data.message)
+      else {
+        if(wrongOtp <3){
+          toast.error(data.message)
+          setWrongOtp(wrongOtp+1);
+        }
+        else toast.error("Too many times of wrong OTP, please resend a new OTP");
+      }
       
     } catch (error) {
       toast.error(error.message)
