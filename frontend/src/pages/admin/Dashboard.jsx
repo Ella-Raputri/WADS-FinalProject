@@ -13,7 +13,7 @@ import { AppContent } from "@/context/AppContext";
 import axios from "axios";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
-import { convertToCSV } from "@/lib/utils";
+import { convertToCSV, convertToTimeZone } from "@/lib/utils";
 
 const Dashboard = () => {
   const {userData, backendUrl} = useContext(AppContent);
@@ -90,7 +90,14 @@ const Dashboard = () => {
   
   const handleDateChange = async (newDate) => {
     setDate(newDate);
-    const formattedDate = formatDateLocal(newDate); 
+    const formattedFull = convertToTimeZone(newDate.toISOString()); // example: "11-04-2025 11:10:03"
+
+    // console.log("full: ", formattedFull)
+    const [day, month, yearWithTime] = formattedFull.split("-");
+    const [year] = yearWithTime.split(",");
+    const formattedDate = `${year}-${month}-${day}`; 
+
+    // console.log("f:", formattedDate);
     const compTypeId = userData.admin.CompTypeId;
 
     try {
