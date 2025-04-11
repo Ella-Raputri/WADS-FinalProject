@@ -10,8 +10,13 @@ export const AppContextProvider = (props) => {
 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userData, setUserData] = useState(null);
-    const [onlineUsers, setOnlineUsers] = useState([]);
     const [socket, setSocket] = useState(null);
+    const [onlineUsers, setOnlineUsers] =useState([])
+    
+    const onlineUsersRef = useRef(onlineUsers);
+    useEffect(() => {
+        onlineUsersRef.current = onlineUsers; // Keep ref updated
+    }, [onlineUsers]);
 
     axios.defaults.withCredentials = true;
 
@@ -51,7 +56,9 @@ export const AppContextProvider = (props) => {
             });
 
             newSocket.on("getOnlineUsers", (users) => {
+                console.log("online user berubah");
                 setOnlineUsers(users);
+                onlineUsersRef.current =users;
             });
 
             newSocket.on("disconnect", () => {
@@ -91,6 +98,7 @@ export const AppContextProvider = (props) => {
         }
     };
 
+
     const value = {
         backendUrl,
         isLoggedIn,
@@ -99,8 +107,7 @@ export const AppContextProvider = (props) => {
         setUserData,
         getUserData,
         socket,
-        onlineUsers,
-        setOnlineUsers,
+        onlineUsersRef,
         initializeSocket,
         cleanupSocket
     };

@@ -40,7 +40,7 @@ const HelpPage = () => {
   const [openFilter, setOpenFilter] =useState(false);
   const [filteredData, setFilteredData] = useState(data);
 
-  const {isLoggedIn} = useContext(AppContent);
+  const {isLoggedIn, userData, socket, initializeSocket} = useContext(AppContent);
 
   const itemsPerPage = 5;
   const totalResult = filteredData.length; 
@@ -50,6 +50,15 @@ const HelpPage = () => {
       console.log("Updated currentData:", currentData);
       setTracker(Math.random);
   }, [currentData]); 
+
+  useEffect(() => {
+        if (!userData || !userData.id) return; 
+  
+        if (!socket) {
+            console.log("🔄 Initializing socket...");
+            initializeSocket(userData.id);
+        }
+    }, [userData]);
 
   useEffect(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;

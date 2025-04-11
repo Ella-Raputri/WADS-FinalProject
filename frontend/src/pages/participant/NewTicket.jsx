@@ -16,7 +16,16 @@ const NewTicket = () => {
     const [priority, setPriority] =useState("Low");
     const [compType, setCompType] =useState("Junior Singing");
     const navigate = useNavigate();
-    const {backendUrl} = useContext(AppContent)
+    const {backendUrl, userData, socket, initializeSocket} = useContext(AppContent)
+
+    useEffect(() => {
+            if (!userData || !userData.id) return; 
+      
+            if (!socket) {
+                console.log("🔄 Initializing socket...");
+                initializeSocket(userData.id);
+            }
+        }, [userData]);
 
 
     const handleSubmit=async(e)=>{

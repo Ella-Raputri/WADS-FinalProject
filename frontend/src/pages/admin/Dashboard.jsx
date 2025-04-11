@@ -3,7 +3,7 @@ import { BarChartMulti } from "@/components/BarChartMulti";
 import { DonutChart } from "@/components/DonutChart";
 import GaugeChart from "@/components/GaugeChart";
 import { StatusChart } from "@/components/StatusChart";
-import React, { useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { MdOutlineFileDownload } from "react-icons/md";
@@ -16,7 +16,7 @@ import { saveAs } from "file-saver";
 import { convertToCSV, convertToTimeZone } from "@/lib/utils";
 
 const Dashboard = () => {
-  const {userData, backendUrl} = useContext(AppContent);
+  const {userData, backendUrl, socket, initializeSocket, onlineUsersRef} = useContext(AppContent);
   const [date, setDate] = useState(new Date());
 
   const [totalTickets, setTotalTickets] = useState(0);
@@ -28,7 +28,6 @@ const Dashboard = () => {
   const [donutChartData, setDonutChartData] = useState([]);
   const [horizBarChartData, setHorizBarChartData] = useState([]);
   const [agentTableData, setAgentTableData] = useState([]);
-
   
   const priorityColors = {
     Urgent: { color: "#DC2626", darkColor: "#B91C1C" },
@@ -45,14 +44,30 @@ const Dashboard = () => {
     }));
   };
 
-  const transformAgentData = (apiData) => {
-    return apiData.map(agent => ({
-      id: agent.agentId,
-      name: agent.agentName,
-      tickets: agent.ticketCount,
-      status: "Offline"
-    }));
-  };
+    useEffect(() => {
+        if (!agentTableData) return; // Guard against null/undefined
+        
+        const newTable = updateAgentStatus(agentTableData);
+        setAgentTableData(newTable);
+    }, [onlineUsersRef.current.length]);
+
+    const updateAgentStatus = (newData)=>{
+        return newData.map(agent => ({
+            id: agent.id,
+            name: agent.name,
+            tickets: agent.tickets,
+            status: onlineUsersRef.current.includes(agent.id) ? "Online" : "Offline"
+        }));
+    }
+
+    const transformAgentData = (apiData) => {
+        return apiData.map(agent => ({
+            id: agent.agentId,
+            name: agent.agentName,
+            tickets: agent.ticketCount,
+            status: onlineUsersRef.current.includes(agent.agentId) ? "Online" : "Offline"
+        }));
+    };
 
   const statusColors = {
     "Open": { color: "bg-red-400"},
@@ -80,6 +95,18 @@ const Dashboard = () => {
   useEffect(() => {
     handleDateChange(date);
   }, [])
+
+
+  //TAMBAHIN CODE DI SETIAP PAGE (INITIALIZE SOCKET)
+  useEffect(() => {
+      if (!userData || !userData.id) return; 
+
+      if (!socket) {
+          console.log("🔄 Initializing socket...");
+          initializeSocket(userData.id);
+      }
+  }, [userData]);
+  
   
   const formatDateLocal = (date) => {
     const year = date.getFullYear();
@@ -176,6 +203,9 @@ const Dashboard = () => {
 
   return (
     <>
+    
+    {
+    <>
       <div className="flex flex-col sm:flex-row items-center justify-between px-6 py-4 lg:ml-15 ml-12 mt-25 mb-10 mr-15 space-y-4 sm:space-y-0">
         <h1 className="text-3xl lg:text-5xl font-kanit font-medium flex-grow text-center sm:text-left">
           Hello, {userData.name}!
@@ -253,6 +283,9 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+
+    </>
+    }
 
     </>
   );

@@ -68,7 +68,15 @@ endDate: new Date(2026, 0, 15)
   const [isEditingAccount, setIsEditingAccount] = useState(false);
 
   //userData isinya ada apa aja, silakan lihat ke userController.js ~
-  const {userData} = useContext(AppContent);
+  const {userData, socket, initializeSocket} = useContext(AppContent);
+  useEffect(() => {
+      if (!userData || !userData.id) return; 
+
+      if (!socket) {
+          console.log("🔄 Initializing socket...");
+          initializeSocket(userData.id);
+      }
+  }, [userData]);
   
   //berikut adalah isi dari participant field dari userData
   // MandarinName: { type: String },

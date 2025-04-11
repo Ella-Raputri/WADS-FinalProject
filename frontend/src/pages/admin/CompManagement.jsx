@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Table from '../../components/Table';
 import Pagination from '../../components/Pagination';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"; 
@@ -7,6 +7,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import SearchBar from '../../components/SearchBar';
 import SaveButton from '../../components/SaveButton';
 import FilterStatusModal from '../../components/FilterStatusModal';
+import { AppContent } from '@/context/AppContext';
 
 const CompManagement = () => {
   const cols = ["id", "NAME", "EMAIL","PHONE NUMBER", "STATUS"];
@@ -67,6 +68,7 @@ const CompManagement = () => {
   const [openFilter, setOpenFilter] =useState(false);
   const [filteredData, setFilteredData] = useState(data);
   const [baseFilteredData, setBaseFilteredData] = useState(data);
+  const {userData, socket, initializeSocket} = useContext(AppContent);
 
   const location = useLocation();
   const updatedData = location.state?.updatedData;
@@ -106,6 +108,15 @@ const CompManagement = () => {
     setCurrentData(filteredData.slice(startIndex, endIndex));
     console.log(currentPage)
   }, [currentPage, filteredData]); 
+
+  useEffect(() => {
+      if (!userData || !userData.id) return; 
+
+      if (!socket) {
+          console.log("🔄 Initializing socket...");
+          initializeSocket(userData.id);
+      }
+  }, [userData]);
 
   const navigate = useNavigate();
 

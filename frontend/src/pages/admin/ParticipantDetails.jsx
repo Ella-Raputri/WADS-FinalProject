@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Loading from '@/components/Loading';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
+import { AppContent } from '@/context/AppContext';
 
 const ParticipantDetails = () => {
     const navigate = useNavigate();
@@ -11,6 +12,7 @@ const ParticipantDetails = () => {
     const [data, setData] = useState(null);
     const [updatedStatus, setUpdatedStatus] = useState("");
     const [message, setMessage] =useState('');
+    const {userData, socket, initializeSocket} =useContext(AppContent);
 
     useEffect(() => {
         if (location.state?.data) {
@@ -18,6 +20,15 @@ const ParticipantDetails = () => {
             setUpdatedStatus(location.state.data.status);
         }
     }, [location.state?.data]);
+
+    useEffect(() => {
+          if (!userData || !userData.id) return; 
+    
+          if (!socket) {
+              console.log("🔄 Initializing socket...");
+              initializeSocket(userData.id);
+          }
+      }, [userData]);
 
     const excludedKeys = ["id", "student_card_photo", "payment_proof", "upload_twibbon_proof", "status"];
 

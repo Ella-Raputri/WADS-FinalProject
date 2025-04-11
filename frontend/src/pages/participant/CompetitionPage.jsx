@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { CompetitionInfo } from '../../components/CompetitionInfo';
 import { useState } from 'react';
+import { AppContent } from '@/context/AppContext';
 
 const CompetitionPage = ({}) => {
   const [competitions, setCompetitions] = useState([
@@ -31,6 +32,16 @@ const CompetitionPage = ({}) => {
       endDate: new Date(2026, 0, 15)
   }  
 ]);
+  const {userData, socket, initializeSocket} =useContext(AppContent);
+
+  useEffect(() => {
+        if (!userData || !userData.id) return; 
+  
+        if (!socket) {
+            console.log("🔄 Initializing socket...");
+            initializeSocket(userData.id);
+        }
+    }, [userData]);
 
   if (competitions.length !== 0){ 
     return(
