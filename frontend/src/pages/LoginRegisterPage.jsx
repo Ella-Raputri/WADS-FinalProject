@@ -26,7 +26,6 @@ const LoginRegisterPage = () => {
 
   const [emailLogin, setEmailLogin] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [image, setImage] =useState(null);
   const [imageName, setImageName] =useState("");
 
@@ -220,13 +219,13 @@ const LoginRegisterPage = () => {
                   value={formData[id]}
                   onChange={handleChange}
                   placeholder={
-                    id === "fullName" ? "Full Name" :
-                    id === "mandarinName" ? "Mandarin Name" :
-                    id.charAt(0).toUpperCase() + id.slice(1)
+                    id === "mandarinName" ? "Chinese characters or  -" :
+                    id === 'phone'? "Starts with +628XX or 08XX":
+                    ''
                   }
                 />
               ))}
-
+              
               <p className="ml-1 mb-2 font-semibold font-poppins text-md xl:text-lg">Password</p>
               <div className="w-full relative">
                 <input
@@ -235,7 +234,7 @@ const LoginRegisterPage = () => {
                     type={showPassword? 'text' : 'password'}
                     value={formData.password}
                     onChange={handleChange}
-                    placeholder='Password'
+                    placeholder="Min 8 chars, letter & number"
                     className="p-2 font-poppins w-full pr-10 bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
                 />  
                 <button
@@ -353,9 +352,9 @@ const LoginRegisterPage = () => {
             {["fullName", "mandarinName", "address", "phone", "email", "institution"].map((id) => (
               <InputField key={id} id={id} type={"text"} value={formData[id]} onChange={handleChange} 
               placeholder={
-                id === "fullName" ? "Full Name" :
-                id === "mandarinName" ? "Mandarin Name" :
-                id.charAt(0).toUpperCase() + id.slice(1)
+                id === "mandarinName" ? "Chinese characters or  -" :
+                id === 'phone'? "Starts with +628XX or 08XX":
+                ''
               } />
             ))}
 
@@ -367,7 +366,7 @@ const LoginRegisterPage = () => {
                     type={showPassword? 'text' : 'password'}
                     value={formData.password}
                     onChange={handleChange}
-                    placeholder='Password'
+                    placeholder='Min 8 chars, letter & number'
                     className="p-2 font-poppins w-full pr-10 bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
                 />  
                 <button

@@ -2,7 +2,11 @@ import React from 'react'
 
 const InputField = ({ id, type = "text", value, onChange, placeholder }) => (
     <div className="relative">
-      <p className="ml-1 mb-2 font-semibold font-poppins text-md xl:text-lg">{placeholder}</p>
+      <p className="ml-1 mb-2 font-semibold font-poppins text-md xl:text-lg">
+        {id === "fullName" ? "Full Name" :
+        id === "mandarinName" ? "Mandarin Name" :
+        id.charAt(0).toUpperCase() + id.slice(1)}
+      </p>
       <input
         id={id}
         type={type}
