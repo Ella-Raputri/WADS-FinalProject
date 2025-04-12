@@ -251,6 +251,7 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
           </select>
         </div>
 
+        {/* Sort Method */}
         <div className="mt-6">
           <label className="block text-md font-poppins mb-2 font-medium">SORT METHOD:</label>
           <select
@@ -265,6 +266,7 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
           </select>
         </div>
 
+        {/* Sort by */}
         <div className="mt-6">
           <label className="block text-md font-poppins mb-2 font-medium">SORT BY:</label>
           <select
@@ -274,11 +276,11 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
             onChange={handleFilterChange}
           >
             <option value="">Select Sort By</option>
-            <option value="subject">Subject</option>
-            <option value="createdAt">Created At</option>
-            <option value="updatedAt">Updated At</option>
-            <option value="priority">Priority</option>
-            <option value="status">Status</option>
+            <option value="Subject">Subject</option>
+            <option value="CreatedAt">Created At</option>
+            <option value="UpdatedAt">Updated At</option>
+            <option value="PriorityType">Priority</option>
+            <option value="Status">Status</option>
           </select>
         </div>
 

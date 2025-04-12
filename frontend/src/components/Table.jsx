@@ -5,39 +5,28 @@ import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { convertToTimeZone } from '@/lib/utils';
 import { AppContent } from '@/context/AppContext';
-import axios from 'axios';
-
-const fetchUpdatedAt = async (ticketId, backendUrl) => {
-    try {
-        const {data} = await axios.get(`${backendUrl}api/ticket/getUpdatedAtByTicketId?ticketId=${ticketId}`);
-        // console.log("API response for", ticketId, data);
-        return data.latestUpdatedAt;
-    } catch (err) {
-        console.error("Failed to fetch updatedAt for ticket", ticketId, err);
-        return null;
-    }
-};    
+   
 
 function Table({ columns, data, isTicketTable}) { 
     const [sortedData, setSortedData] = useState(data);
     const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
-    const [updatedAtMap, setUpdatedAtMap] = useState({});
-    const {backendUrl} = useContext(AppContent);
+    // const [updatedAtMap, setUpdatedAtMap] = useState({});
+    // const {backendUrl} = useContext(AppContent);
 
-    useEffect(() => {
-        const fetchAllUpdatedAt = async () => {
-            const map = {};
-            for (const ticket of data) {
-                const updatedAt = await fetchUpdatedAt(ticket._id, backendUrl);
-                map[ticket._id] = updatedAt;
-            }
-            setUpdatedAtMap(map);
-        };
+    // useEffect(() => {
+    //     const fetchAllUpdatedAt = async () => {
+    //         const map = {};
+    //         for (const ticket of data) {
+    //             const updatedAt = await fetchUpdatedAt(ticket._id, backendUrl);
+    //             map[ticket._id] = updatedAt;
+    //         }
+    //         setUpdatedAtMap(map);
+    //     };
     
-        if (isTicketTable && data.length > 0) {
-            fetchAllUpdatedAt();
-        }
-    }, [data, isTicketTable]);
+    //     if (isTicketTable && data.length > 0) {
+    //         fetchAllUpdatedAt();
+    //     }
+    // }, [data, isTicketTable]);
 
     // useEffect(() => {
     //     console.log("updatedAtMap updated:", updatedAtMap);
@@ -152,7 +141,7 @@ function Table({ columns, data, isTicketTable}) {
                                     )}
 
                                     {col ==='CREATED AT' && convertToTimeZone(item['CreatedAt'])}
-                                    {col ==='UPDATED AT' && (updatedAtMap[item._id] ? convertToTimeZone(updatedAtMap[item._id]) : 'Loading...')}
+                                    {col ==='UPDATED AT' && convertToTimeZone(item['UpdatedAt'])}
                                     
                                 </td>
                             )))}
