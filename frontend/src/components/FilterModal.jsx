@@ -14,6 +14,8 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
     updatedEnd: "",
     priority: "",
     status: "",
+    sortMethod: "",
+    sortBy: "",
   });
 
   // Refs for date inputs
@@ -110,6 +112,8 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
       updatedEnd: "",
       priority: "",
       status: "",
+      sortMethod: "",
+      sortBy: "",
     });
   };
 
@@ -120,144 +124,179 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
       className="w-[80%] md:w-[600px] h-auto bg-white mx-auto shadow-xl rounded-lg p-6 overflow-y-auto"
       overlayClassName="fixed inset-0 flex z-1000 justify-center items-center bg-[rgba(0,0,0,0.5)]"
     >
-      {/* Header */}
-      <div className="flex justify-between items-center font-kanit">
-        <h2 className="text-2xl font-medium">Filter</h2>
-        <button onClick={onClose} className="text-3xl cursor-pointer hover:text-gray-600 text-gray-500"> <FontAwesomeIcon icon={faTimes}/></button>
-      </div>
+      <div className="h-[80vh] md:h-[70vh] overflow-y-auto" style={{scrollbarWidth:"thin", scrollbarColor:"#ccc transparent"}}>
+        {/* Header */}
+        <div className="top-0 sticky pt-1 bg-white z-10">
+          <div className="flex justify-between items-center font-kanit">
+            <h2 className="text-2xl font-medium">Filter</h2>
+            <button onClick={onClose} className="text-3xl cursor-pointer hover:text-gray-600 text-gray-500"> <FontAwesomeIcon icon={faTimes}/></button>
+          </div>
+        </div>        
 
-      {/* Created At */}
-      <div className="mt-4">
-        <label className="block text-md mb-2 font-poppins font-medium">CREATED AT:</label>
-        <div className="md:flex gap-2">
-          <div className="relative w-full">
-            <input
-              type="date"
-              name="createdStart"
-              className="p-2 font-poppins w-full pr-10 bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
-              value={filters.createdStart}
-              onChange={handleFilterChange}
-              ref={createdStartRef}
-            />
-            <button
-              type="button"
-              className="absolute cursor-pointer right-2 top-1 text-gray-500 w-5 h-5"
-              onClick={() => createdStartRef.current?.showPicker()}
-            >
-              <FontAwesomeIcon icon={faCalendar} />
-            </button>
-          </div>
-          <p className="md:p-2 text-center">-</p>
-          <div className="relative w-full">
-            <input
-              type="date"
-              name="createdEnd"
-              className="bg-white font-poppins placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 pr-10 py-2 transition duration-300 ease focus:outline-none w-full focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
-              value={filters.createdEnd}
-              onChange={handleFilterChange}
-              ref={createdEndRef}
-            />
-            <button
-              type="button"
-              className="absolute cursor-pointer right-2 top-1 text-gray-500 w-5 h-5"
-              onClick={() => createdEndRef.current?.showPicker()}
-            >
-              <FontAwesomeIcon icon={faCalendar} />
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Updated At */}
-      <div className="mt-6">
-        <label className="block text-md mb-2 font-poppins font-medium">UPDATED AT:</label>
-        <div className="md:flex gap-2">
-          <div className="relative w-full">
-            <input
-              type="date"
-              name="updatedStart"
-              className="w-full font-poppins bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 pr-10 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
-              value={filters.updatedStart}
-              onChange={handleFilterChange}
-              ref={updatedStartRef}
-            />
-            <button
-              type="button"
-              className="absolute cursor-pointer right-2 top-1 text-gray-500 w-5 h-5"
-              onClick={() => updatedStartRef.current?.showPicker()}
-            >
-              <FontAwesomeIcon icon={faCalendar} />
-            </button>
-          </div>
-          <p className="md:p-2 text-center">-</p>
-          <div className="relative w-full">
-            <input
-              type="date"
-              name="updatedEnd"
-              className="w-full font-poppins bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 pr-10 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
-              value={filters.updatedEnd}
-              onChange={handleFilterChange}
-              ref={updatedEndRef}
-            />
-            <button
-              type="button"
-              className="absolute cursor-pointer right-2 top-1 text-gray-500 w-5 h-5"
-              onClick={() => updatedEndRef.current?.showPicker()}
-            >
-              <FontAwesomeIcon icon={faCalendar} />
-            </button>
+        {/* Created At */}
+        <div className="mt-4">
+          <label className="block text-md mb-2 font-poppins font-medium">CREATED AT:</label>
+          <div className="md:flex gap-2">
+            <div className="relative w-full">
+              <input
+                type="date"
+                name="createdStart"
+                className="p-2 font-poppins w-full pr-10 bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
+                value={filters.createdStart}
+                onChange={handleFilterChange}
+                ref={createdStartRef}
+              />
+              <button
+                type="button"
+                className="absolute cursor-pointer right-2 top-1 text-gray-500 w-5 h-5"
+                onClick={() => createdStartRef.current?.showPicker()}
+              >
+                <FontAwesomeIcon icon={faCalendar} />
+              </button>
+            </div>
+            <p className="md:p-2 text-center">-</p>
+            <div className="relative w-full">
+              <input
+                type="date"
+                name="createdEnd"
+                className="bg-white font-poppins placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 pr-10 py-2 transition duration-300 ease focus:outline-none w-full focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
+                value={filters.createdEnd}
+                onChange={handleFilterChange}
+                ref={createdEndRef}
+              />
+              <button
+                type="button"
+                className="absolute cursor-pointer right-2 top-1 text-gray-500 w-5 h-5"
+                onClick={() => createdEndRef.current?.showPicker()}
+              >
+                <FontAwesomeIcon icon={faCalendar} />
+              </button>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Priority Dropdown */}
-      <div className="mt-6">
-        <label className="block text-md font-poppins mb-2 font-medium">PRIORITY:</label>
-        <select
-          name="priority"
-          className="w-full font-poppins cursor-pointer bg-white  text-slate-700 text-md border border-slate-300 rounded-md pl-3 pr-10 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
-          value={filters.priority}
-          onChange={handleFilterChange}
-        >
-          <option value="">Select Priority</option>
-          <option value="low">Low</option>
-          <option value="medium">Medium</option>
-          <option value="high">High</option>
-          <option value="urgent">Urgent</option>
-        </select>
-      </div>
+        {/* Updated At */}
+        <div className="mt-6">
+          <label className="block text-md mb-2 font-poppins font-medium">UPDATED AT:</label>
+          <div className="md:flex gap-2">
+            <div className="relative w-full">
+              <input
+                type="date"
+                name="updatedStart"
+                className="w-full font-poppins bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 pr-10 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
+                value={filters.updatedStart}
+                onChange={handleFilterChange}
+                ref={updatedStartRef}
+              />
+              <button
+                type="button"
+                className="absolute cursor-pointer right-2 top-1 text-gray-500 w-5 h-5"
+                onClick={() => updatedStartRef.current?.showPicker()}
+              >
+                <FontAwesomeIcon icon={faCalendar} />
+              </button>
+            </div>
+            <p className="md:p-2 text-center">-</p>
+            <div className="relative w-full">
+              <input
+                type="date"
+                name="updatedEnd"
+                className="w-full font-poppins bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 pr-10 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
+                value={filters.updatedEnd}
+                onChange={handleFilterChange}
+                ref={updatedEndRef}
+              />
+              <button
+                type="button"
+                className="absolute cursor-pointer right-2 top-1 text-gray-500 w-5 h-5"
+                onClick={() => updatedEndRef.current?.showPicker()}
+              >
+                <FontAwesomeIcon icon={faCalendar} />
+              </button>
+            </div>
+          </div>
+        </div>
 
-      {/* Status Dropdown */}
-      <div className="mt-6">
-        <label className="block text-md font-poppins mb-2 font-medium">STATUS:</label>
-        <select
-          name="status"
-          className="w-full cursor-pointer bg-white placeholder:text-slate-400 text-slate-700 text-md border border-slate-300 rounded-md pl-3 pr-10 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
-          value={filters.status}
-          onChange={handleFilterChange}
-        >
-          <option value="">Select Status</option>
-          <option value="open">Open</option>
-          <option value="in progress">In Progress</option>
-          <option value="closed">Closed</option>
-          <option value="resolved">Resolved</option>
-        </select>
-      </div>
+        {/* Priority Dropdown */}
+        <div className="mt-6">
+          <label className="block text-md font-poppins mb-2 font-medium">PRIORITY:</label>
+          <select
+            name="priority"
+            className="w-full font-poppins cursor-pointer bg-white  text-slate-700 text-md border border-slate-300 rounded-md pl-3 pr-10 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
+            value={filters.priority}
+            onChange={handleFilterChange}
+          >
+            <option value="">Select Priority</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+            <option value="urgent">Urgent</option>
+          </select>
+        </div>
 
-      {/* Buttons */}
-      <div className="mt-6 flex justify-end text-sm font-poppins font-semibold gap-5">
-        <button
-          className="bg-gray-400 hover:bg-gray-500 shadow-md cursor-pointer text-white px-4 py-2 rounded"
-          onClick={handleReset}
-        >
-          Reset
-        </button>
-        <button
-          className="bg-red-600 hover:bg-red-700 shadow-md cursor-pointer text-white px-4 py-2 rounded"
-          onClick={handleApply}
-        >
-          Apply
-        </button>
+        {/* Status Dropdown */}
+        <div className="mt-6">
+          <label className="block text-md font-poppins mb-2 font-medium">STATUS:</label>
+          <select
+            name="status"
+            className="w-full cursor-pointer bg-white placeholder:text-slate-400 text-slate-700 text-md border border-slate-300 rounded-md pl-3 pr-10 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
+            value={filters.status}
+            onChange={handleFilterChange}
+          >
+            <option value="">Select Status</option>
+            <option value="open">Open</option>
+            <option value="in progress">In Progress</option>
+            <option value="closed">Closed</option>
+            <option value="resolved">Resolved</option>
+          </select>
+        </div>
+
+        <div className="mt-6">
+          <label className="block text-md font-poppins mb-2 font-medium">SORT METHOD:</label>
+          <select
+            name="sortMethod"
+            className="w-full cursor-pointer bg-white placeholder:text-slate-400 text-slate-700 text-md border border-slate-300 rounded-md pl-3 pr-10 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
+            value={filters.sortMethod}
+            onChange={handleFilterChange}
+          >
+            <option value="">Select Sort Method</option>
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
+          </select>
+        </div>
+
+        <div className="mt-6">
+          <label className="block text-md font-poppins mb-2 font-medium">SORT BY:</label>
+          <select
+            name="sortBy"
+            className="w-full cursor-pointer bg-white placeholder:text-slate-400 text-slate-700 text-md border border-slate-300 rounded-md pl-3 pr-10 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
+            value={filters.sortBy}
+            onChange={handleFilterChange}
+          >
+            <option value="">Select Sort By</option>
+            <option value="subject">Subject</option>
+            <option value="createdAt">Created At</option>
+            <option value="updatedAt">Updated At</option>
+            <option value="priority">Priority</option>
+            <option value="status">Status</option>
+          </select>
+        </div>
+
+        {/* Buttons */}
+        <div className="mt-6 flex justify-end text-sm font-poppins font-semibold gap-5">
+          <button
+            className="bg-gray-400 hover:bg-gray-500 shadow-md cursor-pointer text-white px-4 py-2 rounded"
+            onClick={handleReset}
+          >
+            Reset
+          </button>
+          <button
+            className="bg-red-600 hover:bg-red-700 shadow-md cursor-pointer text-white px-4 py-2 rounded"
+            onClick={handleApply}
+          >
+            Apply
+          </button>
+        </div>
       </div>
     </Modal>
   );

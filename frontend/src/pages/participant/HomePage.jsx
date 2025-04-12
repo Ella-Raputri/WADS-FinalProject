@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { SecheduleList } from '../../components/ScheduleList';
 import { UpcomingCompetitionsList } from '../../components/UpcomingCompetitionsList';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
