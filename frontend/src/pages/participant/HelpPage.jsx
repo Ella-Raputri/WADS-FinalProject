@@ -13,27 +13,7 @@ const HelpPage = () => {
   const cols = ["SUBJECT", "CREATED AT", "UPDATED AT", "PRIORITY", "STATUS"];
   const [data, setData] = useState([]);
   const {backendUrl} = useContext(AppContent);
-
-  const fetchTickets = async () => {
-    try {
-        const response = await axios.get(`${backendUrl}api/ticket/getAllTickets`);
-        console.log("📡 Fetched Tickets:", response.data);
-
-        if (response.data.success) {
-            setData(response.data.tickets);
-            setFilteredData(response.data.tickets)
-        } else {
-            console.warn("No tickets found:", response.data.message);
-        }
-    } catch (error) {
-        console.error("Error fetching tickets:", error);
-    } 
-};
-
-  useEffect(()=>{
-    fetchTickets()
-  },[backendUrl])
-
+  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [currentData, setCurrentData] = useState([]);
   const [tracker, setTracker] = useState(1);
@@ -45,6 +25,50 @@ const HelpPage = () => {
   const itemsPerPage = 5;
   const totalResult = filteredData.length; 
   const totalPage = Math.ceil(totalResult / itemsPerPage);
+
+  const fetchUpdatedAt = async (ticketId) => {
+      try {
+          const {data} = await axios.get(`${backendUrl}api/ticket/getUpdatedAtByTicketId?ticketId=${ticketId}`);
+          return data.latestUpdatedAt;
+      } catch (err) {
+          console.error("Failed to fetch updatedAt for ticket", ticketId, err);
+          return null;
+      }
+  }; 
+
+  const fetchTickets = async () => {
+    try {
+        setLoading(true);
+        const response = await axios.get(`${backendUrl}api/ticket/getAllTickets`);
+        const tickets = response.data.tickets;
+
+        if (response.data.success && tickets.length > 0) {
+          const updatedAtList = await Promise.all(
+            tickets.map(ticket => fetchUpdatedAt(ticket._id))
+          );
+    
+          const mergedTickets = tickets.map((ticket, idx) => ({
+            ...ticket,
+            UpdatedAt: updatedAtList[idx],
+          }));
+    
+          setData(mergedTickets);
+          setFilteredData(mergedTickets);
+        } 
+        else {
+            console.warn("No tickets found:", response.data.message);
+        }
+    } catch (error) {
+        console.error("Error fetching tickets:", error);
+    } 
+    finally{
+      setLoading(false);
+    }
+  };
+
+  useEffect(()=>{
+    fetchTickets()
+  },[backendUrl])
 
   useEffect(() => {
       console.log("Updated currentData:", currentData);
@@ -72,7 +96,7 @@ const HelpPage = () => {
   const handleFilter = (newFilters) => {
     setOpenFilter(false);
   
-    const { createdStart, createdEnd, updatedStart, updatedEnd, priority, status } = newFilters;
+    const { createdStart, createdEnd, updatedStart, updatedEnd, priority, status, sortMethod, sortBy } = newFilters;
   
     const dateCreateStart = createdStart ? new Date(createdStart) : null;
     const dateCreateEnd = createdEnd ? new Date(createdEnd) : null;
@@ -81,7 +105,7 @@ const HelpPage = () => {
   
     const filtered = data.filter(ticket => {
       const createdAt = new Date(ticket.CreatedAt);
-      const updatedAt = new Date(ticket.updated_at);    //TODO
+      const updatedAt = new Date(ticket.UpdatedAt); 
   
       const isWithinCreateRange =
         (!dateCreateStart || createdAt >= dateCreateStart) &&
@@ -93,20 +117,35 @@ const HelpPage = () => {
   
       const isPriorityMatch = priority ? ticket.PriorityType.toLowerCase() === priority : true;
       const isStatusMatch = status ? ticket.Status.toLowerCase() === status : true;
-      
-      console.log("iterating ticket:");
-      console.log(ticket);
-      console.log(priority);
-      console.log(isWithinCreateRange)
-      console.log(isWithinUpdateRange)
-      console.log(isPriorityMatch)
-      console.log(isStatusMatch)
   
       return isWithinCreateRange && isWithinUpdateRange && isPriorityMatch && isStatusMatch;
     });
+
+    if (sortBy) {
+      filtered.sort((a, b) => {
+        const aVal = a[sortBy];
+        const bVal = b[sortBy];
+  
+        if (aVal == null || bVal == null) return 0; 
+  
+        if (typeof aVal === "string" && typeof bVal === "string") { //sort string
+          return sortMethod === "asc"
+            ? aVal.localeCompare(bVal)
+            : bVal.localeCompare(aVal);
+        }
+  
+        if (aVal instanceof Date || bVal instanceof Date) { //sort date
+          const aDate = new Date(aVal);
+          const bDate = new Date(bVal);
+          return sortMethod === "asc" ? aDate - bDate : bDate - aDate;
+        }
+
+        return sortMethod === "asc" ? aVal - bVal : bVal - aVal; //sort num
+      });
+    }
   
     setFilteredData(filtered);
-    setCurrentPage(1); // Reset to first page after filtering
+    setCurrentPage(1); 
   };
   
 
@@ -144,8 +183,10 @@ const HelpPage = () => {
 
 
       <div className="md:ml-20 mb-30 p-4 pt-0 pl-0">
-        {currentData.length > 0 ? (
-          <Table key={tracker} columns={cols} data={currentData} role={"participant"} isTicketTable={true}/>
+        {loading ? (
+          <div className="text-center font-semibold text-gray-500 p-5">Loading...</div>
+        ) : currentData.length > 0 ? (
+          <Table key={tracker} columns={cols} data={currentData} isTicketTable={true}/>
         ) : (
           <div className="text-center font-semibold text-gray-500 p-5">No data available</div>
         )}

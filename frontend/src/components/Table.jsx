@@ -1,71 +1,19 @@
 import React, { useContext } from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSortUp, faSortDown, faExternalLink } from "@fortawesome/free-solid-svg-icons";
-import { useState, useEffect } from "react";
+import { faExternalLink } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from 'react-router-dom';
 import { convertToTimeZone } from '@/lib/utils';
 import { AppContent } from '@/context/AppContext';
    
 
 function Table({ columns, data, isTicketTable}) { 
-    const [sortedData, setSortedData] = useState(data);
-    const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
-    // const [updatedAtMap, setUpdatedAtMap] = useState({});
-    // const {backendUrl} = useContext(AppContent);
-
-    // useEffect(() => {
-    //     const fetchAllUpdatedAt = async () => {
-    //         const map = {};
-    //         for (const ticket of data) {
-    //             const updatedAt = await fetchUpdatedAt(ticket._id, backendUrl);
-    //             map[ticket._id] = updatedAt;
-    //         }
-    //         setUpdatedAtMap(map);
-    //     };
-    
-    //     if (isTicketTable && data.length > 0) {
-    //         fetchAllUpdatedAt();
-    //     }
-    // }, [data, isTicketTable]);
-
-    // useEffect(() => {
-    //     console.log("updatedAtMap updated:", updatedAtMap);
-    // }, [updatedAtMap]);
-    
-
-    // useEffect(() => {
-    //     console.log("Table received data:", data);
-    // }, [data]);
-
-    const handleSort = (column) => {
-        const columnKey = column.replace(/\s+/g, '_').toLowerCase(); 
-
-        let direction = "asc";
-        if (sortConfig.key === columnKey && sortConfig.direction === "asc") {
-            direction = "desc";
-        }
-
-        const sortedArray = [...sortedData].sort((a, b) => {
-            if (a[columnKey] < b[columnKey]) return direction === "asc" ? -1 : 1;
-            if (a[columnKey] > b[columnKey]) return direction === "asc" ? 1 : -1;
-            return 0;
-        });
-
-        setSortedData(sortedArray);
-        setSortConfig({ key: columnKey, direction });
-    };
-
     const {userData} = useContext(AppContent)
-    // console.log("userdata")
-    // console.log(userData)
-
     const navigate = useNavigate();
+
     const handleRowClick = (row)=>{
-        // console.log("clicked");
         if (columns.includes("SUBJECT")) {
             if(userData.role==="admin") navigate(`/adminticketdetails`, {state: {data:row,  user:userData}}); 
             if(userData.role ==="participant") navigate(`/userticketdetails`,  { state: { data:row, user:userData } }); 
-            // console.log(row);
             return;
         } else if (columns.includes("NAME")) {
             navigate(`/adminparticipantdetails`, { state: { data:row } });
@@ -84,27 +32,15 @@ function Table({ columns, data, isTicketTable}) {
                             <th
                                 key={index}
                                 className="text-sm px-4 py-3 text-left text-gray-600 font-poppins w-[200px]"
-                                onClick={() => handleSort(col)}
                             >
                                 {col}
-                                <div className="inline-flex flex-col ml-2 mt-2">
-                                    <FontAwesomeIcon
-                                        icon={faSortUp}
-                                        className={`${sortConfig.key === col.replace(/\s+/g, '_').toLowerCase() && sortConfig.direction === "asc" ? "text-gray-700" : "text-gray-400"}`}
-                                    />
-                                    <FontAwesomeIcon
-                                        icon={faSortDown}
-                                        className={`${sortConfig.key === col.replace(/\s+/g, '_').toLowerCase() && sortConfig.direction === "desc" ? "text-gray-700" : "text-gray-400"}`}
-                                        style={{ marginTop: '-12px' }}
-                                    />
-                                </div>
+                                
                             </th>
                         )))}
-                        {/* {console.log(columns)} */}
                     </tr>
                 </thead>
                 <tbody>
-                    {isTicketTable && sortedData.map((item, index) => (
+                    {isTicketTable && data.map((item, index) => (
                         <tr key={index} className="border-b border-gray-500 hover:bg-gray-50 ">
                             {columns.map((col, colIndex) => (
                                 col!=="id" &&(
@@ -149,7 +85,7 @@ function Table({ columns, data, isTicketTable}) {
                     ))}
 
 
-                    {!isTicketTable && sortedData.map((item, index) => (
+                    {!isTicketTable && data.map((item, index) => (
                         <tr key={index} className="border-b border-gray-500 hover:bg-gray-50 ">
                             {columns.map((col, colIndex) => (
                                 col!=="id" &&(
