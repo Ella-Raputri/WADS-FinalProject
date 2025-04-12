@@ -19,6 +19,16 @@ const HelpPage = () => {
   const [tracker, setTracker] = useState(1);
   const [openFilter, setOpenFilter] =useState(false);
   const [filteredData, setFilteredData] = useState(data);
+  const [currentFilter, setCurrentFilter] = useState({
+    createdStart: "",
+    createdEnd: "",
+    updatedStart: "",
+    updatedEnd: "",
+    priority: "",
+    status: "",
+    sortMethod: "",
+    sortBy: "",
+  });
 
   const {isLoggedIn, userData, socket, initializeSocket} = useContext(AppContent);
 
@@ -95,7 +105,7 @@ const HelpPage = () => {
 
   const handleFilter = (newFilters) => {
     setOpenFilter(false);
-  
+    setCurrentFilter(newFilters);
     const { createdStart, createdEnd, updatedStart, updatedEnd, priority, status, sortMethod, sortBy } = newFilters;
   
     const dateCreateStart = createdStart ? new Date(createdStart) : null;
@@ -206,7 +216,7 @@ const HelpPage = () => {
       </div>
       </div>
 
-      {openFilter && <FilterModal isOpen={openFilter} onClose={()=>setOpenFilter(false)} onApply={handleFilter}/>}
+      {openFilter && <FilterModal isOpen={openFilter} onClose={()=>setOpenFilter(false)} onApply={handleFilter} currFilters={currentFilter}/>}
       </div>
       }
       

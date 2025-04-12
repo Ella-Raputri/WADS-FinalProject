@@ -8,6 +8,10 @@ import { useEffect } from "react";
 export function AgentsTable({data}) {
   const [openFilter, setOpenFilter] =useState(false);
   const [filteredData, setFilteredData] = useState(data);
+  const [currentFilter, setCurrentFilter] = useState({
+    status: "",
+    sort: ""
+  })
 
   useEffect(() => {
     setFilteredData(data);
@@ -15,14 +19,13 @@ export function AgentsTable({data}) {
 
   const handleFilter = (newFilters) => {
     setOpenFilter(false);
-    const { sort, status } = newFilters; // 'sort' instead of 'sortDirection'
+    setCurrentFilter(newFilters);
+    const { sort, status } = newFilters; 
   
-    // Ensure correct status filtering
     const filtered = data.filter(ticket => {
       return status ? ticket.status.toLowerCase() === status.toLowerCase() : true;
     });
   
-    // Fix sortDirection comparison (matching "ascending"/"descending")
     const sortedArray = [...filtered].sort((a, b) => {
       if (a.tickets < b.tickets) return sort === "ascending" ? -1 : 1;
       if (a.tickets > b.tickets) return sort === "ascending" ? 1 : -1;
@@ -74,7 +77,7 @@ export function AgentsTable({data}) {
         </table>
       </div>
           
-      {openFilter && <FilterAgent isOpen={openFilter} onClose={()=>setOpenFilter(false)} onApply={handleFilter}/>}
+      {openFilter && <FilterAgent isOpen={openFilter} onClose={()=>setOpenFilter(false)} onApply={handleFilter} currFilters={currentFilter}/>}
 
     </div>
   );

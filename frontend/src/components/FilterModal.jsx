@@ -6,16 +6,16 @@ import { toast } from "react-toastify";
 
 Modal.setAppElement("#root");
 
-const FilterModal = ({ isOpen, onClose, onApply }) => {
+const FilterModal = ({ isOpen, onClose, onApply, currFilters }) => {
   const [filters, setFilters] = useState({
-    createdStart: "",
-    createdEnd: "",
-    updatedStart: "",
-    updatedEnd: "",
-    priority: "",
-    status: "",
-    sortMethod: "",
-    sortBy: "",
+    createdStart: currFilters['createdStart'],
+    createdEnd: currFilters['createdEnd'],
+    updatedStart: currFilters['updatedStart'],
+    updatedEnd: currFilters['updatedEnd'],
+    priority: currFilters['priority'],
+    status: currFilters['status'],
+    sortMethod: currFilters['sortMethod'],
+    sortBy: currFilters['sortBy'],
   });
 
   // Refs for date inputs

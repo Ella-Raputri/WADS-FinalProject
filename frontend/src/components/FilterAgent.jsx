@@ -3,10 +3,10 @@ import Modal from "react-modal";
 
 Modal.setAppElement("#root");
 
-const FilterAgent = ({ isOpen, onClose, onApply }) => {
+const FilterAgent = ({ isOpen, onClose, onApply, currFilters }) => {
   const [filters, setFilters] = useState({
-    status: "",
-    sort:"",
+    status: currFilters['status'],
+    sort: currFilters['sort'],
   });
 
   useEffect(() => {

@@ -20,6 +20,16 @@ const TicketManagement = () => {
   const [baseFilteredData, setBaseFilteredData] = useState(data);
   const {backendUrl, userData, socket, initializeSocket} = useContext(AppContent);
   const [loading, setLoading] = useState(true);
+  const [currentFilter, setCurrentFilter] = useState({
+    createdStart: "",
+    createdEnd: "",
+    updatedStart: "",
+    updatedEnd: "",
+    priority: "",
+    status: "",
+    sortMethod: "",
+    sortBy: "",
+  });
 
   const itemsPerPage = 10;
   const totalResult = filteredData.length; 
@@ -37,9 +47,10 @@ const TicketManagement = () => {
 
   const handleFilter = (newFilters) => {
     setOpenFilter(false);
-  
+
+    setCurrentFilter(newFilters);
     const { createdStart, createdEnd, updatedStart, updatedEnd, priority, status, sortMethod, sortBy } = newFilters;
-  
+
     const dateCreateStart = createdStart ? new Date(createdStart) : null;
     const dateCreateEnd = createdEnd ? new Date(createdEnd) : null;
     const dateUpdateStart = updatedStart ? new Date(updatedStart) : null;
@@ -202,7 +213,7 @@ const TicketManagement = () => {
       </div>
       </div>
 
-      {openFilter && <FilterModal isOpen={openFilter} onClose={()=>setOpenFilter(false)} onApply={handleFilter}/>}
+      {openFilter && <FilterModal isOpen={openFilter} onClose={()=>setOpenFilter(false)} onApply={handleFilter} currFilters={currentFilter}/>}
     </>
   );
 };
