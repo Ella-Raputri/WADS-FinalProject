@@ -212,23 +212,30 @@ export const getReceivedResolvedBar = async (req, res) => {
         }
 
         const selectedDate = new Date(date);
+        const gmtPlus7Offset = 7 * 60 * 60 * 1000;
+        
         const weekStart = new Date(selectedDate);
-        weekStart.setDate(weekStart.getDate() - weekStart.getDay()); 
-        weekStart.setHours(0, 0, 0, 0);
+        weekStart.setDate(selectedDate.getDate() - selectedDate.getDay()); 
+        const weekStartUTC = new Date(weekStart.getTime() - gmtPlus7Offset);
+        
+        const weekEndUTC = new Date(weekStartUTC);
+        weekEndUTC.setDate(weekStart.getDate() + 6);
+        weekEndUTC.setHours(23, 59, 59, 999);
 
-        const weekEnd = new Date(weekStart);
-        weekEnd.setDate(weekEnd.getDate() + 6); 
-        weekEnd.setHours(23, 59, 59, 999);
+        // console.log("Selected date:", selectedDate);
+        // console.log("Week start in GMT+7:", weekStart);
+        // console.log("Week start UTC:", weekStartUTC);
+        // console.log("Week end UTC:", weekEndUTC);
 
         const match = {
-        $and: [
-            {
-            $or: [
-                { CreatedAt: { $gte: weekStart, $lte: weekEnd } },
-                { BecomeResolvedAt: { $gte: weekStart, $lte: weekEnd } }
+            $and: [
+                {
+                    $or: [
+                        { CreatedAt: { $gte: weekStartUTC, $lte: weekEndUTC } },
+                        { BecomeResolvedAt: { $gte: weekStartUTC, $lte: weekEndUTC } }
+                    ]
+                }
             ]
-            }
-        ]
         };
 
         if (compTypeId) {
@@ -240,9 +247,14 @@ export const getReceivedResolvedBar = async (req, res) => {
 
         const initChartData = [];
         for (let i = 0; i < 7; i++) {
-            const currentDate = new Date(weekStart);
-            currentDate.setDate(weekStart.getDate() + i);
-            const formattedDate = currentDate.toISOString().split("T")[0].slice(5, 10);; 
+            const currentDateUTC = new Date(weekStartUTC);
+            currentDateUTC.setDate(weekStartUTC.getDate() + i);
+            
+            const currentDateGMT7 = new Date(currentDateUTC.getTime() + gmtPlus7Offset);
+            const formattedDate = currentDateGMT7.toISOString().split("T")[0].slice(5, 10);
+            
+            // console.log(`Day ${i}:`, currentDateUTC, "->", currentDateGMT7, "->", formattedDate);
+            
             initChartData.push({
                 date: formattedDate,
                 received: 0,
@@ -254,23 +266,25 @@ export const getReceivedResolvedBar = async (req, res) => {
             { $match: match },
             {
                 $project: {
-                CreatedAt: 1,
-                BecomeResolvedAt: 1
+                    CreatedAt: 1,
+                    BecomeResolvedAt: 1
                 }
             }
         ]);
 
         for (const ticket of tickets) {
-        if (ticket.CreatedAt >= weekStart && ticket.CreatedAt <= weekEnd) {
-            const createdDate = ticket.CreatedAt.toISOString().split("T")[0].slice(5, 10);
-            const found = initChartData.find(d => d.date === createdDate);
-            if (found) found.received += 1;
-        }
-        if (ticket.BecomeResolvedAt >= weekStart && ticket.BecomeResolvedAt <= weekEnd) {
-            const resolvedDate = ticket.BecomeResolvedAt.toISOString().split("T")[0].slice(5, 10);
-            const found = initChartData.find(d => d.date === resolvedDate);
-            if (found) found.resolved += 1;
-        }
+            if (ticket.CreatedAt >= weekStartUTC && ticket.CreatedAt <= weekEndUTC) {
+                const createdDateGMT7 = new Date(ticket.CreatedAt.getTime() + gmtPlus7Offset);
+                const createdDate = createdDateGMT7.toISOString().split("T")[0].slice(5, 10);
+                const found = initChartData.find(d => d.date === createdDate);
+                if (found) found.received += 1;
+            }
+            if (ticket.BecomeResolvedAt >= weekStartUTC && ticket.BecomeResolvedAt <= weekEndUTC) {
+                const resolvedDateGMT7 = new Date(ticket.BecomeResolvedAt.getTime() + gmtPlus7Offset);
+                const resolvedDate = resolvedDateGMT7.toISOString().split("T")[0].slice(5, 10);
+                const found = initChartData.find(d => d.date === resolvedDate);
+                if (found) found.resolved += 1;
+            }
         }
 
         return res.status(200).json(initChartData);

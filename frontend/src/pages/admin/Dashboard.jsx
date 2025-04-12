@@ -107,14 +107,6 @@ const Dashboard = () => {
       }
   }, [userData]);
   
-  
-  const formatDateLocal = (date) => {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const day = date.getDate().toString().padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
-  
   const handleDateChange = async (newDate) => {
     setDate(newDate);
     const formattedFull = convertToTimeZone(newDate.toISOString()); // example: "11-04-2025 11:10:03"

@@ -20,7 +20,7 @@ const TicketManagement = () => {
   const [openFilter, setOpenFilter] =useState(false);
   const [filteredData, setFilteredData] = useState(data);
   const [baseFilteredData, setBaseFilteredData] = useState(data);
-  const {backendUrl, userData} = useContext(AppContent);
+  const {backendUrl, userData, socket, initializeSocket} = useContext(AppContent);
 
   const itemsPerPage = 10;
   const totalResult = filteredData.length; 
@@ -102,17 +102,27 @@ const TicketManagement = () => {
         if (response.data.success) {
             setData(response.data.tickets);
             setFilteredData(response.data.tickets)
+            setBaseFilteredData(response.data.tickets); 
         } else {
             console.warn("No tickets found:", response.data.message);
         }
     } catch (error) {
         console.error("Error fetching tickets:", error);
     } 
-};
+  };
 
   useEffect(()=>{
     fetchTickets()
   },[backendUrl])
+
+  useEffect(() => {
+      if (!userData || !userData.id) return; 
+
+      if (!socket) {
+          console.log("🔄 Initializing socket...");
+          initializeSocket(userData.id);
+      }
+  }, [userData]);
 
   return (
     <>
