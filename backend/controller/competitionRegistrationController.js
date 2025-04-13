@@ -11,8 +11,7 @@ export const getCompetitionRegistrations = async(req, res) => {
 
 export const createCompetitionRegistration = async(req, res) => {
     try{
-        const {userId, competitionId} = req.params;
-        const {paymentProofUrl, twibbonProofUrl} = req.body;
+        const {userId, competitionId, paymentProofUrl, twibbonProofUrl} = req.body;
 
         const competitionRegistration = await competitionRegistrationModel.find({
             "UserId": userId,
@@ -50,6 +49,31 @@ export const deleteCompetitionRegistration = async(req, res) => {
         }
         res.status(200).json({message: "Registration Successfully Deleted!"});
     }catch(err){
+        res.status(500).json({message: err.message});
+    }
+}
+
+export const editCompetitionRegistration = async(req, res) => {
+    try{
+        const {registrationId} = req.params;
+        const {status, adminComment} = req.body;
+
+        const competitionRegistration = await competitionRegistrationModel.findById(registrationId);
+        
+        if (!competitionRegistration){
+            return res.status(404).json({message: "Registration not found"})
+        }
+
+        if (competitionRegistration.AdminComment === adminComment && competitionRegistration.Status === status){
+            return res.status(500).json({message: "No changes detected. New values must be different from old ones."})
+        }
+
+        competitionRegistration.AdminComment = adminComment;
+        competitionRegistration.Status = status;
+
+        await competitionRegistration.save();
+        res.status(200).json({message: "Changes applied!"})
+    } catch (err){
         res.status(500).json({message: err.message});
     }
 }
