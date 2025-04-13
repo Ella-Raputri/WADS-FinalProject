@@ -1,9 +1,10 @@
 import express from 'express';
-import { createCompetitionRegistration, deleteCompetitionRegistration, getCompetitionRegistrations } from '../controller/competitionRegistrationController.js';
+import { createCompetitionRegistration, deleteCompetitionRegistration, editCompetitionRegistration, getCompetitionRegistrations } from '../controller/competitionRegistrationController.js';
 
 const competitionRegistrationRouter = express.Router();
 competitionRegistrationRouter.get("/", getCompetitionRegistrations);
-competitionRegistrationRouter.post("/:userId/:competitionId", createCompetitionRegistration);
+competitionRegistrationRouter.post("/", createCompetitionRegistration);
 competitionRegistrationRouter.delete("/:registrationId", deleteCompetitionRegistration);
+competitionRegistrationRouter.put("/:registrationId", editCompetitionRegistration);
 
-export default competitionRegistrationRouter;
+export default competitionRegistrationRouter;   
