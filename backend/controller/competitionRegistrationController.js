@@ -1,4 +1,40 @@
 import competitionRegistrationModel from "../models/competitionRegistrationModel.js";
+import competitionTypeModel from "../models/competitionTypeModel.js";
+
+export const getUserRegistrationById = async(req, res) => {
+    try{
+        const {UserId, CompetitionId} = req.params;
+        const competitionRegistration = await competitionRegistrationModel.find({
+            "UserId": UserId,
+            "CompTypeId": CompetitionId
+        })
+        res.status(200).json(competitionRegistration);
+    }catch(err){
+        res.status(200).json({message: err.message});
+    }
+}
+
+export const getUserRegistrations = async(req, res) => {
+    try{
+        const {UserId} = req.params;
+        const competitionRegistrations = await competitionRegistrationModel.find({
+            "UserId": UserId
+        })
+
+        const result = []
+        if (competitionRegistrations.length > 0){
+            for (let i = 0; i < competitionRegistrations.length; i++){
+                let competition = await competitionTypeModel.findById(competitionRegistrations[i].CompTypeId);
+                result.push(competition);
+            }
+            return res.status(200).json(result);
+        } else {
+            return res.status(500).json({message: "No Registrations"});
+        }
+    }catch(err){
+        return res.status(500).json({message: err.message});
+    }
+}
 
 export const getCompetitionRegistrations = async(req, res) => {
     try{
@@ -11,11 +47,11 @@ export const getCompetitionRegistrations = async(req, res) => {
 
 export const createCompetitionRegistration = async(req, res) => {
     try{
-        const {userId, competitionId, paymentProofUrl, twibbonProofUrl} = req.body;
+        const {UserId, CompetitionId, PaymentProofUrl, TwibbonProofUrl} = req.body;
 
         const competitionRegistration = await competitionRegistrationModel.find({
-            "UserId": userId,
-            "CompTypeId": competitionId
+            "UserId": UserId,
+            "CompTypeId": CompetitionId
         })
 
         if (competitionRegistration.length > 0) {
@@ -28,10 +64,10 @@ export const createCompetitionRegistration = async(req, res) => {
         }
 
         const newRegistration = await competitionRegistrationModel.create({
-            "UserId": userId,
-            "CompTypeId": competitionId,
-            "PaymentProof": paymentProofUrl,
-            "TwibbonProof": twibbonProofUrl,
+            "UserId": UserId,
+            "CompTypeId": CompetitionId,
+            "PaymentProof": PaymentProofUrl,
+            "TwibbonProof": TwibbonProofUrl,
             "Status": "Pending"
         })
         res.status(200).json(newRegistration);
@@ -74,6 +110,16 @@ export const editCompetitionRegistration = async(req, res) => {
         await competitionRegistration.save();
         res.status(200).json({message: "Changes applied!"})
     } catch (err){
+        res.status(500).json({message: err.message});
+    }
+}
+
+export const getUpcomingCompetitions = async(req, res) => {
+    try{
+        const result = await competitionTypeModel.find({
+        })
+        return res.status(200).json(result);
+    }catch(err){
         res.status(500).json({message: err.message});
     }
 }

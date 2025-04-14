@@ -3,20 +3,45 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react'
 import Modal from "react-modal";
 import UploadImage from './UploadImage';
+import { useContext } from 'react';
+import { AppContent } from '@/context/AppContext';
 
-function UploadTwibbonPayment({isOpen, onClose, onCloseParent}) {
+function UploadTwibbonPayment({isOpen, onClose, onCloseParent, competition}) {
     const [twibbonImage, setTwibbonImage] = useState(null);
     const [paymentImage, setPaymentImage] = useState(null);
     const [twibbonImageName, setTwibbonImageName] = useState('');
     const [paymentImageName, setPaymentImageName] = useState('');
+    const {userData} = useContext(AppContent);
 
-    const handleSubmit=(e)=>{
+    const handleSubmit=async(e)=>{
         e.preventDefault();
-        //TODO: insert ke database
         
-        alert('udah keisi');
-        onClose();
-        onCloseParent(); 
+        const formData = {
+            UserId: userData.id,
+            CompetitionId: competition._id,
+            PaymentProofUrl: paymentImageName || "dummy_payment.png",
+            TwibbonProofUrl: twibbonImageName || "dummy_twibbon.png"
+        };
+
+        console.log(formData);
+
+        try{
+            const response = await fetch("http://localhost:4000/api/competitionRegistration/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(formData)
+            })  
+
+            const result = await response.json();
+            
+            alert('udah keisi');
+            onClose();
+            onCloseParent(); 
+        } catch(err){
+            alert("Error!");
+        }
     }
 
   return (

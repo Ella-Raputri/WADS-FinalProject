@@ -5,7 +5,6 @@ import { getCompetitionDetails, getCompetitionIdByName } from '../controller/com
 const compRouter = express.Router();
 
 compRouter.get('/getCompetitionIdByName', getCompetitionIdByName);
-compRouter.get('/getCompetitionDetails', getCompetitionDetails)
-
+compRouter.get('/getCompetitionDetails', getCompetitionDetails);
 
 export default compRouter

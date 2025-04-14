@@ -6,23 +6,19 @@ export const SecheduleList = ({competition}) => {
     let days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
     let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
-    let day, date, month, year, status = null;
-    let now = new Date();
-    let startDate = competition.startDate;
-    let endDate = competition.endDate;
+    let startDate = new Date(competition.CompetitionDate.StartDate);
+    let endDate = new Date(competition.CompetitionDate.EndDate);
 
-    if (now < startDate){
-        day = days[startDate.getDay()];
-        date = startDate.getDate();
-        month = months[startDate.getMonth()];
-        year = startDate.getFullYear();
-    }
-    if (now > startDate && now < endDate){
-        day = days[startDate.getDay()];
-        date = startDate.getDate();
-        month = months[startDate.getMonth()];
-        year = startDate.getFullYear();
-    }
+    let day, date, month, year = null;
+    let monthEnd, dateEnd = null;
+
+    day = days[startDate.getDay()];
+    date = startDate.getDate();
+    month = months[startDate.getMonth()];
+    year = startDate.getFullYear();
+    
+    monthEnd = months[endDate.getMonth()];
+    dateEnd = endDate.getDate();
 
     const [competitionIsOpen, setCompetitionIsOpen] = useState(false);
     const [statusIsOpen, setStatusIsOpen] = useState(false);
@@ -37,8 +33,8 @@ export const SecheduleList = ({competition}) => {
             </div>
             <div className="w-[80%] sm:mr-2 md:mr-0 bg-[#F4F4F4] rounded-[10px] font-poppins  flex flex-col justify-center sm:items-center sm:flex-row pt-4 pb-4 sm:pt-3 sm:pb-3 shadow">
                 <div className="pl-[2em] w-[90%] sm:w-[70%] flex flex-col">
-                    <p className="w-[100%] md:w-[80%] text-xl pb-2 font-semibold">{competition.title}</p>
-                    <p className="font-medium text-lg">{competition.time}</p>
+                    <p className="w-[100%] md:w-[80%] text-xl pb-2 font-semibold">{competition.Name}</p>
+                    <p className="font-medium text-lg">Submission Due: {monthEnd} {dateEnd}</p>
                     <button className="w-23 my-[0.7em] py-2 bg-red-600 shadow-md font-semibold text-sm rounded-md hover:!bg-red-700 duration-200 ease transition text-white cursor-pointer sm:hidden" onClick={() => {
                         setCompetitionIsOpen(true);
                     }}>Details</button>

@@ -8,14 +8,32 @@ import { AppContent } from "@/context/AppContext";
 import { toast } from "react-toastify";
 
 
-export const CompetitionPopUp = ({ competition, isRegistered, isOpen, onClose }) => {
-    let requirement_arr = competition.rules.split("\n");
-
+export const CompetitionPopUp = ({ competition, isOpen, onClose }) => {
     const [uploadOpen, setUploadOpen] = useState(false); 
+    const [isRegistered, setIsRegistered] = useState(null);
     const navigate = useNavigate();
-    const {isLoggedIn} = useContext(AppContent);
+    const {userData, isLoggedIn} = useContext(AppContent);
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
     useEffect(() => {
+      if (!userData?.id || !competition?._id) return;
+      console.log("userData:", userData.id);
+      console.log("competition:", competition._id);
+
+      fetch(`http://localhost:4000/api/CompetitionRegistration/getUserRegistrationById/${userData.id}/${competition._id}`)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        if (data.length > 0) {
+          setIsRegistered(true);
+        } else {
+          setIsRegistered(false);
+        }
+      })
+      .catch(err => {
+        console.log("Blyat");
+      })
+
         if (isOpen || uploadOpen) {
           const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
           
@@ -45,7 +63,7 @@ export const CompetitionPopUp = ({ competition, isRegistered, isOpen, onClose })
             navbar.style.paddingRight = "0px";
           }
         };
-      }, [isOpen, uploadOpen]);
+      }, [isOpen, uploadOpen, competition]);
 
     const handleRegisterCompetition = ()=>{
       if(isLoggedIn){
@@ -57,6 +75,9 @@ export const CompetitionPopUp = ({ competition, isRegistered, isOpen, onClose })
       }
     }
 
+    let competitionDate = new Date(competition.CompetitionDate.StartDate);
+    let competitionDateEnd = new Date(competition.CompetitionDate.EndDate);
+    let competitionDateFinal = new Date(competition.CompetitionDate.FinalDate);
     return (
         <>
         {/* Main Competition Modal */}
@@ -69,20 +90,25 @@ export const CompetitionPopUp = ({ competition, isRegistered, isOpen, onClose })
         >
             <div className="h-[80vh] md:h-[70vh] overflow-y-auto" style={{scrollbarWidth:"thin", scrollbarColor:"#ccc transparent"}}>
               <div className="top-0 sticky pt-1 bg-white">
-                  <p className="font-kanit font-medium text-2xl xl:text-3xl ml-11 w-[65%] md:w-auto">{competition.title}</p>
-                  <p className="ml-11 text-md xl:text-lg mt-3">Price: {competition.price} / Person</p>
+                  <p className="font-kanit font-medium text-2xl xl:text-3xl ml-11 w-[65%] md:w-auto">{competition.Name}</p>
+                  <p className="ml-11 text-md xl:text-lg mt-3">Price: {competition.Price} / Person</p>
                   <span className="text-[2.3rem] xl:text-[2.7rem] text-gray-500 absolute top-0 right-0 mr-[1em] md:mr-[1.5em]  hover:text-gray-600 cursor-pointer" onClick={onClose}> <FontAwesomeIcon icon={faTimes}/> </span>
                   <div className="w-[80%] h-[0.05em] bg-gray-400 ml-[3.1em] mt-[0.5em]"></div>
               </div>
-              <p className="ml-11 text-md xl:text-lg mt-[1.2em]"><span className="font-semibold">Venue:</span> {competition.venue}</p>
-              <p className="ml-11 text-md xl:text-lg mt-[0.7em]"><span className="font-semibold">Date:</span> {competition.date}</p>
-              <p className="ml-11 text-md xl:text-lg mt-[0.7em]"><span className="font-semibold">Time:</span> {competition.time}</p>
-              <p className="ml-11 text-md xl:text-lg mt-[0.7em]"><span className="font-semibold">Prizepool:</span> {competition.prizepool}</p>
+              <p className="ml-11 text-md xl:text-lg mt-[1.2em]"><span className="font-semibold">Venue:</span> {competition.Venue}</p>
+              <p className="ml-11 text-md xl:text-lg mt-[0.7em]"><span className="font-semibold">Date:</span> {months[competitionDate.getMonth()]} {competitionDate.getDate()} - {months[competitionDateFinal.getMonth()]} {competitionDateFinal.getDate()}</p>
+              <p className="ml-11 text-md xl:text-lg mt-[0.7em]"><span className="font-semibold">Final Submission for Preliminary Round:</span> {months[competitionDateEnd.getMonth()]} {competitionDateEnd.getDate()}</p>
+              <p className="ml-11 text-md xl:text-lg mt-[0.7em] font-semibold">Prizepool:</p>
+              <ul className="ml-11 list-disc text-md xl:text-lg mt-[0.7em]">
+                {competition.MainPrize.map((line, index) => {
+                    return <li className="ml-11 text-md xl:text-lg mt-[0.7em]" key={index}>{line}</li>
+                  })}
+              </ul>
               <p className="ml-11 text-md xl:text-lg font-semibold mt-[1.4em]">Requirements:</p>
-              <ul className="list-disc ml-11">
-                  {requirement_arr.map((line, i) => (
-                      <li key={i} className={`leading-7 ml-5 w-[80%] text-md xl:text-lg mt-[0.6em]`}>{line}</li>
-                  ))}
+              <ul className="list-disc ml-11 text-md xl:text-lg mt-[0.7em]">
+                {competition.Description.map((line, index) => {
+                  return <li className="ml-11 text-md xl:text-lg mt-[0.7em]" key={index}>{line}</li>
+                })}
               </ul>
               <button 
                 onClick={handleRegisterCompetition} 
@@ -94,7 +120,7 @@ export const CompetitionPopUp = ({ competition, isRegistered, isOpen, onClose })
         </Modal>
 
         {/* Upload Modal */}
-        <UploadTwibbonPayment isOpen={uploadOpen} onClose={() => setUploadOpen(false)} onCloseParent={onClose}/>
+        <UploadTwibbonPayment isOpen={uploadOpen} onClose={() => setUploadOpen(false)} onCloseParent={onClose} competition={competition} />
         </>
     );
 }

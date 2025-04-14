@@ -18,4 +18,4 @@ const CompetitionTypeSchema = new mongoose.Schema({
   
 const competitionTypeModel = mongoose.models.CompetitionType || mongoose.model('CompetitionType', CompetitionTypeSchema);
 
-export default competitionTypeModel
+export default competitionTypeModel;
