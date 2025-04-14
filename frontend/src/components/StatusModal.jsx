@@ -3,18 +3,37 @@ import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import UploadTwibbonPayment from "./UploadTwibbonPayment";
-
-
+import { AppContent } from "@/context/AppContext";
+import { useContext } from "react";
+import { data } from "react-router-dom";
 
 export const StatusModal = ({competition, isOpen, onClose}) => {
     const [uploadOpen, setUploadOpen] = useState(false);
+    const {userData} = useContext(AppContent);
 
     //TODO: NANTI UBAH UTK IKUT SESUAI DATABASE. UTK SEMENTARA INI, AKU PAKE FALSE
-    const [isRejected, setIsRejected] = useState(false); 
+    const [isRejected, setIsRejected] = useState(null); 
+    const [confirmationStatus, setConfirmationStatus] = useState(null);
+    const [adminComment, setAdminComment] = useState(null);
 
-
+    console.log(competition.Status);
 
     useEffect(() => {
+        fetch(`http://localhost:4000/api/competitionRegistration/getUserRegistrationById/${userData.id}/${competition._id}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data[0].Status === "Rejected"){
+            setIsRejected(true);
+          } else {
+            setIsRejected(false);
+          }
+          setConfirmationStatus(data[0].Status);
+          setAdminComment(data[0].AdminComment);
+        })
+        .catch(err => {
+          console.log(err);
+        })
+
         if (isOpen || uploadOpen) {
           const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
           
@@ -65,15 +84,15 @@ export const StatusModal = ({competition, isOpen, onClose}) => {
                   <img src='https://m.media-amazon.com/images/I/61DwXnVN9QL._AC_UF894,1000_QL80_.jpg' className="w-[40%] bg-gray-500 rounded-[10px] min-w-[200px]"/>
 
                   <p className="text-md font-semibold xl:text-lg sm:pt-0">Confirmation Status:</p>
-                  <p className="text-md xl:text-lg font-semibold text-red-500">Rejected</p>
+                  <p className={`text-md xl:text-lg font-semibold ${confirmationStatus === "Accepted" ? "text-green-700": confirmationStatus === "Rejected" ? "text-red-500": confirmationStatus === "Pending" ? "text-yellow-700" : "" }`}>{confirmationStatus}</p>
 
                   <p className="text-md font-semibold xl:text-lg sm:pt-0">Admin Comment:</p>
-                  <p className="text-md text-justify leading-7 xl:text-md w-[80%] break-words">No Guawdawdawdawdawdawd aw dwa dwa dawd aw daw daw d awd awd awd awd awd aw dwa daw daw d awd awd aw daw daw d awd awd aw dd No Guawdawdawdawdawdawd aw dwa dwa dawd aw daw daw d awd awd awd awd awd aw dwa daw daw d awd awd aw daw daw d awd awd aw ddNo Guawdawdawdawdawdawd aw dwa dwa dawd aw daw daw d awd awd awd awd awd aw dwa daw daw d awd awd aw daw daw d awd awd aw ddNo Guawdawdawdawdawdawd aw dwa dwa dawd aw daw daw d awd awd awd awd awd aw dwa daw daw d awd awd aw daw daw d awd awd aw ddNo Guawdawdawdawdawdawd aw dwa dwa dawd aw daw daw d awd awd awd awd awd aw dwa daw daw d awd awd aw daw daw d awd awd aw ddNo Guawdawdawdawdawdawd aw dwa dwa dawd aw daw daw d awd awd awd awd awd aw dwa daw daw d awd awd aw daw daw d awd awd aw ddNo Guawdawdawdawdawdawd aw dwa dwa dawd aw daw daw d awd awd awd awd awd aw dwa daw daw d awd awd aw daw daw d awd awd aw ddNo Guawdawdawdawdawdawd aw dwa dwa dawd aw daw daw d awd awd awd awd awd aw dwa daw daw d awd awd aw daw daw d awd awd aw ddNo Guawdawdawdawdawdawd aw dwa dwa dawd aw daw daw d awd awd awd awd awd aw dwa daw daw d awd awd aw daw daw d awd awd aw dd</p>
+                  <p className="text-md text-justify leading-7 xl:text-md w-[80%] break-words">{adminComment === "" ? "None" : adminComment}</p>
               
               </div>
 
               {
-                !isRejected? (<button 
+                  isRejected? (<button 
                   onClick={() => setUploadOpen(true)} 
                   className={`w-30 h-9 mt-8 bg-red-600 cursor-pointer hover:bg-red-700 shadow-md font-poppins font-semibold rounded-md text-white text-center block mx-auto mb-2`}
                 >

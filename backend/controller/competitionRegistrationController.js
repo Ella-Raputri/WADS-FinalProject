@@ -14,7 +14,7 @@ export const getUserRegistrationById = async(req, res) => {
     }
 }
 
-export const getUserRegistrations = async(req, res) => {
+export const getRegisteredCompetitions = async(req, res) => {
     try{
         const {UserId} = req.params;
         const competitionRegistrations = await competitionRegistrationModel.find({

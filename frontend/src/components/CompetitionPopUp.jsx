@@ -23,7 +23,6 @@ export const CompetitionPopUp = ({ competition, isOpen, onClose }) => {
       fetch(`http://localhost:4000/api/CompetitionRegistration/getUserRegistrationById/${userData.id}/${competition._id}`)
       .then(response => response.json())
       .then(data => {
-        console.log(data);
         if (data.length > 0) {
           setIsRegistered(true);
         } else {
@@ -31,7 +30,7 @@ export const CompetitionPopUp = ({ competition, isOpen, onClose }) => {
         }
       })
       .catch(err => {
-        console.log("Blyat");
+        console.log(err);
       })
 
         if (isOpen || uploadOpen) {
@@ -111,7 +110,9 @@ export const CompetitionPopUp = ({ competition, isOpen, onClose }) => {
                 })}
               </ul>
               <button 
-                onClick={handleRegisterCompetition} 
+                onClick={() => {
+                  isRegistered ? alert("You are already registered!") : handleRegisterCompetition()
+                }}
                 className={`w-30 h-9 mt-8 ${isRegistered ? "bg-[#319340]" : "bg-red-600 cursor-pointer hover:bg-red-700 shadow-md"} font-poppins font-semibold rounded-md text-white text-center block mx-auto mb-2`}
               >
                 {isRegistered ? "Registered" : "Register"}
@@ -124,5 +125,3 @@ export const CompetitionPopUp = ({ competition, isOpen, onClose }) => {
         </>
     );
 }
-
-
