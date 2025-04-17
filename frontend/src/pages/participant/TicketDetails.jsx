@@ -10,6 +10,7 @@ import { convertToTimeZone } from "@/lib/utils";
 import axios from "axios";
 import { AppContent } from "@/context/AppContext";
 import { toast } from "react-toastify";
+import RatingPopup from "@/components/RatingPopup";
 
 
 
@@ -30,6 +31,7 @@ const TicketDetails = () => {
   const messagesEndRef = useRef(null);
   const {backendUrl, socket, initializeSocket} = useContext(AppContent);
   const [isLoading, setIsLoading] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     if (messages.length > 0) {
@@ -75,6 +77,15 @@ const TicketDetails = () => {
       socket.off("newRoomMessage"); // Cleanup on unmount
     };
   }, [socket])
+
+  useEffect(() => {
+    const showPopup = localStorage.getItem('showRatingPopup');
+    if (showPopup === 'true') {
+      setIsOpen(true);
+      localStorage.removeItem('showRatingPopup'); // Show once only
+    }
+  }, []);
+  
 
 
   const handleSend = async(e) => {
@@ -161,7 +172,11 @@ const TicketDetails = () => {
         toast.success(response2.data.message);
         const updatedData = { ...data, Status: up };
         setData(updatedData);
+        if(up==='Closed'){
+          setIsOpen(true);
+        }
         navigate(location.pathname, { state: { data: updatedData, user } });
+
     } else {
         toast.error(response2.data.message);
     }
@@ -364,6 +379,12 @@ const TicketDetails = () => {
         </CardContent>
         </form>
       </Card>  
+
+      { isOpen && 
+            <RatingPopup ticket={data} isOpen={isOpen} onClose={() => {
+                setIsOpen(false);
+                }}></RatingPopup>
+            }
       
     </div>
 

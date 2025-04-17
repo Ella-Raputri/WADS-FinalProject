@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import adminUserChatModel from "../models/adminUserChatModel.js";
 import ticketModel from "../models/ticketModel.js";
+import ratingModel from "../models/ratingModel.js";
 
 export const uploadNewTicket =async(req,res)=>{
     const {userId, newTicketDetails} = req.body;
@@ -103,3 +104,24 @@ export const getUpdatedAtByTicketId = async (req, res) => {
         return res.status(500).json({ message: "Internal Server Error" });
     }
 };
+
+export const updateRateTicket = async (req, res) => {
+    const {userId, adminId, rating, comment} = req.body;
+    if(!rating){
+        return res.json({success:false, message:"Please give the rating."})
+    }
+
+    try {
+        const newRating = new ratingModel({
+            AdminId: adminId,
+            UserId: userId,
+            Rating: rating,
+            Comment: comment
+        })
+        await newRating.save();
+        return res.json({ success: true, message: "Thank you for your rating!" });
+
+    } catch (error) {
+        return res.status(500).json({success:false, message:error.message}) 
+    }
+}
