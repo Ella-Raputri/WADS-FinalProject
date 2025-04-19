@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useHref, useLocation, useNavigate } from "react-router-dom";
-import { faCheck, faChevronLeft, faClipboardCheck, faImage, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faChevronLeft, faClipboardCheck, faFileCircleCheck, faFilePen, faImage, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -32,6 +32,8 @@ const TicketDetails = () => {
   const {backendUrl, socket, initializeSocket} = useContext(AppContent);
   const [isLoading, setIsLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
+  const [isDone, setIsDone] = useState(false);
+  const [ratingResult, setRatingResult] = useState(null);
 
   useEffect(() => {
     if (messages.length > 0) {
@@ -77,14 +79,6 @@ const TicketDetails = () => {
       socket.off("newRoomMessage"); // Cleanup on unmount
     };
   }, [socket])
-
-  useEffect(() => {
-    const showPopup = localStorage.getItem('showRatingPopup');
-    if (showPopup === 'true') {
-      setIsOpen(true);
-      localStorage.removeItem('showRatingPopup'); // Show once only
-    }
-  }, []);
   
 
 
@@ -209,10 +203,11 @@ const TicketDetails = () => {
       console.log("Fetching data...");
       setFetchNum(fetchNum+1);
       
-      const [compResponse, senderResponse, messageResponse] = await Promise.all([
+      const [compResponse, senderResponse, messageResponse, ratingResponse] = await Promise.all([
         axios.get(`${backendUrl}api/competition/getCompetitionDetails?compId=${data.CompTypeId}`),
         axios.get(`${backendUrl}api/user/fetchUserDetails?userId=${data.SenderId}`),
-        axios.get(`${backendUrl}api/message/getParticipantAdminMessage?ticketId=${data._id}`)
+        axios.get(`${backendUrl}api/message/getParticipantAdminMessage?ticketId=${data._id}`),
+        axios.get(`${backendUrl}api/ticket/getRatingTicket?ticketId=${data._id}`)
       ]);
   
       setData(prev => ({
@@ -226,7 +221,12 @@ const TicketDetails = () => {
 
       setMessages(messageResponse.data.adminUserChat || []);
       const admins = messageResponse.data.adminUserChat.filter(msg => msg.SenderId && msg.SenderId.Role === "admin").map(msg => msg.SenderId.FullName); 
-       setAdminNames([...new Set(admins)]);
+      setAdminNames([...new Set(admins)]);
+
+      if(ratingResponse.data.rating){
+        setIsDone(true);
+        setRatingResult(ratingResponse.data.rating);
+      }
 
       setIsLoading(false);
   
@@ -234,6 +234,24 @@ const TicketDetails = () => {
       console.error("Error fetching data:", error);
     }
   };
+
+  const handleOpenSurvey = async()=>{
+    if(data.Status !== 'Closed') return;
+
+    try {
+      const response = await axios.get(`${backendUrl}api/ticket/getRatingTicket?ticketId=${data._id}`);
+      const rating = response.data.rating;
+
+      if(rating){
+        setIsDone(true);
+        setRatingResult(rating);
+      }
+      setIsOpen(true);
+
+    } catch (error) {
+      console.error(error)
+    }
+  }
   
 
   useEffect(() => {
@@ -274,19 +292,30 @@ const TicketDetails = () => {
             <FontAwesomeIcon icon={faChevronLeft} />
         </button>
   
-        {/* status Button (Right) */}
-        <button 
-          className={`text-white shadow-md font-poppins font-semibold px-3 py-2 flex items-center justify-center rounded-md 
-            ${user.role === 'admin' ? 'bg-sky-400 ' : 'bg-green-500 '}
-            ${user.role==='admin' && data.Status!=='Resolved' && data.Status !=='Closed' && 'hover:bg-sky-500'}
-            ${user.role==='participant' && data.Status !=='Closed' && 'hover:bg-green-600'}
-            ${data.Status === 'Closed' || (user.role === 'admin' && data.Status === 'Resolved') ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
-          onClick={handleClickResolveClose}
-          disabled={data.Status === 'Closed' || (user.role === 'admin' && data.Status === 'Resolved')}
-        >
-          <FontAwesomeIcon className="text-lg font-black" icon={faCheck} /> &ensp;  
-          {user.role === 'admin' ? 'Resolve' : 'Close'}
-        </button>
+        
+        <div className="flex gap-4 md:gap-6">
+          {user.role==='participant' &&
+          <button className={`${data.Status==='Closed'? 'bg-red-600 hover:bg-red-700 cursor-pointer' : 'bg-red-300 cursor-not-allowed'} text-white shadow-md  w-10 h-10 flex items-center justify-center rounded-full `}
+              onClick={handleOpenSurvey}>
+                <FontAwesomeIcon icon={faFilePen} />   
+            </button>
+          }
+
+          {/* status Button (Right) */}
+          <button 
+            className={`text-white shadow-md font-poppins font-semibold px-3 py-2 flex items-center justify-center rounded-md 
+              ${user.role === 'admin' ? 'bg-sky-400 ' : 'bg-green-500 '}
+              ${user.role==='admin' && data.Status!=='Resolved' && data.Status !=='Closed' && 'hover:bg-sky-500'}
+              ${user.role==='participant' && data.Status !=='Closed' && 'hover:bg-green-600'}
+              ${data.Status === 'Closed' || (user.role === 'admin' && data.Status === 'Resolved') ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+            onClick={handleClickResolveClose}
+            disabled={data.Status === 'Closed' || (user.role === 'admin' && data.Status === 'Resolved')}
+          >
+            <FontAwesomeIcon className="text-lg font-black" icon={faCheck} /> &ensp;  
+            {user.role === 'admin' ? 'Resolve' : 'Close'}
+          </button>
+        </div>
+        
 
       </div>
 
@@ -383,7 +412,7 @@ const TicketDetails = () => {
       { isOpen && 
             <RatingPopup ticket={data} isOpen={isOpen} onClose={() => {
                 setIsOpen(false);
-                }}></RatingPopup>
+                }} isDone={isDone} ratingResult={ratingResult}></RatingPopup>
             }
       
     </div>

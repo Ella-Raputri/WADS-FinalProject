@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { AppContent } from "@/context/AppContext";
 
-function RatingPopup({ ticket, isOpen, onClose }) {
+function RatingPopup({ ticket, isOpen, onClose, isDone, ratingResult }) {
   const ratingOptions = [
     { label: "Terrible", emoji: "😡", value: 1 },
     { label: "Bad", emoji: "😕", value: 2 },
@@ -28,6 +28,9 @@ function RatingPopup({ ticket, isOpen, onClose }) {
       document.body.style.paddingRight = `${scrollbarWidth}px`;
       const navbar = document.querySelector(".navbar");
       if (navbar) navbar.style.paddingRight = `${scrollbarWidth}px`;
+      
+      if(isDone) setSelectedRating(ratingResult.Rating);
+
     } else {
       document.body.style.overflow = "auto";
       document.body.style.paddingRight = "0px";
@@ -51,7 +54,7 @@ function RatingPopup({ ticket, isOpen, onClose }) {
 
     try {
       axios.defaults.withCredentials =true
-      const { data } = await axios.post(backendUrl + 'api/ticket/rateTicket', {adminId: ticket.HandledBy, rating:selectedRating, comment:comment});
+      const { data } = await axios.post(backendUrl + 'api/ticket/rateTicket', {ticketId:ticket._id, adminId: ticket.HandledBy, rating:selectedRating, comment:comment});
       
       if(data.success) {
         toast.success(data.message);
@@ -81,8 +84,11 @@ function RatingPopup({ ticket, isOpen, onClose }) {
           <div className="w-full h-[0.05em] bg-gray-300 mt-4"></div>
         </div>
   
-        <p className="text-md xl:text-xl font-semibold md:mt-1 mb-4">How was the service you received?</p>
-        <div className="flex flex-col md:flex-row justify-around items-center gap-6 mb-6">
+        <p className="text-md xl:text-xl font-semibold md:mt-2 mb-4 xl:mb-8">How was the service you received?</p>
+        
+        {!isDone && !ratingResult && 
+        <div>
+        <div className="flex flex-col md:flex-row justify-around items-center gap-6 mb-6 xl:mb-10">
             {ratingOptions.map((option) => (
               <div
                 key={option.value}
@@ -101,7 +107,7 @@ function RatingPopup({ ticket, isOpen, onClose }) {
                   {option.emoji}
                 </div>
                 <span
-                  className={`mt-1 text-sm ${
+                  className={`mt-1 font-poppins text-sm ${
                     selectedRating === option.value ? "font-bold text-black" : "text-gray-500"
                   }`}
                 >
@@ -127,6 +133,56 @@ function RatingPopup({ ticket, isOpen, onClose }) {
                 Submit
             </button>
           </div>
+
+          </div>
+          }
+
+
+
+        {isDone && ratingResult && 
+        <div>
+        <div className="flex flex-col md:flex-row justify-around items-center gap-6 mb-6 xl:mb-10">
+            {ratingOptions.map((option) => (
+              <div
+                key={option.value}
+                className={`flex flex-col items-center transition-all ${
+                  selectedRating === option.value ? "scale-110" : "opacity-70"
+                }`}
+              >
+                <div
+                  className={`text-5xl rounded-full border-4 p-2 ${
+                    selectedRating === option.value
+                      ? "border-green-500"
+                      : "border-transparent"
+                  }`}
+                >
+                  {option.emoji}
+                </div>
+                <span
+                  className={`mt-1 font-poppins text-sm ${
+                    selectedRating === option.value ? "font-bold text-black" : "text-gray-500"
+                  }`}
+                >
+                  {option.label}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          <textarea
+              className="resize-none w-full min-h-32 lg:min-h-48 bg-white placeholder:text-slate-400 text-slate-700 text-sm md:text-md border border-slate-300 rounded-md transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow p-2"
+              placeholder={ratingResult.Comment}
+              maxLength={500}
+              rows={4}
+              disabled
+          />
+
+          
+
+          </div>
+          }
+
+          
 
         </div>
       </Modal>

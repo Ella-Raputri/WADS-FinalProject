@@ -106,13 +106,14 @@ export const getUpdatedAtByTicketId = async (req, res) => {
 };
 
 export const updateRateTicket = async (req, res) => {
-    const {userId, adminId, rating, comment} = req.body;
+    const {userId, ticketId, adminId, rating, comment} = req.body;
     if(!rating){
         return res.json({success:false, message:"Please give the rating."})
     }
 
     try {
         const newRating = new ratingModel({
+            TicketId: ticketId,
             AdminId: adminId,
             UserId: userId,
             Rating: rating,
@@ -120,6 +121,17 @@ export const updateRateTicket = async (req, res) => {
         })
         await newRating.save();
         return res.json({ success: true, message: "Thank you for your rating!" });
+
+    } catch (error) {
+        return res.status(500).json({success:false, message:error.message}) 
+    }
+}
+
+export const fetchTicketRating = async(req,res) =>{
+    const ticketId = req.query.ticketId;
+    try {
+        const rating = await ratingModel.findOne({TicketId: ticketId});
+        return res.json({success:true, rating});
 
     } catch (error) {
         return res.status(500).json({success:false, message:error.message}) 
