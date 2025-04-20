@@ -122,6 +122,7 @@ export const getUpcomingCompetitions = async(req, res) => {
         const result = await competitionTypeModel.find({
             "CompetitionDate.FinalDate": {$gt: Date.now()}
         })
+        result.sort((a, b) => new Date(a.CompetitionDate.StartDate) - new Date(b.CompetitionDate.StartDate));
         return res.status(200).json(result);
     }catch(err){
         res.status(500).json({message: err.message});
