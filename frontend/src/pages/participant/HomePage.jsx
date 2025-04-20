@@ -7,6 +7,7 @@ import { UserData } from '../../components/UserData';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import { EditAccount } from '@/components/EditAccount';
 import { AppContent } from '@/context/AppContext';
+import { Users } from 'lucide-react';
 
 const HomePage = () => {
 

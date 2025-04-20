@@ -25,8 +25,11 @@ export const getRegisteredCompetitions = async(req, res) => {
         if (competitionRegistrations.length > 0){
             for (let i = 0; i < competitionRegistrations.length; i++){
                 let competition = await competitionTypeModel.findById(competitionRegistrations[i].CompTypeId);
-                result.push(competition);
+                if (competition.CompetitionDate.EndDate > Date.now()){
+                    result.push(competition);
+                }
             }
+            result.sort((a, b) => new Date(a.CompetitionDate.StartDate) - new Date(b.CompetitionDate.StartDate));
             return res.status(200).json(result);
         } else {
             return res.status(500).json({message: "No Registrations"});
@@ -117,6 +120,7 @@ export const editCompetitionRegistration = async(req, res) => {
 export const getUpcomingCompetitions = async(req, res) => {
     try{
         const result = await competitionTypeModel.find({
+            "CompetitionDate.FinalDate": {$gt: Date.now()}
         })
         return res.status(200).json(result);
     }catch(err){
