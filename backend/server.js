@@ -12,6 +12,7 @@ import ticketRouter from './routes/ticketRouter.js';
 import competitionRegistrationRouter from './routes/competitionRegistrationRoute.js';
 import messageRouter from './routes/messageRoutes.js';
 import {app, server} from './config/socket.js'
+import { swaggerUi, swaggerSpec } from './config/swagger.js';
 
 const PORT = process.env.PORT || 4000;
 connectDB();
@@ -28,6 +29,8 @@ app.use('/api/image', imageRouter)
 
 app.use(express.json());
 app.use(cookieParser());
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 //API Endpoints
 app.get('/', (req, res) => res.send("API get working"));

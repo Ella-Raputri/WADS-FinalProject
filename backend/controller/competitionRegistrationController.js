@@ -10,7 +10,7 @@ export const getUserRegistrationById = async(req, res) => {
         })
         res.status(200).json(competitionRegistration);
     }catch(err){
-        res.status(200).json({message: err.message});
+        res.status(500).json({message: err.message});
     }
 }
 
@@ -32,7 +32,7 @@ export const getRegisteredCompetitions = async(req, res) => {
             result.sort((a, b) => new Date(a.CompetitionDate.StartDate) - new Date(b.CompetitionDate.StartDate));
             return res.status(200).json(result);
         } else {
-            return res.status(500).json({message: "No Registrations"});
+            return res.status(200).json({message: "No Registrations"});
         }
     }catch(err){
         return res.status(500).json({message: err.message});
@@ -60,9 +60,9 @@ export const createCompetitionRegistration = async(req, res) => {
         if (competitionRegistration.length > 0) {
             const lastRegisteredCompetition = competitionRegistration[competitionRegistration.length - 1];
             if (lastRegisteredCompetition.Status === "Pending"){
-                return res.status(500).json({message: "Previous Request is Still Being Processed!"});
+                return res.status(200).json({message: "Previous Request is Still Being Processed!"});
             } else if (lastRegisteredCompetition.Status === "Accepted"){
-                return res.status(500).json({message: "You are Already Registered to This Competition!"});
+                return res.status(200).json({message: "You are Already Registered to This Competition!"});
             } 
         }
 
