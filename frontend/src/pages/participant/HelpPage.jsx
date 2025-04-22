@@ -2,12 +2,13 @@ import React, { useState, useEffect, useContext } from 'react';
 import Table from '../../components/Table';
 import Pagination from '../../components/Pagination';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"; 
-import { faFilter, faPlus } from "@fortawesome/free-solid-svg-icons"; 
+import { faFilter, faMessage, faPlus } from "@fortawesome/free-solid-svg-icons"; 
 import AccordionFAQ from '../../components/AccordionFAQ';
 import { useNavigate } from 'react-router-dom';
 import FilterModal from '../../components/FilterModal';
 import { AppContent } from '@/context/AppContext';
 import axios from 'axios';
+import ChatModal from '@/components/ChatModal';
 
 const HelpPage = () => {
   const cols = ["SUBJECT", "CREATED AT", "UPDATED AT", "PRIORITY", "STATUS"];
@@ -29,6 +30,7 @@ const HelpPage = () => {
     sortMethod: "",
     sortBy: "",
   });
+  const [isOpenChatAI, setIsOpenChatAI] =useState(true);
 
   const {isLoggedIn, userData, socket, initializeSocket} = useContext(AppContent);
 
@@ -168,6 +170,13 @@ const HelpPage = () => {
         <AccordionFAQ />
       </div>
 
+      <button 
+      onClick={() => setIsOpenChatAI(true)}
+      class="fixed bottom-4 right-4 bg-red-600 text-white py-3 px-4 rounded-full hover:bg-red-700 transition shadow-md cursor-pointer">
+        <FontAwesomeIcon icon={faMessage}/>
+      </button>
+
+
       {isLoggedIn && 
       <div>
       <div className="flex justify-between items-center md:ml-20 mt-15 p-6 pb-0">
@@ -217,6 +226,8 @@ const HelpPage = () => {
       </div>
 
       {openFilter && <FilterModal isOpen={openFilter} onClose={()=>setOpenFilter(false)} onApply={handleFilter} currFilters={currentFilter}/>}
+      
+      {isOpenChatAI && <ChatModal isOpen={isOpenChatAI} onClose={()=>setIsOpenChatAI(false)} user={userData} adminPage={false}/>}
       </div>
       }
       
