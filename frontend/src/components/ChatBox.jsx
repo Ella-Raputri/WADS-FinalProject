@@ -2,14 +2,36 @@ import { Card, CardContent } from "@/components/ui/card";
 import { convertToTimeZone } from "@/lib/utils";
 import { useEffect } from "react";
 
-export default function ChatBox({ msg, index, user, adminPage }) {
-  const isSystemMessage = (!adminPage) && (msg.SenderId.FullName === "System");
-  const isUserMessage = (user.role==='admin' && msg.AdminId===user.id) || (!adminPage && msg.SenderId._id === user.id) ;    //kalau true, berarti itu 本人 
+// Message
+// : 
+// "Who are you"
+// Role
+// : 
+// "user"
+// SenderId
+// : 
+// "67ed1e7be368010fea9da469"
+// createdAt
+// : 
+// "2025-04-23T03:59:39.109Z"
+// updatedAt
+// : 
+// "2025-04-23T03:59:39.109Z"
+// __v
+// : 
+// 0
+// _id
+// : 
+// "680865abeaf766cbbe3e1dae"
 
-  useEffect(()=>{
-    console.log(user)
-    console.log(msg)
-  },[user, msg])
+export default function ChatBox({ msg, index, user, page }) {
+  const isSystemMessage = (page==='ticketdetails') && (msg.SenderId.FullName === "System");
+  const isUserMessage = (page==='adminticketdetails' && user.role==='admin' && msg.AdminId===user.id) || (page==='ticketdetails' && msg.SenderId._id === user.id) || (page==='chatbot' && msg.SenderId===user.id);    //kalau true, berarti itu 本人 
+
+  // useEffect(()=>{
+  //   console.log(user)
+  //   console.log(msg)
+  // },[user, msg])
 
   return (
     <div className="max-w-6xl mt-6 mx-auto font-poppins" lang="en">

@@ -364,7 +364,7 @@ const TicketDetails = () => {
     <div className='m-auto max-w-10/12 p-4 mt-10'>
       <div className="pr-8 max-h-[60vh] md:max-h-[70vh] overflow-y-scroll chat-container">
             {messages.map((msg, index) => (
-                <ChatBox msg={msg} index={index} user={user} key={index} adminPage={false}/>
+                <ChatBox msg={msg} index={index} user={user} key={index} page={"ticketdetails"}/>
             ))}
             {/* This empty div will be used as the scroll target */}
             <div ref={messagesEndRef}></div>

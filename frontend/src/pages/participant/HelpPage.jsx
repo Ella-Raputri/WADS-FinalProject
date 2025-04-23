@@ -30,7 +30,7 @@ const HelpPage = () => {
     sortMethod: "",
     sortBy: "",
   });
-  const [isOpenChatAI, setIsOpenChatAI] =useState(true);
+  const [isOpenChatAI, setIsOpenChatAI] =useState(false);
 
   const {isLoggedIn, userData, socket, initializeSocket} = useContext(AppContent);
 
@@ -80,7 +80,7 @@ const HelpPage = () => {
 
   useEffect(()=>{
     fetchTickets()
-  },[backendUrl])
+  },[backendUrl]);
 
   useEffect(() => {
       console.log("Updated currentData:", currentData);
@@ -226,10 +226,11 @@ const HelpPage = () => {
       </div>
 
       {openFilter && <FilterModal isOpen={openFilter} onClose={()=>setOpenFilter(false)} onApply={handleFilter} currFilters={currentFilter}/>}
-      
-      {isOpenChatAI && <ChatModal isOpen={isOpenChatAI} onClose={()=>setIsOpenChatAI(false)} user={userData} adminPage={false}/>}
+
       </div>
       }
+
+      {isOpenChatAI && <ChatModal isOpen={isOpenChatAI} onClose={()=>setIsOpenChatAI(false)} user={userData}/>}
       
       </>
   );

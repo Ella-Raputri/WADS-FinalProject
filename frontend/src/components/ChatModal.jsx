@@ -1,15 +1,20 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import ChatBox from './ChatBox'
 import Modal from "react-modal";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { AppContent } from '@/context/AppContext';
+import axios from 'axios';
 
-function ChatModal({isOpen, onClose, user, adminPage}) {
+function ChatModal({isOpen, onClose, user}) {
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState('');
+    const [fetchNum, setFetchNum] = useState(0);
+
     const messagesEndRef = useRef(null);
+    const {backendUrl} = useContext(AppContent);
 
     useEffect(() => {
     if (messages.length > 0) {
@@ -49,12 +54,61 @@ function ChatModal({isOpen, onClose, user, adminPage}) {
         };
     }, [isOpen]);
 
+    useEffect(()=>{
+      if(!user) return;
+
+      fetchData();
+    }, [isOpen]);
+
+
+    const fetchData = async () => {
+      const needsFetching = messages.length === 0;
+      if (!needsFetching) return; // Skip if all data is available
+      if(fetchNum>=5) return;
+    
+      try {
+        console.log("Fetching message...");
+        setFetchNum(fetchNum+1);
+        
+        const [messageResponse] = await Promise.all([
+          axios.get(`${backendUrl}api/message/fetchChatbotMessage?userId=${user.id}`)
+        ]);        
+        
+        setMessages(messageResponse.data.chat);
+    
+      } catch (error) {
+        console.error("Error fetching message:", error);
+      }
+    };
+
     const handleSend = async(e)=>{
         e.preventDefault();
+        axios.defaults.withCredentials = true;
 
-        alert(message+" has been sent");
-        // setMessages(prevMessage => [...prevMessage, message]);
-        setMessage("");
+        if(!user.id) return;
+
+        try {
+            const { data } = await axios.post(backendUrl + 'api/message/sendChatbotMessage', { userId:user.id, message:message, role:"user" });
+
+            if (data.success) {
+                setTimeout(async () => {
+                    try {
+                        const res = await axios.get(`${backendUrl}api/message/fetchChatbotMessage?userId=${user.id}`);
+                        setMessages(res.data.chat); // Overwrite with the latest
+                        setMessage("");
+
+                    } catch (err) {
+                        console.error("Error fetching updated chat:", err);
+                    }
+                }, 1); 
+
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            console.error("Message send error:", error);
+            toast.error("Failed to send message. Please try again.");
+        }
     }
     
 
@@ -76,7 +130,7 @@ function ChatModal({isOpen, onClose, user, adminPage}) {
     {/* Messages */}
     <div className="flex-1 overflow-y-auto space-y-2 pr-2">
         {messages.map((msg, idx) => (
-        <ChatBox key={idx} msg={msg} index={idx} user={user} adminPage={adminPage} />
+        <ChatBox key={idx} msg={msg} index={idx} user={user} page={"chatbot"} />
         ))}
         <div ref={messagesEndRef}></div>
     </div>

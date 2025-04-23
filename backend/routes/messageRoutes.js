@@ -1,6 +1,6 @@
 import express from 'express';
 import userAuth from '../middleware/userAuth.js';
-import { getAllCollabAdminMessage, getAllParticipantAdminMessage, sendCollabAdminMessage, sendParticipantAdminMessage, sendParticipantSystemMessage } from '../controller/messageController.js';
+import { getAllChatbotMessage, getAllCollabAdminMessage, getAllParticipantAdminMessage, sendChatbotMessage, sendCollabAdminMessage, sendParticipantAdminMessage, sendParticipantSystemMessage } from '../controller/messageController.js';
 
 const messageRouter = express.Router();
 /**
@@ -183,5 +183,9 @@ messageRouter.get('/getAdminCollabMessage',userAuth, getAllCollabAdminMessage);
  *         description: Server error
  */
 messageRouter.post('/sendAdminCollabMessage',userAuth, sendCollabAdminMessage);
+
+messageRouter.post('/sendChatbotMessage', sendChatbotMessage);
+
+messageRouter.get('/fetchChatbotMessage', getAllChatbotMessage);
 
 export default messageRouter

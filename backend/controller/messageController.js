@@ -2,6 +2,7 @@ import { getReceiverSocketId } from "../config/socket.js";
 import adminCollabChatModel from "../models/adminCollabChatModel.js";
 import adminUserChatModel from "../models/adminUserChatModel.js";
 import mongoose from "mongoose";
+import chatbotModel from "../models/ChatbotModel.js";
 
 export const getAllParticipantAdminMessage = async (req, res) => {
     try {
@@ -87,10 +88,7 @@ export const sendParticipantSystemMessage =async(req,res)=>{
     }
 }
 
-// TicketId: { type: mongoose.Schema.Types.ObjectId, ref: "ticket", required: true},
-//     AdminId: { type: mongoose.Schema.Types.ObjectId, ref: "user", required: true},
-//     Message: { type: String, required: true },
-//     Image: { type: String, default: null }
+
 export const getAllCollabAdminMessage = async(req,res)=>{
     try {
         const ticketId = req.query.ticketId;
@@ -128,3 +126,46 @@ export const sendCollabAdminMessage =async(req,res)=>{
         return res.status(500).json({success:false, message:error.message})
     }
 }
+
+
+export const getAllChatbotMessage = async(req,res)=>{
+    try {
+        const userId =req.query.userId;
+        const chat = await chatbotModel.find({SenderId: userId});
+
+        return res.json({success:true, chat})
+        
+    } catch (error) {
+        console.error("Error fetching chatbot message:", error);
+        return res.status(500).json({ success: false, message: error.message });
+    }
+}
+
+
+export const sendChatbotMessage = async (req, res) => {
+    const { userId, message, role } = req.body;
+
+    if (!message) {
+        return res.json({ success: false, message: "Please fill the message field" });
+    }
+
+    if (!userId) {
+        return res.status(201).json({ success: true, message: "User ID not provided, message not saved." });
+    }
+
+    try {
+        const newMessage = new chatbotModel({
+            SenderId: userId,
+            Message: message,
+            Role: role
+        });
+
+        await newMessage.save();
+
+        return res.json({ success: true, message: "Message created successfully" });
+
+    } catch (error) {
+        console.error("Error saving message:", error);
+        return res.status(500).json({ success: false, message: error.message });
+    }
+};

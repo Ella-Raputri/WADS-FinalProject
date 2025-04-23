@@ -281,7 +281,7 @@ const fetchMessagesWithAdminNames = async () => {
 
         <div className="pr-8 min-h-[60vh] max-h-[60vh] md:max-h-[70vh] md:min-h-[70vh] overflow-y-scroll chat-container">
             {messages.map((msg, index) => (
-                <ChatBox msg={msg} index={index} user={user} key={index} adminPage={true}/>
+                <ChatBox msg={msg} index={index} user={user} key={index} page={"adminticketdetails"}/>
             ))}
             {/* This empty div will be used as the scroll target */}
             <div ref={messagesEndRef}></div>
