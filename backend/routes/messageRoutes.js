@@ -1,6 +1,6 @@
 import express from 'express';
 import userAuth from '../middleware/userAuth.js';
-import { getAllChatbotMessage, getAllCollabAdminMessage, getAllParticipantAdminMessage, sendChatbotMessage, sendCollabAdminMessage, sendParticipantAdminMessage, sendParticipantSystemMessage } from '../controller/messageController.js';
+import { generateBotRes, getAllChatbotMessage, getAllCollabAdminMessage, getAllParticipantAdminMessage, sendChatbotMessage, sendCollabAdminMessage, sendParticipantAdminMessage, sendParticipantSystemMessage } from '../controller/messageController.js';
 
 const messageRouter = express.Router();
 /**
@@ -187,5 +187,7 @@ messageRouter.post('/sendAdminCollabMessage',userAuth, sendCollabAdminMessage);
 messageRouter.post('/sendChatbotMessage', sendChatbotMessage);
 
 messageRouter.get('/fetchChatbotMessage', getAllChatbotMessage);
+
+messageRouter.post('/generateChatbotResponse', generateBotRes);
 
 export default messageRouter

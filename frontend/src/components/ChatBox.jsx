@@ -26,7 +26,7 @@ import { useEffect } from "react";
 
 export default function ChatBox({ msg, index, user, page }) {
   const isSystemMessage = (page==='ticketdetails') && (msg.SenderId.FullName === "System");
-  const isUserMessage = (page==='adminticketdetails' && user.role==='admin' && msg.AdminId===user.id) || (page==='ticketdetails' && msg.SenderId._id === user.id) || (page==='chatbot' && msg.SenderId===user.id);    //kalau true, berarti itu 本人 
+  const isUserMessage = (page==='adminticketdetails' && user.role==='admin' && msg.AdminId===user.id) || (page==='ticketdetails' && msg.SenderId._id === user.id) || (page==='chatbot' && msg.Role==='user');    //kalau true, berarti itu 本人 
 
   // useEffect(()=>{
   //   console.log(user)

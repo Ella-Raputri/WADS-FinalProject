@@ -2,7 +2,8 @@ import { getReceiverSocketId } from "../config/socket.js";
 import adminCollabChatModel from "../models/adminCollabChatModel.js";
 import adminUserChatModel from "../models/adminUserChatModel.js";
 import mongoose from "mongoose";
-import chatbotModel from "../models/ChatbotModel.js";
+import chatbotModel from "../models/chatbotModel.js";
+import axios from "axios";
 
 export const getAllParticipantAdminMessage = async (req, res) => {
     try {
@@ -169,3 +170,29 @@ export const sendChatbotMessage = async (req, res) => {
         return res.status(500).json({ success: false, message: error.message });
     }
 };
+
+
+export const generateBotRes = async(req,res) =>{
+    const {lastMsg} = req.body;
+    const requestBody = {
+        contents: [{
+            parts: [{ text: lastMsg }]
+        }]
+    };
+
+    try {
+        axios.defaults.withCredentials = true;
+        const response = await axios.post(process.env.GEMINI_API_KEY, requestBody,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          }
+        );
+    
+        res.json(response.data);
+      } catch (err) {
+        console.error('Gemini API Error:', err.response?.data || err.message);
+        res.status(500).json({ error: 'Failed to generate content' });
+      }
+}

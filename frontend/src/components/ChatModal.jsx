@@ -85,7 +85,19 @@ function ChatModal({isOpen, onClose, user}) {
         e.preventDefault();
         axios.defaults.withCredentials = true;
 
-        if(!user.id) return;
+        if(!user){
+            const newMessage = {
+                Message: message,
+                Role: "user",
+                SenderId: "guest",
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            }
+            setMessages(prev => [...prev, newMessage]);
+            setMessage("");
+            generateBotResponse(newMessage);
+            return;
+        }
 
         try {
             const { data } = await axios.post(backendUrl + 'api/message/sendChatbotMessage', { userId:user.id, message:message, role:"user" });
@@ -101,6 +113,8 @@ function ChatModal({isOpen, onClose, user}) {
                         console.error("Error fetching updated chat:", err);
                     }
                 }, 1); 
+                const chats = res.data.chat;
+                generateBotResponse(chats[chats.length-1]);
 
             } else {
                 toast.error(data.message);
@@ -110,21 +124,61 @@ function ChatModal({isOpen, onClose, user}) {
             toast.error("Failed to send message. Please try again.");
         }
     }
+
+    const generateBotResponse = async(latestMessage)=>{
+        try {
+            console.log(latestMessage.Message);
+            const response = await axios.post(`${backendUrl}api/message/generateChatbotResponse`, {lastMsg:latestMessage.Message});
+            const botMsg = response.data.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, "$1").trim();
+
+            if(!user){
+                const newMessage = {
+                    Message: botMsg,
+                    Role: "AI",
+                    SenderId: "guest",
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                }
+                setMessages(prev => [...prev, newMessage])
+            }
+            else{
+                const { data } = await axios.post(backendUrl + 'api/message/sendChatbotMessage', { userId:user.id, message:botMsg, role:"AI" })
+                if (data.success) {
+                    setTimeout(async () => {
+                        try {
+                            const res = await axios.get(`${backendUrl}api/message/fetchChatbotMessage?userId=${user.id}`);
+                            setMessages(res.data.chat); // Overwrite with the latest
+    
+                        } catch (err) {
+                            console.error("Error fetching updated chat:", err);
+                        }
+                    }, 1);
+                }
+            }
+            
+
+        } catch (error) {
+            console.error(error)
+        }
+    }
     
 
   return (
     <Modal
     isOpen={isOpen}
     onRequestClose={onClose}
-    className="md:fixed md:right-15 md:top-18 w-[80%] md:w-[400px] h-[80vh] flex flex-col bg-white mx-auto shadow-xl rounded-lg p-6 overflow-y-auto"
+    className="md:fixed md:right-15 md:top-18 w-[80%] md:w-[500px] h-[80vh] flex flex-col bg-white mx-auto shadow-xl rounded-lg p-6"
     overlayClassName="fixed inset-0 flex justify-center items-center bg-[rgba(0,0,0,0.5)] z-50"
     >
+
     {/* Header */}
     <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-kanit">Chat</h2>
         <button onClick={onClose} className="text-xl cursor-pointer">✖</button>
     </div>
     <hr className="border-t border-gray-300" />
+    
+    <div className="h-[80vh] md:h-[70vh] overflow-y-auto" style={{scrollbarWidth:"thin", scrollbarColor:"#ccc transparent"}}>
 
 
     {/* Messages */}
@@ -133,6 +187,8 @@ function ChatModal({isOpen, onClose, user}) {
         <ChatBox key={idx} msg={msg} index={idx} user={user} page={"chatbot"} />
         ))}
         <div ref={messagesEndRef}></div>
+    </div>
+
     </div>
 
     {/* Input */}
