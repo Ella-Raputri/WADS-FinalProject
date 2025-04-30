@@ -11,6 +11,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@langchain/community": "^0.3.42",
+    "@langchain/core": "^0.3.50",
+    "@langchain/google-genai": "^0.2.5",
+    "@langchain/openai": "^0.5.8",
+    "@langchain/pinecone": "^0.2.0",
+    "@pinecone-database/pinecone": "^5.1.2",
     "axios": "^1.8.4",
     "bcryptjs": "^3.0.2",
     "cloudinary": "^2.6.0",
@@ -25,6 +31,7 @@
     "multer-gridfs-storage": "^5.0.2",
     "nodemailer": "^6.10.0",
     "nodemon": "^3.1.9",
+    "pdf-parse": "^1.1.1",
     "socket.io": "^4.8.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
