@@ -4,6 +4,7 @@ import adminUserChatModel from "../models/adminUserChatModel.js";
 import mongoose from "mongoose";
 import chatbotModel from "../models/chatbotModel.js";
 import axios from "axios";
+import { queryRAG } from "../config/rag.js";
 
 export const getAllParticipantAdminMessage = async (req, res) => {
     try {
@@ -174,24 +175,26 @@ export const sendChatbotMessage = async (req, res) => {
 
 export const generateBotRes = async(req,res) =>{
     const {lastMsg} = req.body;
-    const requestBody = {
-        contents: [{
-            parts: [{ text: lastMsg }]
-        }]
-    };
 
     try {
-        axios.defaults.withCredentials = true;
-        const response = await axios.post(process.env.GEMINI_API_KEY, requestBody,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-            }
-          }
-        );
+        const ragResponse = await queryRAG(lastMsg);
+        res.json({
+            message: ragResponse.result,
+            sources: ragResponse.sources,
+        });
+        // axios.defaults.withCredentials = true;
+        // const geminiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GEMINI_API_KEY}`;
+        // const response = await axios.post(geminiEndpoint, requestBody,
+        //   {
+        //     headers: {
+        //       'Content-Type': 'application/json',
+        //     }
+        //   }
+        // );
     
-        res.json(response.data);
-      } catch (err) {
+        // res.json(response.data);
+      } 
+      catch (err) {
         console.error('Gemini API Error:', err.response?.data || err.message);
         res.status(500).json({ error: 'Failed to generate content' });
       }
