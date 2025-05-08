@@ -1,5 +1,6 @@
 import express from 'express';
 import { createCompetitionRegistration, deleteCompetitionRegistration, editCompetitionRegistration, getRegisteredCompetitions, getUpcomingCompetitions, getUserRegistrationById} from '../controller/competitionRegistrationController.js';
+import userAuth from '../middleware/userAuth.js'
 
 const competitionRegistrationRouter = express.Router();
 /**
@@ -83,7 +84,7 @@ competitionRegistrationRouter.get("/getUserRegistrationById/:UserId/:Competition
  *       500:
  *         description: Internal Server Error
  */
-competitionRegistrationRouter.get("/userRegistrations", getRegisteredCompetitions);
+competitionRegistrationRouter.get("/userRegistrations", userAuth, getRegisteredCompetitions);
 
 /**
  * @swagger
@@ -115,7 +116,7 @@ competitionRegistrationRouter.get("/userRegistrations", getRegisteredCompetition
  *       500:
  *         description: Internal Server Error
  */
-competitionRegistrationRouter.post("/", createCompetitionRegistration);
+competitionRegistrationRouter.post("/registerCompetition", createCompetitionRegistration);
 
 /**
  * @swagger

@@ -5,40 +5,76 @@ import Modal from "react-modal";
 import UploadImage from './UploadImage';
 import { useContext } from 'react';
 import { AppContent } from '@/context/AppContext';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 function UploadTwibbonPayment({isOpen, onClose, onCloseParent, competition}) {
     const [twibbonImage, setTwibbonImage] = useState(null);
     const [paymentImage, setPaymentImage] = useState(null);
     const [twibbonImageName, setTwibbonImageName] = useState('');
     const [paymentImageName, setPaymentImageName] = useState('');
-    const {userData} = useContext(AppContent);
+    const {userData, backendUrl} = useContext(AppContent);
 
     const handleSubmit=async(e)=>{
         e.preventDefault();
+
+        const imageFormData = new FormData();
+        imageFormData.append('file', twibbonImage); 
+
+        const { data: uploadData } = await axios.post(
+            backendUrl + 'api/image/upload', 
+            imageFormData, 
+            {
+                headers: { "Content-Type": "multipart/form-data" },
+                withCredentials: true,
+            }
+        ).catch(error => {
+            console.error("Image upload error:", error);
+            toast.error("Image upload failed. Please try again.");
+            throw error; 
+        });
+
+        if(!uploadData?.imageUrl) {
+            toast.error("Image upload failed");
+            return;
+        }
+
+        const imageFormData2 = new FormData();
+        imageFormData2.append('file', paymentImage); 
+
+        const { data: uploadData2 } = await axios.post(
+            backendUrl + 'api/image/upload', 
+            imageFormData2, 
+            {
+                headers: { "Content-Type": "multipart/form-data" },
+                withCredentials: true,
+            }
+        ).catch(error => {
+            console.error("Image upload error:", error);
+            toast.error("Image upload failed. Please try again.");
+            throw error; 
+        });
+
+        if(!uploadData2?.imageUrl) {
+            toast.error("Image upload failed");
+            return;
+        }
+
         
         const formData = {
             UserId: userData.id,
             CompetitionId: competition._id,
-            PaymentProofUrl: paymentImageName || "dummy_payment.png",
-            TwibbonProofUrl: twibbonImageName || "dummy_twibbon.png"
+            PaymentProofUrl: uploadData2.imageUrl,
+            TwibbonProofUrl: uploadData.imageUrl
         };
 
-        console.log(formData);
-
         try{
-            const response = await fetch("http://localhost:4000/api/competitionRegistration/", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(formData)
-            })  
-
-            const result = await response.json();
-            
-            alert('udah keisi');
-            onClose();
-            onCloseParent(); 
+            const response = await axios.post(backendUrl+"api/competitionRegistration/registerCompetition", formData);
+            if(response.data.success){
+                toast.success("Registration completed!");
+                onClose();
+                onCloseParent();
+            }
         } catch(err){
             alert("Error!");
         }

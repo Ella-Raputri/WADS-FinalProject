@@ -6,32 +6,34 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import UploadTwibbonPayment from "./UploadTwibbonPayment";
 import { AppContent } from "@/context/AppContext";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 
 export const CompetitionPopUp = ({ competition, isOpen, onClose }) => {
     const [uploadOpen, setUploadOpen] = useState(false); 
     const [isRegistered, setIsRegistered] = useState(null);
     const navigate = useNavigate();
-    const {userData, isLoggedIn} = useContext(AppContent);
+    const {userData, isLoggedIn, backendUrl} = useContext(AppContent);
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+
+    const fetchRegistered = async()=>{
+      try {
+        const response = await axios.get(`${backendUrl}api/CompetitionRegistration/getUserRegistrationById/${userData.id}/${competition._id}`)
+        if(response.data.success){
+          setIsRegistered(!response.data.canRegister);
+        }
+      } catch (error) {
+        console.error(error)
+      }
+      
+    }
 
     useEffect(() => {
       if (!userData?.id || !competition?._id) return;
       console.log("userData:", userData.id);
       console.log("competition:", competition._id);
 
-      fetch(`http://localhost:4000/api/CompetitionRegistration/getUserRegistrationById/${userData.id}/${competition._id}`)
-      .then(response => response.json())
-      .then(data => {
-        if (data.length > 0) {
-          setIsRegistered(true);
-        } else {
-          setIsRegistered(false);
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      })
+      fetchRegistered();
 
         if (isOpen || uploadOpen) {
           const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
@@ -111,9 +113,9 @@ export const CompetitionPopUp = ({ competition, isOpen, onClose }) => {
               </ul>
               <button 
                 onClick={() => {
-                  isRegistered ? alert("You are already registered!") : handleRegisterCompetition()
+                  isRegistered ? toast.success("You are already registered!") : handleRegisterCompetition()
                 }}
-                className={`w-30 h-9 mt-8 ${isRegistered ? "bg-[#319340]" : "bg-red-600 cursor-pointer hover:bg-red-700 shadow-md"} font-poppins font-semibold rounded-md text-white text-center block mx-auto mb-2`}
+                className={`w-30 h-9 mt-8 ${isRegistered ? "bg-[#319340] cursor-not-allowed" : "bg-red-600 cursor-pointer hover:bg-red-700 shadow-md"} font-poppins font-semibold rounded-md text-white text-center block mx-auto mb-2`}
               >
                 {isRegistered ? "Registered" : "Register"}
               </button>

@@ -8,7 +8,16 @@ export const getUserRegistrationById = async(req, res) => {
             "UserId": UserId,
             "CompTypeId": CompetitionId
         })
-        res.status(200).json(competitionRegistration);
+
+        let all_rejected = true;
+        for(let i=0; i<competitionRegistration.length; i++){
+            if(competitionRegistration[i].Status !== 'Rejected'){
+                all_rejected =false;
+                break;
+            }
+        }
+
+        return res.status(200).json({success: true, canRegister:all_rejected});
     }catch(err){
         res.status(500).json({message: err.message});
     }
@@ -20,6 +29,7 @@ export const getRegisteredCompetitions = async(req, res) => {
         const competitionRegistrations = await competitionRegistrationModel.find({
             "UserId": userId
         })
+        console.log("regsist", competitionRegistrations);
 
         const result = []
         if (competitionRegistrations.length > 0){
@@ -72,9 +82,9 @@ export const createCompetitionRegistration = async(req, res) => {
             "TwibbonProof": TwibbonProofUrl,
             "Status": "Pending"
         })
-        res.status(200).json(newRegistration);
+        res.status(200).json({success: true});
     }catch(err){
-        res.status(500).json({message: err.message});
+        res.status(500).json({success:false, message: err.message});
     }
 }
 
