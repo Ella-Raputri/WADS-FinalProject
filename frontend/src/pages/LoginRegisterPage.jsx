@@ -95,8 +95,6 @@ const LoginRegisterPage = () => {
             return;
         }
 
-
-
         // 3. Prepare registration data
         const registrationData = {
             ...formData,

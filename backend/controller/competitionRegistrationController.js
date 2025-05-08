@@ -16,9 +16,9 @@ export const getUserRegistrationById = async(req, res) => {
 
 export const getRegisteredCompetitions = async(req, res) => {
     try{
-        const {UserId} = req.params;
+        const {userId} = req.body;
         const competitionRegistrations = await competitionRegistrationModel.find({
-            "UserId": UserId
+            "UserId": userId
         })
 
         const result = []
@@ -30,12 +30,11 @@ export const getRegisteredCompetitions = async(req, res) => {
                 }
             }
             result.sort((a, b) => new Date(a.CompetitionDate.StartDate) - new Date(b.CompetitionDate.StartDate));
-            return res.status(200).json(result);
-        } else {
-            return res.status(200).json({message: "No Registrations"});
+            return res.status(200).json({success:true, result:result});
         }
+        return res.status(200).json({success:true, result: []});
     }catch(err){
-        return res.status(500).json({message: err.message});
+        return res.status(500).json({success:false, message: err.message});
     }
 }
 

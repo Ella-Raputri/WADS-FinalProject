@@ -7,56 +7,59 @@ import { UserData } from '../../components/UserData';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import { EditAccount } from '@/components/EditAccount';
 import { AppContent } from '@/context/AppContext';
-import { Users } from 'lucide-react';
+import { convertToTimeZone } from '@/lib/utils';
+import axios from 'axios';
 
 const HomePage = () => {
 
-  const {userData, socket, initializeSocket} = useContext(AppContent);
+  const {userData, backendUrl, socket, initializeSocket} = useContext(AppContent);
   const [upcomingCompetitions, setUpcomingCompetitions] = useState([]);
-
-  useEffect(() => {
-    if (!userData || !userData.id) return; 
-
-    if (!socket) {
-        console.log("🔄 Initializing socket...");
-        initializeSocket(userData.id);
-    }
-
-    fetch(`http://localhost:4000/api/competitionRegistration/userRegistrations/${userData.id}`)
-    .then(response => response.json())
-    .then(data => {
-      setUpcomingCompetitions(data);
-    })
-    .catch(err => {
-      console.log(err);
-      }
-    )
-    
-}, [userData]);
 
   const [isEditingAccount, setIsEditingAccount] = useState(false);
 
-  //userData isinya ada apa aja, silakan lihat ke userController.js ~
+  const [userName, setUsername] = useState('')
+  const [mandarinName, setMandarinName] = useState('')
+  const [email, setEmail] = useState('');
+  const [dateOfBirth, setDateOfBirth] = useState('');
+  const [gender, setGender] = useState('');
+  const [address, setAddress] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [institution, setInstitution] = useState('');
+  const [studentCardUrl, setStudentCardUrl] = useState('')
+
+  const fetchCompetitions =async()=>{
+    try {
+      const {data} =await axios.get(backendUrl+'api/competitionRegistration/userRegistrations');
+      if(data.success){
+        setUpcomingCompetitions(data.result);
+      }
+    } catch (error) {
+      console.error(error.response.data);
+    }
+  }
+
+  useEffect(() => {
+      if (!userData || !userData.id) return; 
+
+      if (!socket) {
+          console.log("🔄 Initializing socket...");
+          initializeSocket(userData.id);
+      }    
+      setUsername(userData.name);
+      setMandarinName(userData.participant.MandarinName);
+      setEmail(userData.email);
+      setDateOfBirth(convertToTimeZone(userData.participant.DOB).substring(0, 10));
+      setGender(userData.participant.Gender);
+      setAddress(userData.participant.Address);
+      setPhoneNumber(userData.phone);
+      setInstitution(userData.participant.Institution);
+      setStudentCardUrl(userData.participant.StudentCardPhoto);
+
+      fetchCompetitions();
+
+  }, [userData]);
+
   
-  //berikut adalah isi dari participant field dari userData
-  // MandarinName: { type: String },
-  // DOB: { type: Date },
-  // Gender: { type: String },
-  // Address: { type: String },
-  // Institution: { type: String },
-  // StudentCardPhoto: { type: String },
-
-  const [userName, setUsername] = useState(userData.name)
-  const [mandarinName, setMandarinName] = useState(userData.participant.MandarinName)
-
-  //yang di bawah ini, silakan lanjutkan :D
-  const [email, setEmail] = useState("Santoso@gmail.com")
-  const [dateOfBirth, setDateOfBirth] = useState("2002-01-02");
-  const [gender, setGender] = useState("Male");
-  const [address, setAddress] = useState("123 Main Street, Jakarta, Indonesia");
-  const [phoneNumber, setPhoneNumber] = useState("+ 62 812-3456-7890");
-  const [institution, setInstitution] = useState("Binus University");
-  const [studentCardUrl, setStudentCardUrl] = useState('https://indonesia.travel/content/dam/indtravelrevamp/home-revamp/bali-jack.jpg')
 
   return (
     <>
@@ -130,9 +133,8 @@ const HomePage = () => {
       <UpcomingCompetitionsList competitions={upcomingCompetitions} /> */}
       { isEditingAccount && 
         <EditAccount isOpen={isEditingAccount} setIsOpen = {setIsEditingAccount}
-        userName={userName} mandarinName={mandarinName} email={email} dateOfBirth={dateOfBirth} gender={gender} address={address} phoneNumber={phoneNumber} institution={institution}
-        setUsername={setUsername} setMandarinName={setMandarinName} setEmail={setEmail} setDateOfBirth={setDateOfBirth} setGender={setGender} setAddress={setAddress} setPhoneNumber={setPhoneNumber} setInstitution={setInstitution}
-        studentCardUrl={studentCardUrl} setStudentCardUrl={setStudentCardUrl} />
+        userName={userName} mandarinName={mandarinName} dateOfBirth={dateOfBirth} gender={gender} address={address} phoneNumber={phoneNumber} institution={institution}
+        studentCardUrl={studentCardUrl} />
       }
     </>
   )

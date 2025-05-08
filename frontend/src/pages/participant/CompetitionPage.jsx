@@ -2,10 +2,29 @@ import React, { useContext, useEffect } from 'react'
 import { CompetitionInfo } from '../../components/CompetitionInfo';
 import { useState } from 'react';
 import { AppContent } from '@/context/AppContext';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const CompetitionPage = ({}) => {
   const [competitions, setCompetitions] = useState([]);
-  const {userData, socket, initializeSocket} = useContext(AppContent);
+  const {backendUrl, userData, socket, initializeSocket} = useContext(AppContent);
+
+  const fetchComps = async()=>{
+    console.log('masuk')
+    try {
+      const response = await axios.get(backendUrl+'api/competition/getAllCompetitions');
+      if(response.data.success){
+        setCompetitions(response.data.comps);
+      }
+    } catch (error) {
+      if (error.response && error.response.data && error.response.data.message) {
+        toast.error(error.response.data.message);  // This is for 400/401/500 errors
+      } else {
+        toast.error("Something went wrong");
+      }
+      console.error(error);
+    }    
+  }
 
   useEffect(() => {
         if (!userData || !userData.id) return; 
@@ -14,13 +33,12 @@ const CompetitionPage = ({}) => {
             console.log("🔄 Initializing socket...");
             initializeSocket(userData.id);
         }
-        fetch("http://localhost:4000/api/competitionRegistration/getUpcomingCompetitions")
-        .then(response => response.json())
-        .then(data => setCompetitions(data))
-        .catch(err => {
-          console.log(err);
-        })
     }, [userData]);
+
+    useEffect(()=>{
+        fetchComps();
+    }, [backendUrl])
+
 
   if (competitions.length !== 0){ 
     return(

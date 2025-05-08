@@ -1,6 +1,6 @@
 import express from 'express';
 import userAuth from '../middleware/userAuth.js';
-import { getUserData, getUserDataFromId } from '../controller/userController.js';
+import { editUserDetails, getUserData, getUserDataFromId } from '../controller/userController.js';
 
 const userRouter = express.Router();
 
@@ -53,5 +53,7 @@ userRouter.get('/data', userAuth, getUserData);
  *         description: Internal server error
  */
 userRouter.get('/fetchUserDetails', userAuth, getUserDataFromId);
+
+userRouter.put('/editUserDetails', userAuth, editUserDetails);
 
 export default userRouter;

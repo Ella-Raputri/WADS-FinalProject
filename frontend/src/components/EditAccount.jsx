@@ -1,11 +1,14 @@
 import Modal from "react-modal";
 import { Button } from "./ui/button";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalculator, faCalendar, faImage, faTimes } from "@fortawesome/free-solid-svg-icons";
 import UploadImage from "./UploadImage";
+import { AppContent } from "@/context/AppContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 
-export const EditAccount = ({isOpen, setIsOpen, userName, mandarinName, email, dateOfBirth, gender, address, phoneNumber, institution, setUsername, setMandarinName, setEmail, setDateOfBirth, setGender, setAddress, setPhoneNumber, setInstitution, studentCardUrl, setStudentCardUrl}) => {
+export const EditAccount = ({isOpen, setIsOpen, userName, mandarinName, dateOfBirth, gender, address, phoneNumber, institution, studentCardUrl}) => {
 
     useEffect(() => {
         if (isOpen) {
@@ -41,32 +44,80 @@ export const EditAccount = ({isOpen, setIsOpen, userName, mandarinName, email, d
 
     const [userNameText, setUserNameText] = useState(userName);
     const [mandarinNameText, setMandarinNameText] = useState(mandarinName);
-    const [emailText, setEmailText] = useState(email);
-    const [dateOfBirthText, setDateOfBirthText] = useState(dateOfBirth);
+    const [dateOfBirthText, setDateOfBirthText] = useState(() => {
+        if (dateOfBirth) {
+            const [day, month, year] = dateOfBirth.split('-'); // Split DD-MM-YYYY
+            return `${year}-${month}-${day}`; // Convert to YYYY-MM-DD
+        }
+        return ''; // Default to empty if no dateOfBirth is provided
+    });
     const [genderText, setGenderText] = useState(gender);
     const [addressText, setAddressText] = useState(address);
     const [phoneNumberText, setPhoneNumberText] = useState(phoneNumber);
     const [institutionText, setInstitutionText] = useState(institution);
-    const [studentCardUrlText, setStudentCardUrlText] = useState(studentCardUrl);
     const [image, setImage] = useState(studentCardUrl);
     const [imageName, setImageName] = useState('');
 
     const dateInputRef = useRef(null);
+    const {backendUrl, getUserData} = useContext(AppContent);
 
 
-    const applyChanges = () => {
-        setUsername(userNameText);
-        setMandarinName(mandarinNameText);
-        setEmail(emailText);
-        setDateOfBirth(dateOfBirthText);
-        setGender(genderText);
-        setAddress(addressText);
-        setPhoneNumber(phoneNumberText);
-        setInstitution(institutionText);
-        setStudentCardUrl(studentCardUrlText);
+    const applyChanges = async() => {
+        try {
+            let imageUrl = '';
 
-        alert("Changes Applied!");
-        setIsOpen(false);
+            if(imageName){
+                const imageFormData = new FormData();
+                imageFormData.append('file', image); 
+        
+                // 2. Upload image first
+                const { data: uploadData } = await axios.post(
+                    backendUrl + 'api/image/upload', 
+                    imageFormData, 
+                    {
+                        headers: { "Content-Type": "multipart/form-data" },
+                        withCredentials: true,
+                    }
+                ).catch(error => {
+                    // Handle image upload failure
+                    console.error("Image upload error:", error);
+                    toast.error("Image upload failed. Please try again.");
+                    throw error; // Stop execution if image upload fails
+                });
+                imageUrl = uploadData.imageUrl;
+        
+                if(!uploadData?.imageUrl) {
+                    toast.error("Image upload failed");
+                    return;
+                }
+            }
+            
+    
+            // 3. Prepare registration data
+            const registrationData = {
+                fullName:userNameText, 
+                mandarinName:mandarinNameText, 
+                dob: dateOfBirthText, 
+                gender: genderText, 
+                address: addressText, 
+                phone: phoneNumberText, 
+                institution: institutionText, 
+                studentPhotoUrl: (imageUrl? imageUrl : studentCardUrl)
+            };
+    
+            // 4. Register user
+            axios.defaults.withCredentials =true
+            const { data } = await axios.put(backendUrl + 'api/user/editUserDetails', {participantDetails: registrationData});
+
+            if(data.success) {
+                getUserData();
+                toast.success("Changes applied!");
+                setIsOpen(false);
+            } 
+        } catch (error) {
+            console.error("error:", error);
+            toast.error(error.response?.data?.message || error.message || "Edit failed");
+        }
     }
 
     return(
@@ -103,13 +154,21 @@ export const EditAccount = ({isOpen, setIsOpen, userName, mandarinName, email, d
                     
                     
                     <p>Gender:</p>
-                    <input type="text" className="bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 pr-2 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow p-2" value={genderText} onChange={(e) => {setGenderText(e.target.value)}} />
+                    <select
+                        id="gender"
+                        value={genderText}
+                        onChange={(e) => {setGenderText(e.target.value)}}
+                        className="w-full font-poppins bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 pr-5 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow p-2"
+                    >
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                    
                     <p>Full Address:</p>
                     <input type="text" className="bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 pr-2 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow p-2" value={addressText} onChange={(e) => {setAddressText(e.target.value)}} />
                     <p>Phone Number:</p>
                     <input type="text" className="bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 pr-2 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow p-2" value={phoneNumberText} onChange={(e) => {setPhoneNumberText(e.target.value)}} />
-                    <p>Email:</p>
-                    <input type="text" className="bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 pr-2 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow p-2" value={emailText} onChange={(e) => {setEmailText(e.target.value)}} />
                     <p>Institution:</p>
                     <input type="text" className="bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 pr-2 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow p-2" value={institutionText} onChange={(e) => {setInstitutionText(e.target.value)}} />
                 

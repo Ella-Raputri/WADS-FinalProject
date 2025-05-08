@@ -98,13 +98,13 @@ export const CompetitionPopUp = ({ competition, isOpen, onClose }) => {
               <p className="ml-11 text-md xl:text-lg mt-[0.7em]"><span className="font-semibold">Date:</span> {months[competitionDate.getMonth()]} {competitionDate.getDate()} - {months[competitionDateFinal.getMonth()]} {competitionDateFinal.getDate()}</p>
               <p className="ml-11 text-md xl:text-lg mt-[0.7em]"><span className="font-semibold">Final Submission for Preliminary Round:</span> {months[competitionDateEnd.getMonth()]} {competitionDateEnd.getDate()}</p>
               <p className="ml-11 text-md xl:text-lg mt-[0.7em] font-semibold">Prizepool:</p>
-              <ul className="ml-11 list-disc text-md xl:text-lg mt-[0.7em]">
+              <ul className="ml-5 md:ml-11 list-disc text-md xl:text-lg mt-[0.7em] mr-[2em] md:mr-[8em] text-justify">
                 {competition.MainPrize.map((line, index) => {
                     return <li className="ml-11 text-md xl:text-lg mt-[0.7em]" key={index}>{line}</li>
                   })}
               </ul>
               <p className="ml-11 text-md xl:text-lg font-semibold mt-[1.4em]">Requirements:</p>
-              <ul className="list-disc ml-11 text-md xl:text-lg mt-[0.7em]">
+              <ul className="list-disc ml-5 md:ml-11 text-md xl:text-lg mt-[0.7em] break-words mr-[2em] md:mr-[4em] lg:mr-[7em] text-justify">
                 {competition.Description.map((line, index) => {
                   return <li className="ml-11 text-md xl:text-lg mt-[0.7em]" key={index}>{line}</li>
                 })}

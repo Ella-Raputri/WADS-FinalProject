@@ -83,7 +83,7 @@ competitionRegistrationRouter.get("/getUserRegistrationById/:UserId/:Competition
  *       500:
  *         description: Internal Server Error
  */
-competitionRegistrationRouter.get("/userRegistrations/:UserId", getRegisteredCompetitions);
+competitionRegistrationRouter.get("/userRegistrations", getRegisteredCompetitions);
 
 /**
  * @swagger

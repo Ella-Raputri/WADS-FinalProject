@@ -1,6 +1,6 @@
 import express from 'express';
 import userAuth from '../middleware/userAuth.js';
-import { getCompetitionDetails, getCompetitionIdByName } from '../controller/competitionController.js';
+import { getAllCompetitions, getCompetitionDetails, getCompetitionIdByName } from '../controller/competitionController.js';
 
 const compRouter = express.Router();
 /**
@@ -70,5 +70,7 @@ compRouter.get('/getCompetitionIdByName', getCompetitionIdByName);
  *         description: Internal Server Error
  */
 compRouter.get('/getCompetitionDetails', getCompetitionDetails);
+
+compRouter.get('/getAllCompetitions', getAllCompetitions);
 
 export default compRouter

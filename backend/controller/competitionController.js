@@ -32,3 +32,13 @@ export const getCompetitionDetails = async(req,res) =>{
     }
 }
 
+export const getAllCompetitions = async(req,res) =>{
+    try {
+        const comps = await competitionTypeModel.find({});
+        return res.status(200).json({success: true, comps});      
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ success: false, message: error.message });
+    }
+}
