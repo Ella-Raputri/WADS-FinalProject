@@ -178,7 +178,7 @@ export const generateBotRes = async(req,res) =>{
 
     try {
         const ragResponse = await queryRAG(lastMsg);
-        res.json({
+        res.status(200).json({
             message: ragResponse.result,
             sources: ragResponse.sources,
         });

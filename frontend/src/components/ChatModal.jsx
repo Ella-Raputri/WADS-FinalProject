@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import ChatBox from './ChatBox'
 import Modal from "react-modal";
+import { toast } from "react-toastify";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -106,20 +107,19 @@ function ChatModal({isOpen, onClose, user}) {
                 setTimeout(async () => {
                     try {
                         const res = await axios.get(`${backendUrl}api/message/fetchChatbotMessage?userId=${user.id}`);
-                        setMessages(res.data.chat); // Overwrite with the latest
-                        setMessage("");
-
+                        const chats = res.data.chat;
+                        setMessages(chats); 
+                        setMessage(""); 
+                        generateBotResponse(chats[chats.length - 1]); 
                     } catch (err) {
                         console.error("Error fetching updated chat:", err);
                     }
-                }, 1); 
-                const chats = res.data.chat;
-                generateBotResponse(chats[chats.length-1]);
-
+                }, 1);
             } else {
-                toast.error(data.message);
+                toast.error(data.message || "Failed to send message.");
             }
-        } catch (error) {
+        } 
+        catch (error) {
             console.error("Message send error:", error);
             toast.error("Failed to send message. Please try again.");
         }
@@ -127,9 +127,9 @@ function ChatModal({isOpen, onClose, user}) {
 
     const generateBotResponse = async(latestMessage)=>{
         try {
-            console.log(latestMessage.Message);
+            console.log("isi msg: ", latestMessage.Message);
             const response = await axios.post(`${backendUrl}api/message/generateChatbotResponse`, {lastMsg:latestMessage.Message});
-            const botMsg = response.data.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, "$1").trim();
+            const botMsg = response.data.message.trim();
 
             if(!user){
                 const newMessage = {
@@ -155,10 +155,9 @@ function ChatModal({isOpen, onClose, user}) {
                     }, 1);
                 }
             }
-            
 
         } catch (error) {
-            console.error(error)
+            console.error("Error generating bot response:", error)
         }
     }
     

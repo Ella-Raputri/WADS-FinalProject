@@ -4,7 +4,7 @@ import { queryRAG } from "./rag.js";
 config(); // Load environment variables
 
 const runTest = async () => {
-  const testQuery = "Untuk lomba dubbing, kapan pengumpulan videonya?"; // Replace with something from your PDF
+  const testQuery = "Untuk lomba storytelling, kapan pengumpulan videonya?"; // Replace with something from your PDF
   try {
     const { result, sources } = await queryRAG(testQuery);
     console.log("RAG Response:\n", result);
