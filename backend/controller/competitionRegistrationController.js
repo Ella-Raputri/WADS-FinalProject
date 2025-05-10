@@ -2,27 +2,42 @@ import competitionRegistrationModel from "../models/competitionRegistrationModel
 import competitionTypeModel from "../models/competitionTypeModel.js";
 import userModel from "../models/userModel.js"
 
-export const getUserRegistrationById = async(req, res) => {
-    try{
-        const {UserId, CompetitionId} = req.params;
-        const competitionRegistration = await competitionRegistrationModel.find({
-            "UserId": UserId,
-            "CompTypeId": CompetitionId
-        })
+export const getUserRegistrationById = async (req, res) => {
+    try {
+        const { UserId, CompetitionId } = req.params;
+
+        const newestRegistration = await competitionRegistrationModel
+            .findOne({ UserId, CompTypeId: CompetitionId })
+            .sort({ createdAt: -1 }); // Sort by createdAt descending
+
+        if (!newestRegistration) {
+            return res.status(404).json({ success: false, message: "No registration found." });
+        }
+
+        // Check if all previous registrations are 'Rejected'
+        const allRegistrations = await competitionRegistrationModel.find({
+            UserId,
+            CompTypeId: CompetitionId
+        });
 
         let all_rejected = true;
-        for(let i=0; i<competitionRegistration.length; i++){
-            if(competitionRegistration[i].Status !== 'Rejected'){
-                all_rejected =false;
+        for (let i = 0; i < allRegistrations.length; i++) {
+            if (allRegistrations[i].Status !== 'Rejected') {
+                all_rejected = false;
                 break;
             }
         }
 
-        return res.status(200).json({success: true, canRegister:all_rejected});
-    }catch(err){
-        res.status(500).json({message: err.message});
+        return res.status(200).json({
+            success: true,
+            canRegister: all_rejected,
+            newestRegistration
+        });
+    } catch (err) {
+        res.status(500).json({ success:false, message: err.message });
     }
-}
+};
+
 
 export const getRegisteredCompetitions = async(req, res) => {
     try{
@@ -136,9 +151,9 @@ export const editCompetitionRegistration = async(req, res) => {
         competitionRegistration.Status = status;
 
         await competitionRegistration.save();
-        res.status(200).json({message: "Changes applied!"})
+        res.status(200).json({success:true, message: "Changes applied!"})
     } catch (err){
-        res.status(500).json({message: err.message});
+        res.status(500).json({success: false, message: err.message});
     }
 }
 

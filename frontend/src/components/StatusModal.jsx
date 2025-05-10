@@ -6,33 +6,43 @@ import UploadTwibbonPayment from "./UploadTwibbonPayment";
 import { AppContent } from "@/context/AppContext";
 import { useContext } from "react";
 import { data } from "react-router-dom";
+import axios from "axios";
 
 export const StatusModal = ({competition, isOpen, onClose}) => {
     const [uploadOpen, setUploadOpen] = useState(false);
-    const {userData} = useContext(AppContent);
+    const {userData, backendUrl} = useContext(AppContent);
 
-    //TODO: NANTI UBAH UTK IKUT SESUAI DATABASE. UTK SEMENTARA INI, AKU PAKE FALSE
     const [isRejected, setIsRejected] = useState(null); 
     const [confirmationStatus, setConfirmationStatus] = useState(null);
     const [adminComment, setAdminComment] = useState(null);
+    const [data, setData] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
 
-    console.log(competition.Status);
+    const fetchRegistration = async()=>{
+        axios.defaults.withCredentials =true
+        try {
+            const response = await axios.get(backendUrl+'api/competitionRegistration/getUserRegistrationById/'+userData.id+'/' +competition._id);
+            if(response.data.success){
+                const newestRegist = response.data.newestRegistration
+                console.log(newestRegist)
+                setData(newestRegist);
+                if (newestRegist.Status === "Rejected"){
+                    setIsRejected(true);
+                } else {
+                    setIsRejected(false);
+                }
+                setConfirmationStatus(newestRegist.Status);
+                setAdminComment(newestRegist.AdminComment);
+                setIsLoading(false);
+            }
+
+        } catch (error) {
+            console.error(error)
+        }
+    }
 
     useEffect(() => {
-        fetch(`http://localhost:4000/api/competitionRegistration/getUserRegistrationById/${userData.id}/${competition._id}`)
-        .then(response => response.json())
-        .then(data => {
-          if (data[0].Status === "Rejected"){
-            setIsRejected(true);
-          } else {
-            setIsRejected(false);
-          }
-          setConfirmationStatus(data[0].Status);
-          setAdminComment(data[0].AdminComment);
-        })
-        .catch(err => {
-          console.log(err);
-        })
+        fetchRegistration();
 
         if (isOpen || uploadOpen) {
           const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
@@ -67,6 +77,8 @@ export const StatusModal = ({competition, isOpen, onClose}) => {
 
     return(
       <>
+      {isLoading? <div></div> : 
+        <div>
         <Modal competition={competition} isOpen={isOpen} onRequestClose={onClose} className="font-poppins md:w-[80%] w-[90%] py-6 pb-8 bg-white mx-auto shadow-xl relative rounded-[10px]" overlayClassName="flex justify-center items-center inset-0 fixed z-1000 bg-[rgba(0,0,0,0.5)] overflow-hidden">
             <div className="h-[80vh] md:h-[70vh] overflow-y-auto" style={{scrollbarWidth:"thin", scrollbarColor:"#ccc transparent"}}>
               <div className="top-0 sticky pt-1 bg-white">
@@ -78,16 +90,16 @@ export const StatusModal = ({competition, isOpen, onClose}) => {
 
               <div className="sm:grid sm:grid-cols-[auto_1fr] sm:gap-x-[30px] ml-5 sm:gap-y-[1.5em] pl-[2em] pt-[2em] pb-[0.5em]">
                   <p className="font-semibold text-md xl:text-lg mb-1 sm:pb-0">Proof of Payment:</p>
-                  <img src='https://indonesia.travel/content/dam/indtravelrevamp/home-revamp/bali-jack.jpg' className="w-[40%] aspect-[6/3] bg-gray-500 mb-3 rounded-[10px] min-w-[200px]"/>
+                  <img src={data.PaymentProof} className="w-[40%] mb-5 rounded-[10px] min-w-[200px]" alt="Payment Proof Image"/>
 
                   <p className="text-md font-semibold xl:text-lg mb-1 sm:pb-0">Twibbon Proof:</p>
-                  <img src='https://m.media-amazon.com/images/I/61DwXnVN9QL._AC_UF894,1000_QL80_.jpg' className="w-[40%] bg-gray-500 rounded-[10px] min-w-[200px]"/>
+                  <img src={data.TwibbonProof} className="w-[40%] rounded-[10px] min-w-[200px] mb-5" alt="Twibbon Proof Image"/>
 
                   <p className="text-md font-semibold xl:text-lg sm:pt-0">Confirmation Status:</p>
-                  <p className={`text-md xl:text-lg font-semibold ${confirmationStatus === "Accepted" ? "text-green-700": confirmationStatus === "Rejected" ? "text-red-500": confirmationStatus === "Pending" ? "text-yellow-700" : "" }`}>{confirmationStatus}</p>
+                  <p className={`text-md xl:text-lg lg:mb-2 mb-5 font-semibold ${confirmationStatus === "Accepted" ? "text-green-700": confirmationStatus === "Rejected" ? "text-red-500": confirmationStatus === "Pending" ? "text-yellow-700" : "" }`}>{confirmationStatus}</p>
 
                   <p className="text-md font-semibold xl:text-lg sm:pt-0">Admin Comment:</p>
-                  <p className="text-md text-justify leading-7 xl:text-md w-[80%] break-words">{adminComment === "" ? "None" : adminComment}</p>
+                  <p className="text-md xl:text-lg text-justify mb-5 leading-7 w-[80%] break-words">{adminComment === "" ? "None" : adminComment}</p>
               
               </div>
 
@@ -102,9 +114,14 @@ export const StatusModal = ({competition, isOpen, onClose}) => {
               
             </div>
         </Modal>
+        
 
         {/* Upload Modal */}
-        <UploadTwibbonPayment isOpen={uploadOpen} onClose={() => setUploadOpen(false)} onCloseParent={onClose}/>
+        <UploadTwibbonPayment isOpen={uploadOpen} onClose={() => setUploadOpen(false)} onCloseParent={onClose} competition={competition}/>
+        </div>
+        }
+
+
         </>
     );
 }

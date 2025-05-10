@@ -6,6 +6,8 @@ import Loading from '@/components/Loading';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { AppContent } from '@/context/AppContext';
 import { convertToTimeZone } from '@/lib/utils';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const ParticipantDetails = () => {
     const navigate = useNavigate();
@@ -13,7 +15,7 @@ const ParticipantDetails = () => {
     const [data, setData] = useState(null);
     const [updatedStatus, setUpdatedStatus] = useState("");
     const [message, setMessage] =useState('');
-    const {userData, socket, initializeSocket} =useContext(AppContent);
+    const {userData, socket, initializeSocket, backendUrl} =useContext(AppContent);
 
     useEffect(() => {
         if (location.state?.data) {
@@ -33,13 +35,24 @@ const ParticipantDetails = () => {
       }, [userData]);
 
 
-    const handleButtons = (val) => {
+    const handleButtons = async(val) => {
+        axios.defaults.withCredentials = true
         const up = val === 'accept' ? 'Accepted' : 'Rejected';
-        setUpdatedStatus(up);
-        setData(prevData => ({
-            ...prevData,
-            status: up
-        }));
+
+        try {
+            const response = await axios.put(backendUrl+'api/competitionRegistration/'+data._id, {status:up, adminComment:message});
+            if(response.data.success){
+                setUpdatedStatus(up);
+                setData(prevData => ({
+                    ...prevData,
+                    Status: up
+                }));
+                toast.success(response.data.message)
+            }
+        } catch (error) {
+            console.error(error)
+        }       
+        
     };
 
     if (!data) {
@@ -109,7 +122,7 @@ const ParticipantDetails = () => {
                             placeholder="Type your message here..."
                             value={message}
                             onChange={(e) => setMessage(e.target.value)}
-                            className="w-full mb-5 min-h-56 max-h-56 text-md bg-white placeholder:text-slate-400 text-slate-700 border border-slate-300 rounded-md pl-3 pr-2 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
+                            className="w-full mb-5 min-h-56 max-h-56 text-md font-poppins bg-white placeholder:text-slate-400 text-slate-700 border border-slate-300 rounded-md pl-3 pr-2 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
                             ></textarea>
                             
                         <div className='flex justify-center gap-15'>
