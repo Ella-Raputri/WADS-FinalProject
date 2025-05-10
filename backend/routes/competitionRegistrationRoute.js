@@ -1,5 +1,5 @@
 import express from 'express';
-import { createCompetitionRegistration, deleteCompetitionRegistration, editCompetitionRegistration, getRegisteredCompetitions, getUpcomingCompetitions, getUserRegistrationById} from '../controller/competitionRegistrationController.js';
+import { createCompetitionRegistration, deleteCompetitionRegistration, editCompetitionRegistration, getCompetitionRegistrations, getRegisteredCompetitions, getUpcomingCompetitions, getUserRegistrationById} from '../controller/competitionRegistrationController.js';
 import userAuth from '../middleware/userAuth.js'
 
 const competitionRegistrationRouter = express.Router();
@@ -169,5 +169,7 @@ competitionRegistrationRouter.delete("/:registrationId", deleteCompetitionRegist
  *         description: Internal Server Error
  */
 competitionRegistrationRouter.put("/:registrationId", editCompetitionRegistration);
+
+competitionRegistrationRouter.get("/:compTypeId", getCompetitionRegistrations);
 
 export default competitionRegistrationRouter;   

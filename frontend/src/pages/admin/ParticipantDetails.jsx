@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Loading from '@/components/Loading';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { AppContent } from '@/context/AppContext';
+import { convertToTimeZone } from '@/lib/utils';
 
 const ParticipantDetails = () => {
     const navigate = useNavigate();
@@ -18,6 +19,7 @@ const ParticipantDetails = () => {
         if (location.state?.data) {
             setData(location.state.data);
             setUpdatedStatus(location.state.data.status);
+            console.log(location.state.data)
         }
     }, [location.state?.data]);
 
@@ -30,7 +32,6 @@ const ParticipantDetails = () => {
           }
       }, [userData]);
 
-    const excludedKeys = ["id", "student_card_photo", "payment_proof", "upload_twibbon_proof", "status"];
 
     const handleButtons = (val) => {
         const up = val === 'accept' ? 'Accepted' : 'Rejected';
@@ -58,35 +59,49 @@ const ParticipantDetails = () => {
             </div>
 
             <div className='p-8 text-lg mt-5 ml-15 font-poppins w-60% bg-white rounded-2xl shadow-md border-l border-b border-l-neutral-300 border-b-neutral-300'>
-                {Object.entries(data)
-                    .filter(([key]) => !excludedKeys.includes(key))
-                    .map(([key, value]) => (
-                        <p key={key} className="mb-3">
-                            <b className="text-[#DD3833]">
-                                {key.replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase())}:
-                            </b>{" "}
-                            &nbsp;{value}
-                        </p>
-                    ))}
+                <p className="mb-3"> <b className="text-[#DD3833]">Full Name: </b>
+                    &nbsp;{data.userDetails.FullName}
+                </p>
+                <p className="mb-3"> <b className="text-[#DD3833]">Mandarin Name: </b>
+                    &nbsp;{data.userDetails.Participant.MandarinName}
+                </p>
+                <p className="mb-3"> <b className="text-[#DD3833]">Date of Birth: </b>
+                    &nbsp;{convertToTimeZone(data.userDetails.Participant.DOB).substring(0, 10)}
+                </p>
+                <p className="mb-3"> <b className="text-[#DD3833]">Gender: </b>
+                    &nbsp;{data.userDetails.Participant.Gender}
+                </p>
+                <p className="mb-3"> <b className="text-[#DD3833]">Address: </b>
+                    &nbsp;{data.userDetails.Participant.Address}
+                </p>
+                <p className="mb-3"> <b className="text-[#DD3833]">Institution: </b>
+                    &nbsp;{data.userDetails.Participant.Institution}
+                </p>
+                <p className="mb-3"> <b className="text-[#DD3833]">Email: </b>
+                    &nbsp;{data.userDetails.Email}
+                </p>
+                <p className="mb-3"> <b className="text-[#DD3833]">Phone Number: </b>
+                    &nbsp;{data.userDetails.PhoneNumber}
+                </p>
 
                 <p className='mb-2 text-[#DD3833]'><b>Student Card Photo:</b></p>
-                <img src={data.student_card_photo} alt="Student Card" className='mb-5 w-80 rounded-lg' />
+                <img src={data.userDetails.Participant.StudentCardPhoto} alt="Student Card" className='mb-5 w-80 rounded-lg' />
 
                 <p className='mb-2 text-[#DD3833]'><b>Payment Proof:</b></p>
-                <img src={data.payment_proof} alt="Payment Proof" className='mb-5 w-80 rounded-lg' />
+                <img src={data.PaymentProof} alt="Payment Proof" className='mb-5 w-80 rounded-lg' />
 
                 <p className='mb-2 text-[#DD3833]'><b>Uploaded Twibbon Proof:</b></p>
-                <img src={data.upload_twibbon_proof} alt="Twibbon Proof" className='mb-5 w-80 rounded-lg' />
+                <img src={data.TwibbonProof} alt="Twibbon Proof" className='mb-5 w-80 rounded-lg' />
             </div>
             
             <div className='flex flex-col text-lg justify-center ml-15 mt-5 mb-15 '>
-                {data.status === 'Accepted' && (
+                {data.Status === 'Accepted' && (
                     <span className="px-2 py-1 text-white bg-lime-500 rounded-full text-center font-poppins font-semibold">Accepted</span>
                 )}
-                {data.status === 'Rejected' && (
+                {data.Status === 'Rejected' && (
                     <span className="px-2 py-1 text-white bg-red-400 rounded-full text-center font-poppins font-semibold">Rejected</span>
                 )}
-                {data.status === 'Pending' && (
+                {data.Status === 'Pending' && (
                     <Card className=''>
                     <CardContent>
                         <p className='font-kanit font-medium text-2xl mb-4'>Admin Comments</p>

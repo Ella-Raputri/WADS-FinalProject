@@ -1,5 +1,6 @@
 import competitionRegistrationModel from "../models/competitionRegistrationModel.js";
 import competitionTypeModel from "../models/competitionTypeModel.js";
+import userModel from "../models/userModel.js"
 
 export const getUserRegistrationById = async(req, res) => {
     try{
@@ -48,14 +49,29 @@ export const getRegisteredCompetitions = async(req, res) => {
     }
 }
 
-export const getCompetitionRegistrations = async(req, res) => {
-    try{
-        const competitions = await competitionRegistrationModel.find({});
-        res.status(200).json(competitions);
-    }catch(err){
-        res.status(500).json({message: err.message});
+export const getCompetitionRegistrations = async (req, res) => {
+    try {
+        const { compTypeId } = req.params;
+
+        // Fetch competition registrations
+        const comps = await competitionRegistrationModel.find({ CompTypeId: compTypeId });
+
+        // Map over the results and fetch user details for each registration
+        const competitions = await Promise.all(
+            comps.map(async (comp) => {
+                const userDetails = await userModel.findById(comp.UserId);
+                return {
+                    ...comp.toObject(), // Convert MongoDB document to plain object
+                    userDetails, // Add user details
+                };
+            })
+        );
+
+        res.status(200).json({ success: true, competitions });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
     }
-}
+};
 
 export const createCompetitionRegistration = async(req, res) => {
     try{

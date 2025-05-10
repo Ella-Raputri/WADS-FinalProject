@@ -8,89 +8,41 @@ import SearchBar from '../../components/SearchBar';
 import SaveButton from '../../components/SaveButton';
 import FilterStatusModal from '../../components/FilterStatusModal';
 import { AppContent } from '@/context/AppContext';
+import axios from 'axios';
 
 const CompManagement = () => {
   const cols = ["id", "NAME", "EMAIL","PHONE NUMBER", "STATUS"];
-  const data = [
-    {
-        "id": 1,
-        "competition_category": "Mathematics Olympiad",
-        "name": "John Doe",
-        "mandarin_name": "约翰·多伊",
-        "date_of_birth": "2002-05-15",
-        "gender": "Male",
-        "full_address": "123 Main Street, Jakarta, Indonesia",
-        "phone_number": "+62 812-3456-7890",
-        "email": "johndoe@example.com",
-        "institution": "University of Indonesia",
-        "student_card_photo": "images.png",
-        "payment_proof": "images.png",
-        "upload_twibbon_proof":"images.png",
-        "status":"Pending"
-    },
-    {
-        "id": 2,
-        "competition_category": "Physics Olympiad",
-        "name": "Jane Smith",
-        "mandarin_name": "简·史密斯",
-        "date_of_birth": "2001-08-22",
-        "gender": "Female",
-        "full_address": "456 Maple Avenue, Surabaya, Indonesia",
-        "phone_number": "+62 813-9876-5432",
-        "email": "janesmith@example.com",
-        "institution": "Bandung Institute of Technology",
-        "student_card_photo": "jane_smith_student_card.jpg",
-        "payment_proof": "jane_smith_payment.jpeg",
-        "upload_twibbon_proof":"images.png",
-        "status":"Accepted"
-    },
-    {
-        "id": 3,
-        "competition_category": "Programming Contest",
-        "name": "Michael Tan",
-        "mandarin_name": "迈克尔·谭",
-        "date_of_birth": "2000-11-10",
-        "gender": "Male",
-        "full_address": "789 Pine Road, Medan, Indonesia",
-        "phone_number": "+62 812-1122-3344",
-        "email": "michaeltan@example.com",
-        "institution": "Gadjah Mada University",
-        "student_card_photo": "michael_tan_student_card.jpg",
-        "payment_proof": "michael_tan_payment.jpg",
-        "upload_twibbon_proof":"images.png",
-        "status":"Rejected"
-    }
-  ];
-
+  const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [currentData, setCurrentData] = useState([]);
   const [tracker, setTracker] = useState(1);
   const [openFilter, setOpenFilter] =useState(false);
   const [filteredData, setFilteredData] = useState(data);
   const [baseFilteredData, setBaseFilteredData] = useState(data);
-  const {userData, socket, initializeSocket} = useContext(AppContent);
+  const {userData, socket, initializeSocket, backendUrl} = useContext(AppContent);
+  const [competitionType, setCompetitionType] = useState('mma');
 
-  const location = useLocation();
-  const updatedData = location.state?.updatedData;
-  useEffect(() => {
-    if (updatedData) {
-      console.log("Updated participant status:", updatedData);
+//   const location = useLocation();
+//   const updatedData = location.state?.updatedData;
+//   useEffect(() => {
+//     if (updatedData) {
+//       console.log("Updated participant status:", updatedData);
       
-      setFilteredData(prevData => {
-        return prevData.map(ticket => 
-          ticket.id === updatedData.id ? { ...ticket, ...updatedData } : ticket
-        );
-      }); 
+//       setFilteredData(prevData => {
+//         return prevData.map(ticket => 
+//           ticket.id === updatedData.id ? { ...ticket, ...updatedData } : ticket
+//         );
+//       }); 
   
-      setBaseFilteredData(prevData => {
-        return prevData.map(ticket => 
-          ticket.id === updatedData.id ? { ...ticket, ...updatedData } : ticket
-        );
-      });
+//       setBaseFilteredData(prevData => {
+//         return prevData.map(ticket => 
+//           ticket.id === updatedData.id ? { ...ticket, ...updatedData } : ticket
+//         );
+//       });
   
-      setCurrentPage(1); // Reset pagination
-    }
-  }, [updatedData]);
+//       setCurrentPage(1); // Reset pagination
+//     }
+//   }, [updatedData]);
 
 
   const itemsPerPage = 10;
@@ -116,7 +68,34 @@ const CompManagement = () => {
           console.log("🔄 Initializing socket...");
           initializeSocket(userData.id);
       }
+      fetchComps();
+      fetchCompType();
   }, [userData]);
+
+  const fetchComps = async()=>{
+    try {
+        const response = await axios.get(backendUrl+'api/competitionRegistration/'+userData.admin.CompTypeId);
+        if(response.data.success){
+            setBaseFilteredData(response.data.competitions);
+            setData(response.data.competitions);
+            setFilteredData(response.data.competitions);
+            console.log(response.data.competitions)
+        }
+    } catch (error) {
+        console.error(error)
+    }
+  }
+
+  const fetchCompType = async()=>{
+    try {
+        const response = await axios.get(backendUrl+'api/competition/getCompetitionDetails?compId='+userData.admin.CompTypeId);
+        if(response.data.success){
+            setCompetitionType(response.data.comp.Name);
+        }
+    } catch (error) {
+        console.error(error)
+    }
+  }
 
   const navigate = useNavigate();
 
@@ -159,7 +138,7 @@ const CompManagement = () => {
   return (
     <div>
       <h1 className='md:ml-20 mt-20 mb-3 font-medium text-4xl font-kanit p-5 pb-0'>
-        Speech Competition
+        {competitionType} Competition
       </h1>
 
 

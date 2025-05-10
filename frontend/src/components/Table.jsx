@@ -90,26 +90,26 @@ function Table({ columns, data, isTicketTable}) {
                             {columns.map((col, colIndex) => (
                                 col!=="id" &&(
                                 <td key={colIndex} className={`px-4 py-3 text-sm font-poppins text-gray-700 ${col === 'Subject' ? 'w-2/5' : ''}`}>
-                                    {col ==='NAME' && item['name']}
+                                    {col ==='NAME' && item.userDetails.FullName}
                                     
-                                    {col === 'EMAIL' && item['email']}
+                                    {col === 'EMAIL' && item.userDetails.Email}
 
                                     {col === 'STATUS' && (
                                         <div className="flex items-center space-x-2">
                                             <div className={`font-semibold inline-flex w-24 md:w-30 rounded-2xl text-white p-1 justify-center
-                                                ${item['status'] === 'Open' || item['status'] === 'Rejected' ? 'bg-red-400' :
-                                                item['status'] === 'Closed' || item['status'] === 'Accepted' ? 'bg-lime-500' :
-                                                item['status'] === 'In Progress' || item['status'] === 'Pending' ? 'bg-amber-500' :
+                                                ${item.Status === 'Open' || item.Status === 'Rejected' ? 'bg-red-400' :
+                                                item.Status === 'Closed' || item.Status === 'Accepted' ? 'bg-lime-500' :
+                                                item.Status === 'In Progress' || item.Status === 'Pending' ? 'bg-amber-500' :
                                                 'bg-sky-400' // Resolved
                                                 }`}
                                             >
-                                                {item['status']}
+                                                {item.Status}
                                             </div>
                                             <FontAwesomeIcon onClick={() => handleRowClick(item)} className="text-xs md:text-sm cursor-pointer hover:text-red-600" icon={faExternalLink} />
                                         </div>
                                     )}
 
-                                    {col ==='PHONE NUMBER' && (item['phone_number'])}
+                                    {col ==='PHONE NUMBER' && (item.userDetails.PhoneNumber)}
                                     
                                 </td>
                             )))}
