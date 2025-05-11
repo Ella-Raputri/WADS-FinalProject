@@ -7,7 +7,7 @@ export const getCompetitionIdByName = async (req, res) => {
 
         const competition = await competitionTypeModel.findOne({ Name: compName });
         
-        return res.json({
+        return res.status(200).json({
             success: true,
             id: competition._id
         });
@@ -24,7 +24,7 @@ export const getCompetitionDetails = async(req,res) =>{
         const compId = req.query.compId;  
         const comp = await competitionTypeModel.findById(compId);
         
-        return res.json({success:true, comp})
+        return res.status(200).json({success:true, comp})
 
     } catch (error) {
         console.error("Error fetching competition:", error);

@@ -7,7 +7,7 @@ export const uploadNewTicket =async(req,res)=>{
     const {userId, newTicketDetails} = req.body;
     
     if(!newTicketDetails.subject || !newTicketDetails.description){
-        return res.json({success:false, message:"Please fill in the subject and description."})
+        return res.status(400).json({success:false, message:"Please fill in the subject and description."})
     }
 
     try {
@@ -25,7 +25,7 @@ export const uploadNewTicket =async(req,res)=>{
         });
 
         await newTicket.save();
-        return res.json({ success: true, message: "Ticket created successfully" });
+        return res.status(200).json({ success: true, message: "Ticket created successfully" });
 
     } catch (error) {
         return res.status(500).json({success:false, message:error.message})
@@ -37,7 +37,7 @@ export const getAllTickets = async(req,res)=>{
         const {userId} = req.body;
         const tickets = await ticketModel.find({SenderId: userId});
 
-        return res.json({success:true, tickets})
+        return res.status(200).json({success:true, tickets})
         
 
     } catch (error) {
@@ -51,7 +51,7 @@ export const getAllTicketsByCompetitionType = async(req,res)=>{
         const compId = req.query.compId;  
         const tickets = await ticketModel.find({CompTypeId: compId});
 
-        return res.json({success:true, tickets})
+        return res.status(200).json({success:true, tickets})
         
 
     } catch (error) {
@@ -75,7 +75,7 @@ export const updateTicketStatus = async(req,res)=>{
         }
         await ticket.save();
 
-        return res.json({success:true, message:"Ticket status updated successfully"})
+        return res.status(200).json({success:true, message:"Ticket status updated successfully"})
 
     } catch (error) {
         return res.status(500).json({success:false, message:error.message}) 
@@ -108,7 +108,7 @@ export const getUpdatedAtByTicketId = async (req, res) => {
 export const updateRateTicket = async (req, res) => {
     const {userId, ticketId, adminId, rating, comment} = req.body;
     if(!rating){
-        return res.json({success:false, message:"Please give the rating."})
+        return res.status(400).json({success:false, message:"Please give the rating."})
     }
 
     try {
@@ -120,7 +120,7 @@ export const updateRateTicket = async (req, res) => {
             Comment: comment
         })
         await newRating.save();
-        return res.json({ success: true, message: "Thank you for your rating!" });
+        return res.status(200).json({ success: true, message: "Thank you for your rating!" });
 
     } catch (error) {
         return res.status(500).json({success:false, message:error.message}) 
@@ -131,7 +131,7 @@ export const fetchTicketRating = async(req,res) =>{
     const ticketId = req.query.ticketId;
     try {
         const rating = await ratingModel.findOne({TicketId: ticketId});
-        return res.json({success:true, rating});
+        return res.status(200).json({success:true, rating});
 
     } catch (error) {
         return res.status(500).json({success:false, message:error.message}) 

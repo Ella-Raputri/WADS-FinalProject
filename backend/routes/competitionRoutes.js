@@ -12,20 +12,23 @@ const compRouter = express.Router();
 
 /**
  * @swagger
- * /api/competition/getCompetitionIdByName:
+ * /getCompetitionIdByName:
  *   get:
+ *     tags:
+ *       - Competition
  *     summary: Get competition ID by name
- *     tags: [Competition]
+ *     description: Returns the ID of a competition given its name.
  *     parameters:
  *       - in: query
  *         name: compName
  *         required: true
  *         schema:
  *           type: string
+ *         example: Math Olympiad
  *         description: Name of the competition
  *     responses:
  *       200:
- *         description: Returns competition ID
+ *         description: Competition ID retrieved successfully
  *         content:
  *           application/json:
  *             schema:
@@ -36,26 +39,29 @@ const compRouter = express.Router();
  *                 id:
  *                   type: string
  *       500:
- *         description: Internal Server Error
+ *         description: Internal server error
  */
 compRouter.get('/getCompetitionIdByName', getCompetitionIdByName);
 
 /**
  * @swagger
- * /api/competition/getCompetitionDetails:
+ * /getCompetitionDetails:
  *   get:
+ *     tags:
+ *       - Competition
  *     summary: Get competition details by ID
- *     tags: [Competition]
+ *     description: Returns the full details of a competition given its ID.
  *     parameters:
  *       - in: query
  *         name: compId
  *         required: true
  *         schema:
  *           type: string
- *         description: Competition ID
+ *         example: 661c7ef2687b4bb0b4967e2d
+ *         description: ID of the competition
  *     responses:
  *       200:
- *         description: Returns competition details
+ *         description: Competition details retrieved successfully
  *         content:
  *           application/json:
  *             schema:
@@ -64,13 +70,37 @@ compRouter.get('/getCompetitionIdByName', getCompetitionIdByName);
  *                 success:
  *                   type: boolean
  *                 comp:
- *                   type: object
- *                   description: Competition data from the database
+ *                   $ref: '#/components/schemas/Competition'
  *       500:
- *         description: Internal Server Error
+ *         description: Internal server error
  */
 compRouter.get('/getCompetitionDetails', getCompetitionDetails);
 
+/**
+ * @swagger
+ * /getAllCompetitions:
+ *   get:
+ *     tags:
+ *       - Competition
+ *     summary: Get all competitions
+ *     description: Returns a list of all competition types available.
+ *     responses:
+ *       200:
+ *         description: Competitions retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 comps:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Competition'
+ *       500:
+ *         description: Internal server error
+ */
 compRouter.get('/getAllCompetitions', getAllCompetitions);
 
 export default compRouter

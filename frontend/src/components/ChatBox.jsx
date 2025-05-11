@@ -40,7 +40,7 @@ export default function ChatBox({ msg, index, user, page }) {
           <div className="relative">
             <CardContent
               key={index}
-              className={`p-2 px-4 w-fit max-w-4xl rounded-lg break-all hyphens-auto whitespace-pre-wrap ${
+              className={`p-2 px-4 w-fit max-w-4xl rounded-lg break-words hyphens-auto whitespace-pre-wrap ${
                 isSystemMessage
                   ? "bg-gray-400 rounded-full text-xs text-white text-center mx-auto place-items-center"
                   : isUserMessage

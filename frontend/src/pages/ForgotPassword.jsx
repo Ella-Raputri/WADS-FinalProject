@@ -67,10 +67,9 @@ const ForgotPasswordPage = () => {
         setCanResend(false);
         toast.success(data.message)
       }
-      else toast.error(data.message)
       
     } catch (error) {
-      toast.error(error.message)
+      toast.error(error.response?.data?.message)
     }
   }
 
@@ -126,7 +125,7 @@ const ForgotPasswordPage = () => {
       }
       
     } catch (error) {
-      toast.error(error.message)
+      toast.error(error.response?.data?.message || error.message || "Verify failed");
     }
   }
 
@@ -138,10 +137,9 @@ const ForgotPasswordPage = () => {
         toast.success(data.message)
         navigate('/login')
       }
-      else toast.error(data.message)
 
     } catch (error) {
-      toast.error(error.message)
+      toast.error(error.response?.data?.message || error.message || "Password setting failed");
     }
   }
 

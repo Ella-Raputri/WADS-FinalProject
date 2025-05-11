@@ -41,7 +41,7 @@ export const uploadImage = async (req, res) => {
       });
     }
     
-    return res.json({ imageUrl: fileUrl });
+    return res.status(200).json({ imageUrl: fileUrl });
     
   } catch (err) {
     console.error('Upload error:', err);

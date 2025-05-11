@@ -37,7 +37,6 @@ const VerifyEmailPage = () => {
         setCanResend(false);
         toast.success(data.message)
       }
-      else toast.error(data.message)
       
     } catch (error) {
       toast.error(error.message)
@@ -112,8 +111,6 @@ const VerifyEmailPage = () => {
     axios.defaults.withCredentials = true;
     
     try {
-      console.log(email)
-      console.log(inputtedOtp)
       const {data} =await axios.post(backendUrl+'api/auth/verify-account', {email:email, otp:inputtedOtp})
       if(data.success){
         toast.success(data.message)
@@ -121,7 +118,7 @@ const VerifyEmailPage = () => {
         initializeSocket(data.userData._id);
         navigate('/userhome')
       }
-      else {
+      else{
         if(wrongOtp <3){
           toast.error(data.message)
           setWrongOtp(wrongOtp+1);
@@ -130,7 +127,7 @@ const VerifyEmailPage = () => {
       }
       
     } catch (error) {
-      toast.error(error.message)
+      toast.error(error.response?.data?.message || error.message || "Verify failed");
     }
   }
 

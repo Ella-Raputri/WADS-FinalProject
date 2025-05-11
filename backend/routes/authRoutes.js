@@ -6,24 +6,24 @@ const authRouter = express.Router();
 /**
  * @swagger
  * tags:
- *   name: Auth
+ *   name: Authentication
  *   description: Authentication-related APIs
  */
 
 /**
  * @swagger
- * /api/auth/register:
+ * /register:
  *   post:
+ *     tags:
+ *       - Authentication
  *     summary: Register a new participant account
- *     tags: [Auth]
+ *     description: Registers a participant with full profile details and returns a JWT token cookie on success.
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - participantDetails
  *             properties:
  *               participantDetails:
  *                 type: object
@@ -41,51 +41,79 @@ const authRouter = express.Router();
  *                 properties:
  *                   fullName:
  *                     type: string
- *                     example: John Doe
  *                   mandarinName:
  *                     type: string
- *                     example: 杜约翰
  *                   dob:
  *                     type: string
  *                     format: date
- *                     example: 2002-08-15
  *                   gender:
  *                     type: string
- *                     example: Male
  *                   address:
  *                     type: string
- *                     example: 123 Beijing Street, China
  *                   phone:
  *                     type: string
- *                     example: "+6213512345678"
  *                   email:
  *                     type: string
  *                     format: email
- *                     example: johndoe@example.com
  *                   institution:
  *                     type: string
- *                     example: Tsinghua University
  *                   password:
  *                     type: string
- *                     format: password
- *                     example: P@ssw0rd!
  *                   studentPhotoUrl:
  *                     type: string
- *                     example: https://example.com/photo.jpg
+ *                     format: uri
  *     responses:
  *       200:
- *         description: User registered successfully
+ *         description: Account created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Account created successfully
+ *                 user:
+ *                   type: object
+ *                   description: The newly registered user object
  *       400:
- *         description: Missing or invalid fields
+ *         description: Validation failed or user already exists
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
  */
 authRouter.post('/register', register);
 
 /**
  * @swagger
- * /api/auth/login:
+ * /login:
  *   post:
- *     summary: Login user with email and password
- *     tags: [Auth]
+ *     tags:
+ *       - Authentication
+ *     summary: Log in a user
+ *     description: Authenticates a user using email and password. Returns a JWT token in a cookie if successful.
  *     requestBody:
  *       required: true
  *       content:
@@ -99,18 +127,51 @@ authRouter.post('/register', register);
  *               email:
  *                 type: string
  *                 format: email
- *                 example: user@example.com
+ *                 example: example@email.com
  *               password:
  *                 type: string
- *                 format: password
  *                 example: yourPassword123
  *     responses:
  *       200:
  *         description: Logged in successfully
- *       401:
- *         description: Invalid credentials
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Logged in successfully
+ *                 userData:
+ *                   type: object
+ *                   description: Logged-in user information
+ *       400:
+ *         description: Invalid credentials or missing fields
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
  *       500:
- *         description: Internal Server Error
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
  */
 authRouter.post('/login', login);
 
@@ -119,7 +180,7 @@ authRouter.post('/login', login);
  * /api/auth/logout:
  *   post:
  *     summary: Logout user and clear authentication cookie
- *     tags: [Auth]
+ *     tags: [Authentication]
  *     responses:
  *       200:
  *         description: Logged out successfully
@@ -130,10 +191,12 @@ authRouter.post('/logout', logout);
 
 /**
  * @swagger
- * /api/auth/send-verify-otp:
+ * /send-verify-otp:
  *   post:
- *     summary: Send verification OTP to user's email
- *     tags: [Auth]
+ *     tags:
+ *       - Authentication
+ *     summary: Send OTP to user email for account verification
+ *     description: Sends a 6-digit OTP to the user's email if the account is not yet verified.
  *     requestBody:
  *       required: true
  *       content:
@@ -150,17 +213,53 @@ authRouter.post('/logout', logout);
  *     responses:
  *       200:
  *         description: OTP sent successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Verification OTP has been sent
+ *       400:
+ *         description: Missing email or account already verified
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Account already verified
  *       500:
- *         description: Internal Server Error
+ *         description: Server error while sending OTP
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
  */
 authRouter.post('/send-verify-otp', sendVerifyOtp);
 
 /**
  * @swagger
- * /api/auth/verify-account:
+ * /verify-account:
  *   post:
- *     summary: Verify user account using email and OTP
- *     tags: [Auth]
+ *     tags:
+ *       - Authentication
+ *     summary: Verify user email with OTP
+ *     description: Verifies the user account using a 6-digit OTP previously sent to their email.
  *     requestBody:
  *       required: true
  *       content:
@@ -177,12 +276,48 @@ authRouter.post('/send-verify-otp', sendVerifyOtp);
  *                 example: user@example.com
  *               otp:
  *                 type: string
- *                 example: 123456
+ *                 example: "123456"
  *     responses:
  *       200:
- *         description: Account verified successfully
+ *         description: Email verified or invalid OTP
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Email Verified Successfully
+ *                 userData:
+ *                   type: object
  *       400:
- *         description: Invalid or expired OTP
+ *         description: Missing fields, user not found, or OTP expired
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Expired OTP
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
  */
 authRouter.post('/verify-account', verifyEmail);
 
@@ -191,7 +326,7 @@ authRouter.post('/verify-account', verifyEmail);
  * /api/auth/is-auth:
  *   get:
  *     summary: Check if user is authenticated
- *     tags: [Auth]
+ *     tags: [Authentication]
  *     security:
  *       - cookieAuth: []
  *     responses:
@@ -206,10 +341,12 @@ authRouter.get('/is-auth', userAuth, isAuthenticated);
 
 /**
  * @swagger
- * /api/auth/send-reset-otp:
+ * /send-reset-otp:
  *   post:
- *     summary: Send OTP to email for password reset
- *     tags: [Auth]
+ *     tags:
+ *       - Authentication
+ *     summary: Send OTP for password reset
+ *     description: Sends a 6-digit OTP to the user's email to initiate password reset.
  *     requestBody:
  *       required: true
  *       content:
@@ -225,18 +362,54 @@ authRouter.get('/is-auth', userAuth, isAuthenticated);
  *                 example: user@example.com
  *     responses:
  *       200:
- *         description: OTP sent for password reset
+ *         description: Reset OTP sent successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Reset OTP has been sent
+ *       400:
+ *         description: Missing or invalid email, or user not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: User not found
  *       500:
- *         description: Internal Server Error
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
  */
 authRouter.post('/send-reset-otp', sendResetOtp);
 
 /**
  * @swagger
- * /api/auth/verify-otp-reset:
+ * /verify-otp-reset:
  *   post:
+ *     tags:
+ *       - Authentication
  *     summary: Verify OTP for password reset
- *     tags: [Auth]
+ *     description: Verifies the OTP sent to the user's email for resetting the password.
  *     requestBody:
  *       required: true
  *       content:
@@ -253,21 +426,58 @@ authRouter.post('/send-reset-otp', sendResetOtp);
  *                 example: user@example.com
  *               otp:
  *                 type: string
- *                 example: 654321
+ *                 example: "123456"
  *     responses:
  *       200:
- *         description: OTP verified for password reset
+ *         description: OTP verified successfully or is invalid
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                 example:
+ *                   success: true
+ *                   message: OTP is valid
+ *       400:
+ *         description: Missing details, user not found, or OTP expired
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Expired OTP
  *       500:
- *         description: Internal Server Error
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
  */
 authRouter.post('/verify-otp-reset', verifyOtpReset);
 
 /**
  * @swagger
- * /api/auth/reset-password:
+ * /reset-password:
  *   post:
+ *     tags:
+ *       - Authentication
  *     summary: Reset user password
- *     tags: [Auth]
+ *     description: Allows a user to reset their password after OTP verification.
  *     requestBody:
  *       required: true
  *       content:
@@ -285,12 +495,46 @@ authRouter.post('/verify-otp-reset', verifyOtpReset);
  *               newPassword:
  *                 type: string
  *                 format: password
- *                 example: NewSecurePassword123
+ *                 example: NewPass123
  *     responses:
  *       200:
- *         description: Password reset successfully
+ *         description: Password has been reset successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Password has been reset successfully
+ *       400:
+ *         description: Missing fields, user not found, or invalid password format
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Password must have at least 8 characters with at least one letter and one number
  *       500:
- *         description: Internal Server Error
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
  */
 authRouter.post('/reset-password', resetPassword);
 

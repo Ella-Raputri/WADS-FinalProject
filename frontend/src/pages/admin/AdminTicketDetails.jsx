@@ -111,12 +111,10 @@ const AdminTicketDetails = () => {
             setMessage("");
             setImageUploaded(null);
             setImageName("");
-        } else {
-            toast.error(data.message);
-        }
+        } 
     } catch (error) {
         console.error("Message send error:", error);
-        toast.error("Failed to send message. Please try again.");
+        toast.error(error.response?.data?.message || error.message || "Send message failed");
     }
 };
 

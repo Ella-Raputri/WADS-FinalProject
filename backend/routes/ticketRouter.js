@@ -12,36 +12,29 @@ const ticketRouter = express.Router();
 
 /**
  * @swagger
- * /api/ticket/uploadNewTicket:
+ * /uploadNewTicket:
  *   post:
- *     summary: Upload a new support ticket
  *     tags: [Ticket]
- *     security:
- *       - cookieAuth: []
+ *     summary: Upload a new support ticket
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - userId
- *               - newTicketDetails
+ *             required: [userId, newTicketDetails]
  *             properties:
  *               userId:
  *                 type: string
  *               newTicketDetails:
  *                 type: object
- *                 required:
- *                   - subject
- *                   - description
- *                   - compTypeId
+ *                 required: [subject, description]
  *                 properties:
  *                   subject:
  *                     type: string
- *                   description:
- *                     type: string
  *                   priorityType:
+ *                     type: string
+ *                   description:
  *                     type: string
  *                   imageUrl:
  *                     type: string
@@ -50,6 +43,8 @@ const ticketRouter = express.Router();
  *     responses:
  *       200:
  *         description: Ticket created successfully
+ *       400:
+ *         description: Missing subject or description
  *       500:
  *         description: Server error
  */
@@ -57,15 +52,23 @@ ticketRouter.post('/uploadNewTicket',userAuth, uploadNewTicket);
 
 /**
  * @swagger
- * /api/ticket/getAllTickets:
+ * /getAllTickets:
  *   get:
- *     summary: Get all tickets for the authenticated user
  *     tags: [Ticket]
- *     security:
- *       - cookieAuth: []
+ *     summary: Get all tickets for a user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [userId]
+ *             properties:
+ *               userId:
+ *                 type: string
  *     responses:
  *       200:
- *         description: List of user tickets
+ *         description: Tickets retrieved successfully
  *       500:
  *         description: Server error
  */
@@ -73,12 +76,10 @@ ticketRouter.get('/getAllTickets',userAuth, getAllTickets);
 
 /**
  * @swagger
- * /api/ticket/getTicketByCompId:
+ * /getTicketByCompId:
  *   get:
- *     summary: Get all tickets by competition type
  *     tags: [Ticket]
- *     security:
- *       - cookieAuth: []
+ *     summary: Get all tickets by competition type
  *     parameters:
  *       - in: query
  *         name: compId
@@ -88,7 +89,7 @@ ticketRouter.get('/getAllTickets',userAuth, getAllTickets);
  *         description: Competition type ID
  *     responses:
  *       200:
- *         description: List of tickets for a competition type
+ *         description: Tickets retrieved successfully
  *       500:
  *         description: Server error
  */
@@ -96,34 +97,29 @@ ticketRouter.get('/getTicketByCompId', userAuth, getAllTicketsByCompetitionType)
 
 /**
  * @swagger
- * /api/ticket/updateTicketStatus:
+ * /updateTicketStatus:
  *   put:
- *     summary: Update ticket status
  *     tags: [Ticket]
- *     security:
- *       - cookieAuth: []
+ *     summary: Update ticket status
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - request
+ *             required: [request]
  *             properties:
  *               request:
  *                 type: object
- *                 required:
- *                   - ticketId
- *                   - status
  *                 properties:
  *                   ticketId:
  *                     type: string
  *                   status:
  *                     type: string
+ *                     enum: [Open, Closed, Resolved]
  *     responses:
  *       200:
- *         description: Ticket status updated
+ *         description: Ticket status updated successfully
  *       500:
  *         description: Server error
  */
@@ -131,23 +127,22 @@ ticketRouter.put('/updateTicketStatus', userAuth, updateTicketStatus);
 
 /**
  * @swagger
- * /api/ticket/getUpdatedAtByTicketId:
+ * /getUpdatedAtByTicketId:
  *   get:
- *     summary: Get the latest updatedAt timestamp of a ticket
  *     tags: [Ticket]
- *     security:
- *       - cookieAuth: []
+ *     summary: Get the last updated time of a ticket
  *     parameters:
  *       - in: query
  *         name: ticketId
  *         required: true
  *         schema:
  *           type: string
+ *         description: Ticket ID
  *     responses:
  *       200:
- *         description: Latest update timestamp
+ *         description: Latest update time returned
  *       400:
- *         description: Invalid ticketId
+ *         description: Invalid or missing ticketId
  *       500:
  *         description: Server error
  */
@@ -155,23 +150,17 @@ ticketRouter.get('/getUpdatedAtByTicketId', userAuth, getUpdatedAtByTicketId);
 
 /**
  * @swagger
- * /api/ticket/rateTicket:
+ * /rateTicket:
  *   post:
- *     summary: Rate a ticket's resolution
  *     tags: [Ticket]
- *     security:
- *       - cookieAuth: []
+ *     summary: Submit a rating for a ticket
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - userId
- *               - ticketId
- *               - adminId
- *               - rating
+ *             required: [userId, ticketId, adminId, rating]
  *             properties:
  *               userId:
  *                 type: string
@@ -181,11 +170,15 @@ ticketRouter.get('/getUpdatedAtByTicketId', userAuth, getUpdatedAtByTicketId);
  *                 type: string
  *               rating:
  *                 type: number
+ *                 minimum: 1
+ *                 maximum: 5
  *               comment:
  *                 type: string
  *     responses:
  *       200:
- *         description: Rating submitted
+ *         description: Rating submitted successfully
+ *       400:
+ *         description: Rating not provided
  *       500:
  *         description: Server error
  */
@@ -193,18 +186,17 @@ ticketRouter.post('/rateTicket', userAuth, updateRateTicket);
 
 /**
  * @swagger
- * /api/ticket/getRatingTicket:
+ * /getRatingTicket:
  *   get:
- *     summary: Get rating for a specific ticket
  *     tags: [Ticket]
- *     security:
- *       - cookieAuth: []
+ *     summary: Fetch rating for a specific ticket
  *     parameters:
  *       - in: query
  *         name: ticketId
  *         required: true
  *         schema:
  *           type: string
+ *         description: Ticket ID
  *     responses:
  *       200:
  *         description: Rating fetched successfully

@@ -41,6 +41,11 @@ io.on("connection", (socket) => {
         io.to(roomId).emit("newRoomMessage", message);
     });
 
+    socket.on("sendUpdatedStatus", ({roomId, stat}) =>{
+        console.log("sending updated status");
+        io.to(roomId).emit("updatedStatus", stat);
+    });
+
     socket.on("joinAdminRoom", (roomId) => {
         socket.join(roomId);
         console.log(`👥 Admin ${socket.userId} joined room ${roomId}`);

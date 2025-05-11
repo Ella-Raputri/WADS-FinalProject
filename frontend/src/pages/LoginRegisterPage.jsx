@@ -60,11 +60,8 @@ const LoginRegisterPage = () => {
           initializeSocket(data.userData._id);
           toast.success(data.message);
       }
-      else{
-        toast.error(data.message);
-      }
     } catch (error) {
-      toast.error('Error: '+ error.message)
+      toast.error(error.response?.data?.message || error.message || "Login failed");
     }
   };
 
@@ -110,10 +107,7 @@ const LoginRegisterPage = () => {
         if(data.success) {
           navigate('/verifyemail', { state: { email: registrationData.email } });
           console.log("passing emaill: "+registrationData.email);
-        } else {
-            toast.error(data.message);
-        }
-
+        } 
     } catch (error) {
         console.error("Signup error:", error);
         toast.error(error.response?.data?.message || error.message || "Signup failed");

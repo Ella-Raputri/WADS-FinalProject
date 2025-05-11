@@ -15,10 +15,10 @@ export const getUserData =async(req,res)=>{
         const {userId} = req.body;
         const user = await userModel.findById(userId);
         if(!user){
-            return res.json({success:false, message:"User not found"});
+            return res.status(400).json({success:false, message:"User not found"});
         }
 
-        return res.json({
+        return res.status(200).json({
             success:true, 
             userData: {
                 name: user.FullName,
@@ -44,7 +44,7 @@ export const getUserDataFromId = async(req,res) =>{
         const userId = req.query.userId;  
         const user = await userModel.findById(userId);
         
-        return res.json({
+        return res.status(200).json({
             success:true, 
             userData: {
                 name: user.FullName,
@@ -69,22 +69,22 @@ export const editUserDetails = async(req,res)=>{
         const {userId, participantDetails} = req.body;
 
         if (!participantDetails) {
-            return res.status.json({ success: false, message: "Please fill all the required fields" });
+            return res.status(400).json({ success: false, message: "Please fill all the required fields" });
         }
 
         const { fullName, mandarinName, dob, gender, address, phone, institution, studentPhotoUrl } = participantDetails;
         console.log(participantDetails);
 
         if (!fullName || !mandarinName || !dob || !gender || !address || !phone || !institution || !studentPhotoUrl) {
-            return res.json({ success: false, message: "Please fill all the required fields" });
+            return res.status(400).json({ success: false, message: "Please fill all the required fields" });
         }
 
         if (!isMandarin(mandarinName) && mandarinName !== "-") {
-            return res.json({ success: false, message: "Mandarin name must be Chinese characters or '-'" });
+            return res.status(400).json({ success: false, message: "Mandarin name must be Chinese characters or '-'" });
         }
 
         if (!isValidPhoneNumber(phone)) {
-            return res.json({ success: false, message: "Phone number must be formatted with +62XX or 0XX" });
+            return res.status(400).json({ success: false, message: "Phone number must be formatted with +62XX or 0XX" });
         }
 
 

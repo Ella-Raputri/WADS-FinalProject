@@ -20,7 +20,8 @@ const CompManagement = () => {
   const [filteredData, setFilteredData] = useState(data);
   const [baseFilteredData, setBaseFilteredData] = useState(data);
   const {userData, socket, initializeSocket, backendUrl} = useContext(AppContent);
-  const [competitionType, setCompetitionType] = useState('mma');
+  const [competitionType, setCompetitionType] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
 //   const location = useLocation();
 //   const updatedData = location.state?.updatedData;
@@ -91,6 +92,7 @@ const CompManagement = () => {
         const response = await axios.get(backendUrl+'api/competition/getCompetitionDetails?compId='+userData.admin.CompTypeId);
         if(response.data.success){
             setCompetitionType(response.data.comp.Name);
+            setIsLoading(false);
         }
     } catch (error) {
         console.error(error)
@@ -136,6 +138,8 @@ const CompManagement = () => {
   
 
   return (
+    <>
+    {isLoading? <div className='bg-center'>Loading...</div> :
     <div>
       <h1 className='md:ml-20 mt-20 mb-3 font-medium text-4xl font-kanit p-5 pb-0'>
         {competitionType} Competition
@@ -177,6 +181,8 @@ const CompManagement = () => {
 
       {openFilter && <FilterStatusModal isOpen={openFilter} onClose={()=>setOpenFilter(false)} onApply={handleFilter}/>}
     </div>
+    }
+    </>
   );
 };
 

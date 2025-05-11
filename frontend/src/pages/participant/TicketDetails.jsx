@@ -75,6 +75,11 @@ const TicketDetails = () => {
       }
     });
 
+    socket.on("updatedStatus", (newStatus) =>{
+      const updatedData = { ...data, Status: newStatus };
+      setData(updatedData);
+    }); 
+
     return () => {
       socket.off("newRoomMessage"); // Cleanup on unmount
     };
@@ -127,11 +132,10 @@ const TicketDetails = () => {
             setMessage("");
             setImageUploaded(null);
             setImageName("");
-        } else {
-            toast.error(data.message);
-        }
+        } 
 
     } catch (error) {
+        toast.error(error.response?.data?.message || error.message || "Send message failed");
         console.error(error)
     }    
   };
@@ -166,6 +170,7 @@ const TicketDetails = () => {
         toast.success(response2.data.message);
         const updatedData = { ...data, Status: up };
         setData(updatedData);
+        socket.emit("sendUpdatedStatus", {roomId: data._id, stat:up});
         if(up==='Closed'){
           setIsOpen(true);
         }

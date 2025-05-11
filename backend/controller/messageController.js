@@ -35,7 +35,7 @@ export const getAllParticipantAdminMessage = async (req, res) => {
             })
         );
 
-        return res.json({ success: true, adminUserChat: formattedMessages });
+        return res.status(200).json({ success: true, adminUserChat: formattedMessages });
 
     } catch (error) {
         console.error("Error fetching admin participant message:", error);
@@ -47,7 +47,7 @@ export const getAllParticipantAdminMessage = async (req, res) => {
 export const sendParticipantAdminMessage =async(req,res)=>{
     const {userId, request} = req.body;
     if(!request.subject || !request.message){
-        return res.json({ success: false, message: "Please fill the subject and message field" });
+        return res.status(400).json({ success: false, message: "Please fill the subject and message field" });
     }
 
     try {
@@ -64,7 +64,7 @@ export const sendParticipantAdminMessage =async(req,res)=>{
         });
         await newMessage.save();
 
-        return res.json({ success: true, message: "Message created successfully" });
+        return res.status(200).json({ success: true, message: "Message created successfully" });
 
     } catch (error) {
         return res.status(500).json({success:false, message:error.message})
@@ -83,7 +83,7 @@ export const sendParticipantSystemMessage =async(req,res)=>{
         });
 
         await newMessage.save();
-        return res.json({ success: true, message: "Message created successfully" });
+        return res.status(200).json({ success: true, message: "Message created successfully" });
 
     } catch (error) {
         return res.status(500).json({success:false, message:error.message})
@@ -96,7 +96,7 @@ export const getAllCollabAdminMessage = async(req,res)=>{
         const ticketId = req.query.ticketId;
         const adminCollabChat = await adminCollabChatModel.find({TicketId: ticketId});
 
-        return res.json({success:true, adminCollabChat})
+        return res.status(200).json({success:true, adminCollabChat})
         
     } catch (error) {
         console.error("Error fetching admin collab message:", error);
@@ -107,7 +107,7 @@ export const getAllCollabAdminMessage = async(req,res)=>{
 export const sendCollabAdminMessage =async(req,res)=>{
     const {userId, request} = req.body;
     if(!request.message){
-        return res.json({ success: false, message: "Please fill the message field" });
+        return res.status(400).json({ success: false, message: "Please fill the message field" });
     }
 
     try {
@@ -122,7 +122,7 @@ export const sendCollabAdminMessage =async(req,res)=>{
         });
 
         await newMessage.save();
-        return res.json({ success: true, message: "Message created successfully" });
+        return res.status(200).json({ success: true, message: "Message created successfully" });
 
     } catch (error) {
         return res.status(500).json({success:false, message:error.message})
@@ -135,7 +135,7 @@ export const getAllChatbotMessage = async(req,res)=>{
         const userId =req.query.userId;
         const chat = await chatbotModel.find({SenderId: userId});
 
-        return res.json({success:true, chat})
+        return res.status(200).json({success:true, chat})
         
     } catch (error) {
         console.error("Error fetching chatbot message:", error);
@@ -148,7 +148,7 @@ export const sendChatbotMessage = async (req, res) => {
     const { userId, message, role } = req.body;
 
     if (!message) {
-        return res.json({ success: false, message: "Please fill the message field" });
+        return res.status(400).json({ success: false, message: "Please fill the message field" });
     }
 
     if (!userId) {
@@ -164,7 +164,7 @@ export const sendChatbotMessage = async (req, res) => {
 
         await newMessage.save();
 
-        return res.json({ success: true, message: "Message created successfully" });
+        return res.status(200).json({ success: true, message: "Message created successfully" });
 
     } catch (error) {
         console.error("Error saving message:", error);
