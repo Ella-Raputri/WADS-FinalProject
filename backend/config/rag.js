@@ -102,7 +102,7 @@ export const queryRAG = async (query) => {
         } 
         else {
             return {
-                result: `${response}\n\n Untuk informasi lebih lanjut, silakan lihat di ${sources[0]}`,
+                result: `${response}`,
                 sources: sources,
             };
         }

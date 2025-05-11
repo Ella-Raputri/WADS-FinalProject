@@ -13,6 +13,7 @@ function ChatModal({isOpen, onClose, user}) {
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState('');
     const [fetchNum, setFetchNum] = useState(0);
+    const [loading, setLoading] = useState(false);
 
     const messagesEndRef = useRef(null);
     const {backendUrl} = useContext(AppContent);
@@ -126,6 +127,7 @@ function ChatModal({isOpen, onClose, user}) {
     }
 
     const generateBotResponse = async(latestMessage)=>{
+        setLoading(true);
         try {
             console.log("isi msg: ", latestMessage.Message);
             const response = await axios.post(`${backendUrl}api/message/generateChatbotResponse`, {lastMsg:latestMessage.Message});
@@ -148,7 +150,6 @@ function ChatModal({isOpen, onClose, user}) {
                         try {
                             const res = await axios.get(`${backendUrl}api/message/fetchChatbotMessage?userId=${user.id}`);
                             setMessages(res.data.chat); // Overwrite with the latest
-    
                         } catch (err) {
                             console.error("Error fetching updated chat:", err);
                         }
@@ -156,8 +157,12 @@ function ChatModal({isOpen, onClose, user}) {
                 }
             }
 
-        } catch (error) {
+        } 
+        catch (error) {
             console.error("Error generating bot response:", error)
+        }
+        finally {
+            setLoading(false); 
         }
     }
     
@@ -185,6 +190,16 @@ function ChatModal({isOpen, onClose, user}) {
         {messages.map((msg, idx) => (
         <ChatBox key={idx} msg={msg} index={idx} user={user} page={"chatbot"} />
         ))}
+        {loading && (
+            <div className="flex items-center space-x-2 text-slate-500 text-sm italic px-2">
+                <svg className="animate-spin h-4 w-4 text-slate-500" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                </svg>
+                <span className="text-sm text-slate-500 italic animate-pulse px-2">Fetching data...</span>
+            </div>
+        )}
+
         <div ref={messagesEndRef}></div>
     </div>
 
