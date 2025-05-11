@@ -29,7 +29,7 @@ const LoginRegisterPage = () => {
   const [image, setImage] =useState(null);
   const [imageName, setImageName] =useState("");
 
-  const {backendUrl, setIsLoggedIn, getUserData, userData, initializeSocket} = useContext(AppContent)
+  const {backendUrl, setIsLoggedIn, getUserData, userData, initializeSocket, uploadImage} = useContext(AppContent)
 
   const dobRef = useRef(null);
   const [showPassword, setShowPassword] =useState(false);  
@@ -69,34 +69,13 @@ const LoginRegisterPage = () => {
     e.preventDefault();
 
     try {
-        const imageFormData = new FormData();
-        imageFormData.append('file', image); 
-
-        // 2. Upload image first
-        const { data: uploadData } = await axios.post(
-            backendUrl + 'api/image/upload', 
-            imageFormData, 
-            {
-                headers: { "Content-Type": "multipart/form-data" },
-                withCredentials: true,
-            }
-        ).catch(error => {
-            // Handle image upload failure
-            console.error("Image upload error:", error);
-            toast.error("Image upload failed. Please try again.");
-            throw error; // Stop execution if image upload fails
-        });
-
-        if(!uploadData?.imageUrl) {
-            toast.error("Image upload failed");
-            return;
-        }
+        const linkRes = await uploadImage(image);
+        if(linkRes==='') return;
 
         // 3. Prepare registration data
         const registrationData = {
             ...formData,
-            studentPhotoUrl: uploadData.imageUrl
-            // studentPhotoUrl: "example.com"
+            studentPhotoUrl: linkRes
         };
         registrationData.email = formData.email.toLowerCase()
 

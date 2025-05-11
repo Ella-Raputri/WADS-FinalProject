@@ -22,7 +22,7 @@ const AdminTicketDetails = () => {
   const [data, setData] = useState(null);
   const [user, setUser] =useState(null);
   const [fetchNum, setFetchNum] = useState(0);
-  const {backendUrl, socket,initializeSocket} = useContext(AppContent);
+  const {backendUrl, socket,initializeSocket, uploadImage} = useContext(AppContent);
   const [isLoading, setIsLoading] =useState(true);
 
   const messagesEndRef = useRef(null);
@@ -79,28 +79,12 @@ const AdminTicketDetails = () => {
 
     try {
         if (imageUploaded) {
-            const imageFormData = new FormData();
-            imageFormData.append('file', imageUploaded);
-
-            try {
-                // Upload image first
-                const { data: uploadData } = await axios.post(
-                    backendUrl + 'api/image/upload',
-                    imageFormData,
-                    {
-                        headers: { "Content-Type": "multipart/form-data" },
-                        withCredentials: true,
-                    }
-                );
-
+            const linkResult = await uploadImage(imageUploaded);
+            if(linkResult){
                 newMessage = {
                     ...newMessage,
-                    imageUrl: uploadData.imageUrl
+                    imageUrl: linkResult
                 };
-            } catch (error) {
-                console.error("Image upload error:", error);
-                toast.error("Image upload failed. Please try again.");
-                return; // Stop execution if image upload fails
             }
         }
 

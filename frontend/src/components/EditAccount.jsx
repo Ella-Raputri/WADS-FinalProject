@@ -59,7 +59,7 @@ export const EditAccount = ({isOpen, setIsOpen, userName, mandarinName, dateOfBi
     const [imageName, setImageName] = useState('');
 
     const dateInputRef = useRef(null);
-    const {backendUrl, getUserData} = useContext(AppContent);
+    const {backendUrl, getUserData, uploadImage} = useContext(AppContent);
 
 
     const applyChanges = async() => {
@@ -67,32 +67,10 @@ export const EditAccount = ({isOpen, setIsOpen, userName, mandarinName, dateOfBi
             let imageUrl = '';
 
             if(imageName){
-                const imageFormData = new FormData();
-                imageFormData.append('file', image); 
-        
-                // 2. Upload image first
-                const { data: uploadData } = await axios.post(
-                    backendUrl + 'api/image/upload', 
-                    imageFormData, 
-                    {
-                        headers: { "Content-Type": "multipart/form-data" },
-                        withCredentials: true,
-                    }
-                ).catch(error => {
-                    // Handle image upload failure
-                    console.error("Image upload error:", error);
-                    toast.error("Image upload failed. Please try again.");
-                    throw error; // Stop execution if image upload fails
-                });
-                imageUrl = uploadData.imageUrl;
-        
-                if(!uploadData?.imageUrl) {
-                    toast.error("Image upload failed");
-                    return;
-                }
+                const linkResult = await uploadImage(image);
+                if(linkResult) imageUrl = linkResult;
             }
             
-    
             // 3. Prepare registration data
             const registrationData = {
                 fullName:userNameText, 

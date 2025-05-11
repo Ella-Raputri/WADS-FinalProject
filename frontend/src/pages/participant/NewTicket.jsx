@@ -16,7 +16,7 @@ const NewTicket = () => {
     const [priority, setPriority] =useState("Low");
     const [compType, setCompType] =useState("Junior Singing");
     const navigate = useNavigate();
-    const {backendUrl, userData, socket, initializeSocket} = useContext(AppContent)
+    const {backendUrl, userData, socket, initializeSocket, uploadImage} = useContext(AppContent)
 
     useEffect(() => {
             if (!userData || !userData.id) return; 
@@ -44,27 +44,11 @@ const NewTicket = () => {
             }
 
             if(image){
-                const imageFormData = new FormData();
-                imageFormData.append('file', image); 
-
-                // 2. Upload image first
-                const { data: uploadData } = await axios.post(
-                    backendUrl + 'api/image/upload', 
-                    imageFormData, 
-                    {
-                        headers: { "Content-Type": "multipart/form-data" },
-                        withCredentials: true,
-                    }
-                ).catch(error => {
-                    // Handle image upload failure
-                    console.error("Image upload error:", error);
-                    toast.error("Image upload failed. Please try again.");
-                    throw error; // Stop execution if image upload fails
-                });
+                const linkResult = await uploadImage(image);
 
                 newTicketData = {
                     ...newTicketData,
-                    imageUrl: uploadData.imageUrl
+                    imageUrl: linkResult
                 };
             }
 

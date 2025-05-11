@@ -63,6 +63,7 @@ const HelpPage = () => {
             ...ticket,
             UpdatedAt: updatedAtList[idx],
           }));
+           mergedTickets.sort((a, b) => new Date(b.UpdatedAt) - new Date(a.UpdatedAt));
     
           setData(mergedTickets);
           setFilteredData(mergedTickets);

@@ -76,11 +76,16 @@ const CompManagement = () => {
   const fetchComps = async()=>{
     try {
         const response = await axios.get(backendUrl+'api/competitionRegistration/'+userData.admin.CompTypeId);
-        if(response.data.success){
-            setBaseFilteredData(response.data.competitions);
-            setData(response.data.competitions);
-            setFilteredData(response.data.competitions);
-            console.log(response.data.competitions)
+        if (response.data.success) {
+            let resultData = response.data.competitions;
+
+            // 🔽 Sort competitions in reverse by CreatedAt (most recent first)
+            resultData.sort((a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt));
+
+            setBaseFilteredData(resultData);
+            setData(resultData);
+            setFilteredData(resultData);
+            console.log(resultData);
         }
     } catch (error) {
         console.error(error)
@@ -106,7 +111,7 @@ const CompManagement = () => {
     const { status } = newFilters;
   
     const filtered = data.filter(ticket => {
-      const isStatusMatch = status ? ticket.status.toLowerCase() === status : true;
+      const isStatusMatch = status ? ticket.Status.toLowerCase() === status : true;
       
       console.log("iterating ticket:");
       console.log(ticket);
@@ -127,9 +132,10 @@ const CompManagement = () => {
     }
 
     const searched = filteredData.filter(ticket => {
-      const inName = ticket.name.toLowerCase().includes(keywords.toLowerCase());
-      const inEmail = ticket.email.toLowerCase().includes(keywords.toLowerCase());
-      return inName || inEmail;
+      const inName = ticket.userDetails.FullName.toLowerCase().includes(keywords.toLowerCase());
+      const inEmail = ticket.userDetails.Email.toLowerCase().includes(keywords.toLowerCase());
+      const inPhone = ticket.userDetails.PhoneNumber.toLowerCase().includes(keywords.toLowerCase());
+      return inName || inEmail || inPhone;
     });
 
     setFilteredData(searched);

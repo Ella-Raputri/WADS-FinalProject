@@ -98,6 +98,33 @@ export const AppContextProvider = (props) => {
         }
     };
 
+    const uploadImage = async (image) =>{
+        const imageFormData = new FormData();
+        imageFormData.append('file', image); 
+
+        // 2. Upload image first
+        const { data: uploadData } = await axios.post(
+            backendUrl + 'api/image/upload', 
+            imageFormData, 
+            {
+                headers: { "Content-Type": "multipart/form-data" },
+                withCredentials: true,
+            }
+        ).catch(error => {
+            // Handle image upload failure
+            console.error("Image upload error:", error);
+            toast.error("Image upload failed. Please try again.");
+            return '';
+        });
+
+        if(!uploadData?.imageUrl) {
+            toast.error("Image upload failed");
+            return '';
+        }
+
+        return uploadData.imageUrl;
+    }
+
 
     const value = {
         backendUrl,
@@ -109,7 +136,8 @@ export const AppContextProvider = (props) => {
         socket,
         onlineUsersRef,
         initializeSocket,
-        cleanupSocket
+        cleanupSocket,
+        uploadImage
     };
 
     return <AppContent.Provider value={value}>{props.children}</AppContent.Provider>;

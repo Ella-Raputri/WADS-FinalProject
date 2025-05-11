@@ -13,59 +13,22 @@ function UploadTwibbonPayment({isOpen, onClose, onCloseParent, competition}) {
     const [paymentImage, setPaymentImage] = useState(null);
     const [twibbonImageName, setTwibbonImageName] = useState('');
     const [paymentImageName, setPaymentImageName] = useState('');
-    const {userData, backendUrl} = useContext(AppContent);
+    const {userData, backendUrl, uploadImage} = useContext(AppContent);
 
     const handleSubmit=async(e)=>{
         e.preventDefault();
 
-        const imageFormData = new FormData();
-        imageFormData.append('file', twibbonImage); 
+        const twibbonLink = await uploadImage(twibbonImage);
+        if(twibbonLink === '') return;
 
-        const { data: uploadData } = await axios.post(
-            backendUrl + 'api/image/upload', 
-            imageFormData, 
-            {
-                headers: { "Content-Type": "multipart/form-data" },
-                withCredentials: true,
-            }
-        ).catch(error => {
-            console.error("Image upload error:", error);
-            toast.error("Image upload failed. Please try again.");
-            throw error; 
-        });
+        const paymentLink = await uploadImage(paymentImage);
+        if(paymentLink === '') return;
 
-        if(!uploadData?.imageUrl) {
-            toast.error("Image upload failed");
-            return;
-        }
-
-        const imageFormData2 = new FormData();
-        imageFormData2.append('file', paymentImage); 
-
-        const { data: uploadData2 } = await axios.post(
-            backendUrl + 'api/image/upload', 
-            imageFormData2, 
-            {
-                headers: { "Content-Type": "multipart/form-data" },
-                withCredentials: true,
-            }
-        ).catch(error => {
-            console.error("Image upload error:", error);
-            toast.error("Image upload failed. Please try again.");
-            throw error; 
-        });
-
-        if(!uploadData2?.imageUrl) {
-            toast.error("Image upload failed");
-            return;
-        }
-
-        
         const formData = {
             UserId: userData.id,
             CompetitionId: competition._id,
-            PaymentProofUrl: uploadData2.imageUrl,
-            TwibbonProofUrl: uploadData.imageUrl
+            PaymentProofUrl: paymentLink,
+            TwibbonProofUrl: twibbonLink
         };
 
         try{
