@@ -28,13 +28,13 @@ const LoginRegisterPage = () => {
   const [password, setPassword] = useState("");
   const [image, setImage] =useState(null);
   const [imageName, setImageName] =useState("");
+  const [showPassword, setShowPassword] =useState(false);  
+  const [loading, setLoading] = useState(false);
 
   const {backendUrl, setIsLoggedIn, getUserData, userData, initializeSocket, uploadImage} = useContext(AppContent)
 
   const dobRef = useRef(null);
-  const [showPassword, setShowPassword] =useState(false);  
   const passwordRef = useRef(null);
-
   const fullNameRef = useRef(null);
   const mandarinNameRef = useRef(null);
   const addressRef = useRef(null);
@@ -42,8 +42,8 @@ const LoginRegisterPage = () => {
   const emailRef = useRef(null);
   const institutionRef = useRef(null);
   const passwordRef2 = useRef(null);
-  // const dobRef = useRef(null);
   const genderRef = useRef(null);
+  
 
   // KeyDown handler
   const handleKeyDown = (e, nextRef) => {
@@ -86,12 +86,16 @@ const LoginRegisterPage = () => {
 
   const handleSignUp = async(e) => {
     e.preventDefault();
+    if(loading) return;
+    setLoading(true);
 
     try {
         const linkRes = await uploadImage(image);
-        if(linkRes==='') return;
+        if(linkRes===''){
+          setLoading(false);
+          return;
+        }
 
-        // 3. Prepare registration data
         const registrationData = {
             ...formData,
             studentPhotoUrl: linkRes
@@ -110,6 +114,8 @@ const LoginRegisterPage = () => {
         console.error("Signup error:", error);
         toast.error(error.response?.data?.message || error.message || "Signup failed");
     }
+
+    setLoading(false);
 };
 
   const handleKeyDownLogin = (e) => {
@@ -467,7 +473,15 @@ const LoginRegisterPage = () => {
             
             
             <div className="flex justify-center mt-10">
-              <button type="submit" className="px-15 transition ease duration-150 rounded-md bg-red-600 py-2 text-lg text-white hover:bg-red-700 shadow-md font-semibold cursor-pointer focus:outline-none">Sign up</button>
+              <button type="submit" 
+              className={`${loading? 'cursor-not-allowed': 'cursor-pointer'} px-15 transition ease duration-150 rounded-md bg-red-600 py-2 text-lg text-white hover:bg-red-700 shadow-md font-semibold focus:outline-none`}>
+                {loading? 
+                <svg className="animate-spin h-6 w-6 text-white" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                </svg>
+                :'Sign up'}
+                </button>
             </div>
           </form>
         </div>

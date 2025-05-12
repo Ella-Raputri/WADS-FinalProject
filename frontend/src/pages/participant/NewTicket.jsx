@@ -15,6 +15,7 @@ const NewTicket = () => {
     const [subj, setSubj] =useState("");
     const [priority, setPriority] =useState("Low");
     const [compType, setCompType] =useState("Junior Singing");
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const {backendUrl, userData, socket, initializeSocket, uploadImage} = useContext(AppContent)
 
@@ -29,6 +30,7 @@ const NewTicket = () => {
 
 
     const handleSubmit=async(e)=>{
+        setLoading(true);
         e.preventDefault();
         axios.defaults.withCredentials =true
 
@@ -57,13 +59,12 @@ const NewTicket = () => {
             if(data.success) {
               navigate('/userhelp');
               toast.success("Ticket created successfully.")
-            } else {
-                toast.error(data.message);
-            }
-
+            } 
         } catch (error) {
             console.error(error)
+            toast.error(error.response?.data?.message || error.message || "Ticket creation failed");
         }
+        setLoading(false);
     }
 
     const location =useLocation();
@@ -71,7 +72,6 @@ const NewTicket = () => {
 
   return (
     <div className='mt-25 ml-4 mr-8 md:ml-20 ' >
-        {console.log("location:",location)}
         
         <div className='flex'>
             <button className="bg-white text-slate-500 border shadow-md border-slate-300 w-10 h-10 flex items-center justify-center rounded-full hover:cursor-pointer hover:bg-gray-100"
@@ -144,8 +144,14 @@ const NewTicket = () => {
             </div>
 
             {/* Submit Button */}
-            <button type='submit' className="cursor-pointer hover:bg-red-700 mb-30 ml-16 mt-8 text-md p-5 font-semibold bg-red-600 text-white py-2 rounded-md shadow-md ease transition duration-200">
-                Create Ticket</button>
+            <button type='submit' className={`${loading? 'cursor-not-allowed': 'cursor-pointer'} hover:bg-red-700 mb-30 ml-16 mt-8 text-md p-5 font-semibold bg-red-600 text-white py-2 rounded-md shadow-md ease transition duration-200`}>
+                {loading? 
+                    <svg className="animate-spin m-auto h-6 w-6 text-white" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                :'Create Ticket'}
+            </button>
         </form>
       
 

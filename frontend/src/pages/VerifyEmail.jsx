@@ -12,6 +12,7 @@ const VerifyEmailPage = () => {
   const [canResend, setCanResend] = useState(false);
   const [email, setEmail] = useState("");
   const [wrongOtp, setWrongOtp] =useState(0);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const {backendUrl, getUserData, initializeSocket} =useContext(AppContent);
@@ -29,6 +30,7 @@ const VerifyEmailPage = () => {
   }, [resendTimer]);
 
   const sendingOtp =async()=>{
+    setLoading(true);
     try {
       axios.defaults.withCredentials = true;
       const {data} =await axios.post(backendUrl+'api/auth/send-verify-otp', {email:email})
@@ -41,6 +43,7 @@ const VerifyEmailPage = () => {
     } catch (error) {
       toast.error(error.message)
     }
+    setLoading(false);
   }
 
   useEffect(() => {
@@ -170,12 +173,12 @@ const VerifyEmailPage = () => {
           <div className="flex justify-center mb-8">
             <p className="font-poppins text-md text-gray-600" >Haven't got the code? &nbsp;</p>
             <p
-              onClick={canResend ? handleResendCode : undefined}
-              className={`font-poppins underline text-md ${
-                canResend ? "cursor-pointer text-gray-600 hover:text-gray-800" : "cursor-not-allowed text-gray-400"
+              onClick={canResend && !loading ? handleResendCode : undefined}
+              className={`font-poppins text-md ${
+                loading? "cursor-not-allowed text-gray-400" : canResend ? "underline cursor-pointer text-gray-600 hover:text-gray-800" : "underline cursor-not-allowed text-gray-400"
               }`}
             >
-              {canResend ? "Resend Code" : `Resend in ${resendTimer}s`}
+              {loading? 'Sending OTP...' : canResend? "Resend Code" : `Resend in ${resendTimer}s`}
             </p>
           </div>
 

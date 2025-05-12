@@ -9,6 +9,7 @@ import SaveButton from '../../components/SaveButton';
 import FilterStatusModal from '../../components/FilterStatusModal';
 import { AppContent } from '@/context/AppContext';
 import axios from 'axios';
+import Loading from '@/components/Loading';
 
 const CompManagement = () => {
   const cols = ["id", "NAME", "EMAIL","PHONE NUMBER", "STATUS"];
@@ -145,7 +146,7 @@ const CompManagement = () => {
 
   return (
     <>
-    {isLoading? <div className='bg-center'>Loading...</div> :
+    {isLoading? <div className='m-auto'><Loading></Loading></div> :
     <div>
       <h1 className='md:ml-20 mt-20 mb-3 font-medium text-4xl font-kanit p-5 pb-0'>
         {competitionType} Competition

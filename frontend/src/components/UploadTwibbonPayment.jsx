@@ -13,16 +13,24 @@ function UploadTwibbonPayment({isOpen, onClose, onCloseParent, competition}) {
     const [paymentImage, setPaymentImage] = useState(null);
     const [twibbonImageName, setTwibbonImageName] = useState('');
     const [paymentImageName, setPaymentImageName] = useState('');
+    const [loading, setLoading] = useState(false);
     const {userData, backendUrl, uploadImage} = useContext(AppContent);
 
     const handleSubmit=async(e)=>{
+        setLoading(true);
         e.preventDefault();
 
         const twibbonLink = await uploadImage(twibbonImage);
-        if(twibbonLink === '') return;
+        if(twibbonLink === ''){
+            setLoading(false);
+            return;
+        } 
 
         const paymentLink = await uploadImage(paymentImage);
-        if(paymentLink === '') return;
+        if(paymentLink === ''){
+            setLoading(false);
+            return;
+        }
 
         const formData = {
             UserId: userData.id,
@@ -41,6 +49,7 @@ function UploadTwibbonPayment({isOpen, onClose, onCloseParent, competition}) {
         } catch(err){
             alert("Error!");
         }
+        setLoading(false);
     }
 
   return (
@@ -67,10 +76,15 @@ function UploadTwibbonPayment({isOpen, onClose, onCloseParent, competition}) {
                     <UploadImage image={paymentImage} setImage={setPaymentImage} imageName={paymentImageName} setImageName={setPaymentImageName} inputId={'payment-upload'}/>
 
                     <button 
-                        className="mt-10 w-30 h-9 bg-red-600 cursor-pointer hover:bg-red-700 shadow-md font-poppins font-semibold rounded-md text-white text-center block"
+                        className={`${loading? 'cursor-not-allowed': 'cursor-pointer'} mt-10 w-30 h-9 bg-red-600 hover:bg-red-700 shadow-md font-poppins font-semibold rounded-md text-white text-center block`}
                         onClick={handleSubmit}
                     >
-                        Submit
+                        {loading? 
+                        <svg className="animate-spin m-auto h-6 w-6 text-white" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                        </svg>
+                    :'Submit'}
                     </button>
                 </div>
             </div>

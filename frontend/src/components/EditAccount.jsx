@@ -57,12 +57,14 @@ export const EditAccount = ({isOpen, setIsOpen, userName, mandarinName, dateOfBi
     const [institutionText, setInstitutionText] = useState(institution);
     const [image, setImage] = useState(studentCardUrl);
     const [imageName, setImageName] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const dateInputRef = useRef(null);
     const {backendUrl, getUserData, uploadImage} = useContext(AppContent);
 
 
     const applyChanges = async() => {
+        setLoading(true);
         try {
             let imageUrl = '';
 
@@ -96,6 +98,7 @@ export const EditAccount = ({isOpen, setIsOpen, userName, mandarinName, dateOfBi
             console.error("error:", error);
             toast.error(error.response?.data?.message || error.message || "Edit failed");
         }
+        setLoading(false);
     }
 
     return(
@@ -156,7 +159,14 @@ export const EditAccount = ({isOpen, setIsOpen, userName, mandarinName, dateOfBi
                         <UploadImage inputId={'img-upload'} image={image} imageName={imageName} setImage={setImage} setImageName={setImageName} />
                     </div>
                 </div>
-                <button className='bg-red-600 shadow-md mt-8 mb-8 transition ease duration-200 rounded-md hover:!bg-red-700 text-white cursor-pointer py-2 px-3 w-fit mx-auto font-poppins font-semibold text-sm' onClick={() => {applyChanges()}}>Save Changes</button>
+                <button className={`${loading? 'cursor-not-allowed': 'cursor-pointer'} bg-red-600 shadow-md mt-8 mb-8 transition ease duration-200 rounded-md hover:!bg-red-700 text-white py-2 px-3 w-fit mx-auto font-poppins font-semibold text-md`} onClick={() => {applyChanges()}}>
+                    {loading? 
+                        <svg className="animate-spin h-4 w-4 text-white" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                        </svg>
+                    :'Save Changes'}
+                </button>
             </div>
         </Modal>
     );

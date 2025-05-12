@@ -24,6 +24,7 @@ const AdminTicketDetails = () => {
   const [fetchNum, setFetchNum] = useState(0);
   const {backendUrl, socket,initializeSocket, uploadImage} = useContext(AppContent);
   const [isLoading, setIsLoading] =useState(true);
+  const [msgLoading, setMsgLoading] = useState(false);
 
   const messagesEndRef = useRef(null);
   useEffect(() => {
@@ -69,6 +70,7 @@ const AdminTicketDetails = () => {
 
 
   const handleSend = async (e) => {
+    setMsgLoading(true);
     e.preventDefault();
     axios.defaults.withCredentials = true;
 
@@ -100,6 +102,7 @@ const AdminTicketDetails = () => {
         console.error("Message send error:", error);
         toast.error(error.response?.data?.message || error.message || "Send message failed");
     }
+    setMsgLoading(false);
 };
 
 // Fetch messages and attach admin names
@@ -294,9 +297,14 @@ const fetchMessagesWithAdminNames = async () => {
               
               <Button 
                 type='submit'
-                className="px-6 py-5 text-md bg-white text-slate-500 border shadow-md border-slate-300 hover:bg-gray-100 cursor-pointer sm:ml-4"
+                className={`${msgLoading? 'cursor-not-allowed': 'cursor-pointer'} px-6 py-5 text-md bg-white text-slate-500 border shadow-md border-slate-300 hover:bg-gray-100 sm:ml-4`}
               >
-                Send <FontAwesomeIcon icon={faPaperPlane} />
+                {msgLoading? 
+                <svg className="animate-spin h-6 w-6 text-slate-500" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                </svg>
+                : <> Send <FontAwesomeIcon icon={faPaperPlane} /> </> }
               </Button>
             </div>            
         </CardContent>

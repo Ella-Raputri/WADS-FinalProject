@@ -102,6 +102,8 @@ const Navbar = () => {
                       ${location.pathname === item.href ? 'underline decoration-2 font-bold' : ''}
                       ${(location.pathname=='/usernewticket' && item.href==='/userhelp')?  'underline decoration-2 font-bold' : ''}
                       ${(location.pathname=='/userticketdetails' && item.href==='/userhelp')?  'underline decoration-2 font-bold' : ''}
+                      ${(location.pathname=='/userticketdetails' && item.href==='/adminticket')?  'underline decoration-2 font-bold' : ''}
+                      ${(location.pathname=='/adminticketdetails' && item.href==='/adminticket')?  'underline decoration-2 font-bold' : ''}
                       ${(location.pathname=='/adminparticipantdetails' && item.href==='/admincomp')?  'underline decoration-2 font-bold' : ''}`
                     }
                     >
@@ -147,6 +149,8 @@ const Navbar = () => {
                   ${location.pathname === item.href ? 'underline decoration-2 font-bold' : ''}
                       ${(location.pathname=='/usernewticket' && item.href==='/userhelp')?  'underline decoration-2 font-bold' : ''}
                       ${(location.pathname=='/userticketdetails' && item.href==='/userhelp')?  'underline decoration-2 font-bold' : ''}
+                      ${(location.pathname=='/userticketdetails' && item.href==='/adminticket')?  'underline decoration-2 font-bold' : ''}
+                      ${(location.pathname=='/adminticketdetails' && item.href==='/adminticket')?  'underline decoration-2 font-bold' : ''}
                       ${(location.pathname=='/adminparticipantdetails' && item.href==='/admincomp')?  'underline decoration-2 font-bold' : ''}`}
                 >
                   {item.name}

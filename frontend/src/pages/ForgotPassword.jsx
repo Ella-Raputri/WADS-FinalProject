@@ -17,6 +17,7 @@ const ForgotPasswordPage = () => {
   const [canResend, setCanResend] = useState(false);
   const [showPassword, setShowPassword] =useState(false);
   const [wrongOtp, setWrongOtp] =useState(0);
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
   const {backendUrl} =useContext(AppContent);
@@ -59,6 +60,7 @@ const ForgotPasswordPage = () => {
   }, [showOtp]);
 
   const sendingOtp =async()=>{
+    setLoading(true);
     try {
       const {data} =await axios.post(backendUrl+'api/auth/send-reset-otp', {email})
       if(data.success){
@@ -71,6 +73,7 @@ const ForgotPasswordPage = () => {
     } catch (error) {
       toast.error(error.response?.data?.message)
     }
+    setLoading(false);
   }
 
   const handleResetRequest = async(e) => {
@@ -181,9 +184,14 @@ const ForgotPasswordPage = () => {
               <div className="flex justify-center">
                 <button
                   type="submit"
-                  className="w-full cursor-pointer shadow-md font-semibold rounded-md font-poppins bg-red-600 py-3 text-lg text-white hover:bg-red-700 focus:outline-none"
+                  className={`${loading? 'cursor-not-allowed': 'cursor-pointer'} w-full shadow-md font-semibold rounded-md font-poppins bg-red-600 py-3 text-lg text-white hover:bg-red-700 focus:outline-none`}
                 >
-                  Send OTP to Email
+                  {loading? 
+                    <svg className="mx-auto animate-spin h-6 w-6 text-white" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    :'Send OTP to Email'}
                 </button>
               </div>
             </form>
@@ -214,12 +222,12 @@ const ForgotPasswordPage = () => {
               <div className="flex justify-center mb-8">
                 <p className="font-poppins text-md text-gray-600" >Haven't got the code? &nbsp;</p>
                 <p
-                  onClick={canResend ? handleResendCode : undefined}
-                  className={`font-poppins underline text-md ${
-                    canResend ? "cursor-pointer text-gray-600 hover:text-gray-800" : "cursor-not-allowed text-gray-400"
+                  onClick={canResend && !loading ? handleResendCode : undefined}
+                  className={`font-poppins text-md ${
+                    loading? "cursor-not-allowed text-gray-400" : canResend ? "underline cursor-pointer text-gray-600 hover:text-gray-800" : "underline cursor-not-allowed text-gray-400"
                   }`}
                 >
-                  {canResend ? "Resend Code" : `Resend in ${resendTimer}s`}
+                  {loading? 'Sending OTP...' : canResend? "Resend Code" : `Resend in ${resendTimer}s`}
                 </p>
               </div>
 

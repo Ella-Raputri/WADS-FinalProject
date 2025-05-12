@@ -8,6 +8,7 @@ import FilterModal from '../../components/FilterModal';
 import SaveButton from '../../components/SaveButton';
 import { AppContent } from '@/context/AppContext';
 import axios from 'axios';
+import Loading from '@/components/Loading';
 
 const TicketManagement = () => {
   const cols = ["SUBJECT", "CREATED AT", "UPDATED AT", "PRIORITY", "STATUS"];
@@ -174,6 +175,8 @@ const TicketManagement = () => {
 
   return (
     <>
+      {loading? <Loading></Loading> :
+      <>
       <h1 className='md:ml-20 mt-20 mb-3 font-medium text-4xl font-kanit p-5 pb-0'>
         Ticket Management
       </h1>
@@ -215,7 +218,8 @@ const TicketManagement = () => {
       </div>
 
       {openFilter && <FilterModal isOpen={openFilter} onClose={()=>setOpenFilter(false)} onApply={handleFilter} currFilters={currentFilter}/>}
-    </>
+      </>}
+      </>
   );
 };
 

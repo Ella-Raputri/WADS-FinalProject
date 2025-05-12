@@ -118,11 +118,9 @@ export const AppContextProvider = (props) => {
         });
 
         if(!uploadData?.imageUrl) {
-            toast.error("Image upload failed");
             return '';
         }
-
-        return uploadData.imageUrl;
+        else return uploadData.imageUrl;
     }
 
 

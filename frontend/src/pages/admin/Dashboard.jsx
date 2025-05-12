@@ -14,6 +14,7 @@ import axios from "axios";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import { convertToCSV, convertToTimeZone } from "@/lib/utils";
+import Loading from "@/components/Loading";
 
 const Dashboard = () => {
   const {userData, backendUrl, socket, initializeSocket, onlineUsersRef} = useContext(AppContent);
@@ -28,6 +29,7 @@ const Dashboard = () => {
   const [donutChartData, setDonutChartData] = useState([]);
   const [horizBarChartData, setHorizBarChartData] = useState([]);
   const [agentTableData, setAgentTableData] = useState([]);
+  const [loading, setLoading] = useState(false);
   
   const priorityColors = {
     Urgent: { color: "#DC2626", darkColor: "#B91C1C" },
@@ -108,6 +110,7 @@ const Dashboard = () => {
   }, [userData]);
   
   const handleDateChange = async (newDate) => {
+    setLoading(true);
     setDate(newDate);
     const formattedFull = convertToTimeZone(newDate.toISOString()); // example: "11-04-2025 11:10:03"
 
@@ -171,6 +174,7 @@ const Dashboard = () => {
       toast.error("Error fetching data:", error);
       console.log(error);
     }
+    setLoading(false);
   };
 
   const handleDownload = async () => {
@@ -196,7 +200,7 @@ const Dashboard = () => {
   return (
     <>
     
-    {
+    {loading? <Loading></Loading> :
     <>
       <div className="flex flex-col sm:flex-row items-center justify-between px-6 py-4 lg:ml-15 ml-12 mt-25 mb-10 mr-15 space-y-4 sm:space-y-0">
         <h1 className="text-3xl lg:text-5xl font-kanit font-medium flex-grow text-center sm:text-left">
