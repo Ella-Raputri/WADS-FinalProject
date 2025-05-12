@@ -33,6 +33,25 @@ const LoginRegisterPage = () => {
 
   const dobRef = useRef(null);
   const [showPassword, setShowPassword] =useState(false);  
+  const passwordRef = useRef(null);
+
+  const fullNameRef = useRef(null);
+  const mandarinNameRef = useRef(null);
+  const addressRef = useRef(null);
+  const phoneRef = useRef(null);
+  const emailRef = useRef(null);
+  const institutionRef = useRef(null);
+  const passwordRef2 = useRef(null);
+  // const dobRef = useRef(null);
+  const genderRef = useRef(null);
+
+  // KeyDown handler
+  const handleKeyDown = (e, nextRef) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      nextRef?.current?.focus();
+    }
+  };
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -93,6 +112,14 @@ const LoginRegisterPage = () => {
     }
 };
 
+  const handleKeyDownLogin = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault(); // Optional: prevent form submit
+      passwordRef.current?.focus();
+    }
+  };
+
+
   return (
     <div className="relative flex min-h-screen w-full items-center justify-center bg-cover bg-center px-4 py-8" style={{ backgroundImage: "url('/src/assets/Bg.webp')" }}>
       <div className="absolute inset-0 bg-black/30 backdrop-blur-xl"></div>
@@ -149,7 +176,7 @@ const LoginRegisterPage = () => {
                     className="p-2 font-poppins w-full pr-10 bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
                 />  
                 <button
-                  type="button"
+                  type="submit"
                   className="absolute cursor-pointer right-2 top-1.5 text-gray-500 w-5 h-5"
                   onClick={() => setShowPassword(!showPassword)}
                 >
@@ -286,7 +313,7 @@ const LoginRegisterPage = () => {
           ${isLogin ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full pointer-events-none"}`} style={{scrollbarWidth:"none", scrollbarColor:"#ccc transparent"}}>
           <p className="mb-4 text-center font-poppins text-2xl font-semibold md:text-3xl">USER LOGIN</p>
           <form onSubmit={handleLogin} className="space-y-6 mt-6">
-            <InputField id="email" type="email" value={emailLogin} onChange={(e) => setEmailLogin(e.target.value)} placeholder="Email" />
+            <InputField id="email" type="email" value={emailLogin} onChange={(e) => setEmailLogin(e.target.value)} placeholder="Email" onKeyDown={handleKeyDownLogin}/>
             <p className="ml-1 mb-2 font-semibold font-poppins text-md xl:text-lg">Password</p>
             <div className="w-full relative">
               <input
@@ -296,6 +323,7 @@ const LoginRegisterPage = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder='Password'
+                  ref={passwordRef}
                   className="p-2 font-poppins w-full pr-10 bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
               />  
               <button
@@ -320,14 +348,60 @@ const LoginRegisterPage = () => {
           ${isLogin ? "opacity-0 translate-x-full pointer-events-none" : "opacity-100 translate-x-0"}`} style={{scrollbarWidth:"thin", scrollbarColor:"#ccc transparent"}}>
           <p className="mb-4 text-center font-poppins text-2xl font-semibold md:text-3xl">USER SIGNUP</p>
           <form onSubmit={handleSignUp} className="space-y-6 mt-6">
-            {["fullName", "mandarinName", "address", "phone", "email", "institution"].map((id) => (
-              <InputField key={id} id={id} type={"text"} value={formData[id]} onChange={handleChange} 
-              placeholder={
-                id === "mandarinName" ? "Chinese characters or  -" :
-                id === 'phone'? "Starts with +628XX or 08XX":
-                ''
-              } />
-            ))}
+            <InputField
+              id="fullName"
+              type="text"
+              value={formData.fullName}
+              onChange={handleChange}
+              placeholder=""
+              ref={fullNameRef}
+              onKeyDown={(e) => handleKeyDown(e, mandarinNameRef)}
+            />
+            <InputField
+              id="mandarinName"
+              type="text"
+              value={formData.mandarinName}
+              onChange={handleChange}
+              placeholder="Chinese characters or -"
+              ref={mandarinNameRef}
+              onKeyDown={(e) => handleKeyDown(e, addressRef)}
+            />
+            <InputField
+              id="address"
+              type="text"
+              value={formData.address}
+              onChange={handleChange}
+              placeholder=""
+              ref={addressRef}
+              onKeyDown={(e) => handleKeyDown(e, phoneRef)}
+            />
+            <InputField
+              id="phone"
+              type="text"
+              value={formData.phone}
+              onChange={handleChange}
+              placeholder="Starts with +628XX or 08XX"
+              ref={phoneRef}
+              onKeyDown={(e) => handleKeyDown(e, emailRef)}
+            />
+            <InputField
+              id="email"
+              type="text"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder=""
+              ref={emailRef}
+              onKeyDown={(e) => handleKeyDown(e, institutionRef)}
+            />
+            <InputField
+              id="institution"
+              type="text"
+              value={formData.institution}
+              onChange={handleChange}
+              placeholder=""
+              ref={institutionRef}
+              onKeyDown={(e) => handleKeyDown(e, passwordRef2)}
+            />
 
               <p className="ml-1 mb-2 font-semibold font-poppins text-md xl:text-lg">Password</p>
               <div className="w-full relative">
@@ -338,6 +412,8 @@ const LoginRegisterPage = () => {
                     value={formData.password}
                     onChange={handleChange}
                     placeholder='Min 8 chars, letter & number'
+                    ref={passwordRef2}
+                    onKeyDown={(e) => handleKeyDown(e, dobRef)}
                     className="p-2 font-poppins w-full pr-10 bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
                 />  
                 <button
@@ -360,6 +436,7 @@ const LoginRegisterPage = () => {
                   value={formData.dob}
                   onChange={handleChange}
                   ref={dobRef}
+                  onKeyDown={(e) => handleKeyDown(e, genderRef)}
                 />
                 <button
                   type="button"
@@ -376,6 +453,7 @@ const LoginRegisterPage = () => {
                 id="gender"
                 value={formData.gender}
                 onChange={handleChange}
+                ref={genderRef}
                 className="w-full font-poppins bg-white placeholder:text-slate-400 text-slate-700 text-md border border-slate-300 rounded-md pl-3 pr-5 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow p-2"
               >
                 <option value="">Select Gender</option>
