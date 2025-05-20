@@ -24,20 +24,6 @@ const competitionRegistrationRouter = express.Router();
  */
 competitionRegistrationRouter.get("/getUpcomingCompetitions", getUpcomingCompetitions)
 
-// /**
-//  * @swagger
-//  * /api/competitionRegistration/getAll:
-//  *   get:
-//  *     summary: Get all registered competitions
-//  *     tags: [CompetitionRegistration]
-//  *     responses:
-//  *       200:
-//  *         description: Registered competitions list
-//  *       500:
-//  *         description: Internal Server Error
-//  */
-// competitionRegistrationRouter.get("/getAll", getRegisteredCompetitions)
-
 /**
  * @swagger
  * /api/competitionRegistration/getUserRegistrationById/{UserId}/{CompetitionId}:
@@ -170,6 +156,25 @@ competitionRegistrationRouter.delete("/:registrationId", deleteCompetitionRegist
  */
 competitionRegistrationRouter.put("/:registrationId", editCompetitionRegistration);
 
+/**
+ * @swagger
+ * /api/competitionRegistration/{compTypeId}:
+ *   get:
+ *     summary: Get all competition registrations by competition type ID
+ *     tags: [CompetitionRegistration]
+ *     parameters:
+ *       - in: path
+ *         name: compTypeId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the competition type
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved competition registrations
+ *       500:
+ *         description: Internal Server Error
+ */
 competitionRegistrationRouter.get("/:compTypeId", getCompetitionRegistrations);
 
 export default competitionRegistrationRouter;   

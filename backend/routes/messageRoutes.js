@@ -12,7 +12,7 @@ const messageRouter = express.Router();
 
 /**
  * @swagger
- * /getParticipantAdminMessage:
+ * /api/message/getParticipantAdminMessage:
  *   get:
  *     tags: [Message]
  *     summary: Get all messages between participant and admin
@@ -47,7 +47,7 @@ messageRouter.get('/getParticipantAdminMessage',userAuth, getAllParticipantAdmin
 
 /**
  * @swagger
- * /sendParticipantAdminMessage:
+ * /api/message/sendParticipantAdminMessage:
  *   post:
  *     tags: [Message]
  *     summary: Participant sends a message to admin
@@ -86,7 +86,7 @@ messageRouter.post('/sendParticipantAdminMessage',userAuth, sendParticipantAdmin
 
 /**
  * @swagger
- * /sendParticipantSystemMessage:
+ * /api/message/sendParticipantSystemMessage:
  *   post:
  *     tags: [Message]
  *     summary: System sends message to participant
@@ -119,7 +119,7 @@ messageRouter.post('/sendParticipantSystemMessage', userAuth, sendParticipantSys
 
 /**
  * @swagger
- * /getAdminCollabMessage:
+ * /api/message/getAdminCollabMessage:
  *   get:
  *     tags: [Message]
  *     summary: Get all messages between admin and collaborator
@@ -140,7 +140,7 @@ messageRouter.get('/getAdminCollabMessage',userAuth, getAllCollabAdminMessage);
 
 /**
  * @swagger
- * /sendAdminCollabMessage:
+ * /api/message/sendAdminCollabMessage:
  *   post:
  *     tags: [Message]
  *     summary: Admin sends a message to collaborator
@@ -175,7 +175,7 @@ messageRouter.post('/sendAdminCollabMessage',userAuth, sendCollabAdminMessage);
 
 /**
  * @swagger
- * /sendChatbotMessage:
+ * /api/message/sendChatbotMessage:
  *   post:
  *     tags: [Message]
  *     summary: Send a message to chatbot
@@ -206,7 +206,7 @@ messageRouter.post('/sendChatbotMessage', sendChatbotMessage);
 
 /**
  * @swagger
- * /fetchChatbotMessage:
+ * /api/message/fetchChatbotMessage:
  *   get:
  *     tags: [Message]
  *     summary: Fetch all messages sent to chatbot by user
@@ -227,7 +227,7 @@ messageRouter.get('/fetchChatbotMessage', getAllChatbotMessage);
 
 /**
  * @swagger
- * /generateChatbotResponse:
+ * /api/message/generateChatbotResponse:
  *   post:
  *     tags: [Message]
  *     summary: Generate response from chatbot (via RAG or Gemini)

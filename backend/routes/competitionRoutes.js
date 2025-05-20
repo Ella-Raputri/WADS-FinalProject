@@ -12,7 +12,7 @@ const compRouter = express.Router();
 
 /**
  * @swagger
- * /getCompetitionIdByName:
+ * /api/competition/getCompetitionIdByName:
  *   get:
  *     tags:
  *       - Competition
@@ -45,7 +45,7 @@ compRouter.get('/getCompetitionIdByName', getCompetitionIdByName);
 
 /**
  * @swagger
- * /getCompetitionDetails:
+ * /api/competition/getCompetitionDetails:
  *   get:
  *     tags:
  *       - Competition
@@ -78,7 +78,7 @@ compRouter.get('/getCompetitionDetails', getCompetitionDetails);
 
 /**
  * @swagger
- * /getAllCompetitions:
+ * /api/competition/getAllCompetitions:
  *   get:
  *     tags:
  *       - Competition

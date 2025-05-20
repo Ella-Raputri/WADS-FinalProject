@@ -12,7 +12,7 @@ const ticketRouter = express.Router();
 
 /**
  * @swagger
- * /uploadNewTicket:
+ * /api/ticket/uploadNewTicket:
  *   post:
  *     tags: [Ticket]
  *     summary: Upload a new support ticket
@@ -52,7 +52,7 @@ ticketRouter.post('/uploadNewTicket',userAuth, uploadNewTicket);
 
 /**
  * @swagger
- * /getAllTickets:
+ * /api/ticket/getAllTickets:
  *   get:
  *     tags: [Ticket]
  *     summary: Get all tickets for a user
@@ -76,7 +76,7 @@ ticketRouter.get('/getAllTickets',userAuth, getAllTickets);
 
 /**
  * @swagger
- * /getTicketByCompId:
+ * /api/ticket/getTicketByCompId:
  *   get:
  *     tags: [Ticket]
  *     summary: Get all tickets by competition type
@@ -97,7 +97,7 @@ ticketRouter.get('/getTicketByCompId', userAuth, getAllTicketsByCompetitionType)
 
 /**
  * @swagger
- * /updateTicketStatus:
+ * /api/ticket/updateTicketStatus:
  *   put:
  *     tags: [Ticket]
  *     summary: Update ticket status
@@ -127,7 +127,7 @@ ticketRouter.put('/updateTicketStatus', userAuth, updateTicketStatus);
 
 /**
  * @swagger
- * /getUpdatedAtByTicketId:
+ * /api/ticket/getUpdatedAtByTicketId:
  *   get:
  *     tags: [Ticket]
  *     summary: Get the last updated time of a ticket
@@ -150,7 +150,7 @@ ticketRouter.get('/getUpdatedAtByTicketId', userAuth, getUpdatedAtByTicketId);
 
 /**
  * @swagger
- * /rateTicket:
+ * /api/ticket/rateTicket:
  *   post:
  *     tags: [Ticket]
  *     summary: Submit a rating for a ticket
@@ -186,7 +186,7 @@ ticketRouter.post('/rateTicket', userAuth, updateRateTicket);
 
 /**
  * @swagger
- * /getRatingTicket:
+ * /api/ticket/getRatingTicket:
  *   get:
  *     tags: [Ticket]
  *     summary: Fetch rating for a specific ticket

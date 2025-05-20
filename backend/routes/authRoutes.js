@@ -12,7 +12,7 @@ const authRouter = express.Router();
 
 /**
  * @swagger
- * /register:
+ * /api/auth/register:
  *   post:
  *     tags:
  *       - Authentication
@@ -108,7 +108,7 @@ authRouter.post('/register', register);
 
 /**
  * @swagger
- * /login:
+ * /api/auth/login:
  *   post:
  *     tags:
  *       - Authentication
@@ -191,7 +191,7 @@ authRouter.post('/logout', logout);
 
 /**
  * @swagger
- * /send-verify-otp:
+ * /api/auth/send-verify-otp:
  *   post:
  *     tags:
  *       - Authentication
@@ -254,7 +254,7 @@ authRouter.post('/send-verify-otp', sendVerifyOtp);
 
 /**
  * @swagger
- * /verify-account:
+ * /api/auth/verify-account:
  *   post:
  *     tags:
  *       - Authentication
@@ -341,7 +341,7 @@ authRouter.get('/is-auth', userAuth, isAuthenticated);
 
 /**
  * @swagger
- * /send-reset-otp:
+ * /api/auth/send-reset-otp:
  *   post:
  *     tags:
  *       - Authentication
@@ -404,7 +404,7 @@ authRouter.post('/send-reset-otp', sendResetOtp);
 
 /**
  * @swagger
- * /verify-otp-reset:
+ * /api/auth/verify-otp-reset:
  *   post:
  *     tags:
  *       - Authentication
@@ -472,7 +472,7 @@ authRouter.post('/verify-otp-reset', verifyOtpReset);
 
 /**
  * @swagger
- * /reset-password:
+ * /api/auth/reset-password:
  *   post:
  *     tags:
  *       - Authentication

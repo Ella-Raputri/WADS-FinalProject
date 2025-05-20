@@ -13,7 +13,7 @@ const userRouter = express.Router();
 
 /**
  * @swagger
- * /data:
+ * /api/user/data:
  *   get:
  *     tags: [User]
  *     summary: Get logged-in user's data
@@ -69,7 +69,7 @@ userRouter.get('/data', userAuth, getUserData);
 
 /**
  * @swagger
- * /fetchUserDetails:
+ * /api/user/fetchUserDetails:
  *   get:
  *     tags: [User]
  *     summary: Get user data by user ID
@@ -132,7 +132,7 @@ userRouter.get('/fetchUserDetails', userAuth, getUserDataFromId);
 
 /**
  * @swagger
- * /editUserDetails:
+ * /api/user/editUserDetails:
  *   put:
  *     tags: [User]
  *     summary: Edit user details
