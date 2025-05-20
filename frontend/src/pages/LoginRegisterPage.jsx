@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import InputField from "@/components/InputField";
 import { io } from "socket.io-client";
+import { FaGoogle } from "react-icons/fa";
 
 const LoginRegisterPage = () => {
   const navigate = useNavigate();
@@ -208,6 +209,14 @@ const LoginRegisterPage = () => {
                   Login
                 </button>
               </div>
+
+              <div className="flex justify-center mt-10 font-poppins">
+              <button onClick={handleLoginGoogle}
+                className='flex items-center gap-2 cursor-pointer px-15 transition ease duration-150 rounded-md bg-red-600 py-2 text-lg text-white hover:bg-red-700 shadow-md font-semibold focus:outline-none'>
+                <FaGoogle />
+                <span>Sign in with Google</span>
+              </button>
+            </div>
             </form>
           </div>
         </div>
@@ -301,6 +310,14 @@ const LoginRegisterPage = () => {
                   Register
                 </button>
               </div>
+
+              <div className="flex justify-center mt-10 font-poppins">
+              <button onClick={handleLoginGoogle}
+                className='flex items-center gap-2 cursor-pointer px-15 transition ease duration-150 rounded-md bg-red-600 py-2 text-lg text-white hover:bg-red-700 shadow-md font-semibold focus:outline-none'>
+                <FaGoogle />
+                <span>Sign up with Google</span>
+              </button>
+            </div>
             </form>
           </div>
         </div>
@@ -351,6 +368,14 @@ const LoginRegisterPage = () => {
             </div>
             <div className="flex justify-center">
               <button type="submit" className="px-15 transition ease duration-150 rounded-md bg-red-600 py-2 text-lg text-white hover:bg-red-700 focus:outline-none cursor-pointer shadow-md font-semibold">Login</button>
+            </div>
+
+            <div className="flex justify-center mt-10">
+              <button onClick={handleLoginGoogle}
+                className='flex items-center gap-2 cursor-pointer px-15 transition ease duration-150 rounded-md bg-red-600 py-2 text-lg text-white hover:bg-red-700 shadow-md font-semibold focus:outline-none'>
+                <FaGoogle />
+                <span>Sign in with Google</span>
+              </button>
             </div>
           </form>
         </div>
@@ -486,17 +511,23 @@ const LoginRegisterPage = () => {
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                 </svg>
                 :'Sign up'}
-                </button>
+              </button>
             </div>
+            
+            <div className="flex justify-center mt-10">
+              <button onClick={handleLoginGoogle}
+                className='flex items-center gap-2 cursor-pointer px-15 transition ease duration-150 rounded-md bg-red-600 py-2 text-lg text-white hover:bg-red-700 shadow-md font-semibold focus:outline-none'>
+                <FaGoogle />
+                <span>Sign up with Google</span>
+              </button>
+            </div>
+            
           </form>
         </div>
         
       </div>
 
-      <button className="bg-white absolute top-20 left-20 z-1000 text-slate-500 border shadow-md border-slate-300 flex items-center justify-center rounded-full hover:cursor-pointer hover:bg-gray-100"
-        onClick={handleLoginGoogle}
-        >Sign in with google instead
-      </button>
+      
     </div>
   );
 };
