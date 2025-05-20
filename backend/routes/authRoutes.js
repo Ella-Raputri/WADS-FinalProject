@@ -1,6 +1,7 @@
 import express from 'express';
-import { isAuthenticated, login, logout, register, resetPassword, sendResetOtp, sendVerifyOtp, verifyEmail, verifyOtpReset } from '../controller/authController.js';
+import { handleGoogleCallback, isAuthenticated, login, logout, register, resetPassword, sendResetOtp, sendVerifyOtp, verifyEmail, verifyOtpReset } from '../controller/authController.js';
 import userAuth from '../middleware/userAuth.js';
+import passport from 'passport';
 
 const authRouter = express.Router();
 /**
@@ -537,6 +538,17 @@ authRouter.post('/verify-otp-reset', verifyOtpReset);
  *                   type: string
  */
 authRouter.post('/reset-password', resetPassword);
+
+
+
+authRouter.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+// Google OAuth callback
+authRouter.get(
+    '/google/callback',
+    passport.authenticate('google', { failureRedirect: '/' }),
+    handleGoogleCallback
+);
 
 
 export default authRouter

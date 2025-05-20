@@ -23,6 +23,7 @@ import VerifyEmailPage from './pages/VerifyEmail';
 import ForgotPasswordPage from './pages/ForgotPassword.jsx';
 import { AppContent } from './context/AppContext';
 import ProtectedRoute from './lib/protectedRoute';
+import CompleteInfoPage from './pages/participant/CompleteInfoPage';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -54,6 +55,7 @@ function MainLayout() {
     { path: "/adminticket" },
     { path: "/adminparticipantdetails" },
     { path: "/adminticketdetails" },
+    { path: "/completeinfo"}
   ];
   
   const location = useLocation();
@@ -91,22 +93,15 @@ function MainLayout() {
               </ProtectedRoute>
             }
           />
-          {/* <Route
-            path="/usercomp"
+          <Route
+            path="/completeinfo"
             element={
               <ProtectedRoute allowedRoles={["participant"]}>
-                <CompetitionPage />
+                <CompleteInfoPage />
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/userhelp"
-            element={
-              <ProtectedRoute allowedRoles={["participant"]}>
-                <HelpPage />
-              </ProtectedRoute>
-            }
-          /> */}
+          
           <Route
             path="/usernewticket"
             element={

@@ -333,3 +333,24 @@ export const resetPassword = async(req,res)=>{
         
     }
 }
+
+export const handleGoogleCallback = (req, res) => {
+    if (!req.user) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+    }
+
+    // Issue JWT for the authenticated user
+    const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, {
+        expiresIn: '7d',
+    });
+
+    res.cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    // Redirect to frontend after successful login
+    res.redirect('http://localhost:5173/userhome');
+};

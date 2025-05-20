@@ -41,7 +41,6 @@ const Navbar = () => {
         toast.success(data.message)
         navigate('/')
       }
-      else toast.error(data.message)
 
     } catch (error) {
       console.error(error.message)

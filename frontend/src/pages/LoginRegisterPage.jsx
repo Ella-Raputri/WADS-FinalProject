@@ -125,6 +125,10 @@ const LoginRegisterPage = () => {
     }
   };
 
+  const handleLoginGoogle = () =>{
+    window.location.href = backendUrl+'api/auth/google'
+  }
+
 
   return (
     <div className="relative flex min-h-screen w-full items-center justify-center bg-cover bg-center px-4 py-8" style={{ backgroundImage: "url('/src/assets/Bg.webp')" }}>
@@ -134,6 +138,7 @@ const LoginRegisterPage = () => {
         onClick={() => navigate('/')}>
             <FontAwesomeIcon icon={faChevronLeft} />
         </button>
+
 
       <div className="relative z-10 flex w-full max-w-md flex-col overflow-hidden rounded-lg bg-white shadow-lg lg:hidden">
         <div className="bg-red-600 p-6 text-white">
@@ -485,7 +490,13 @@ const LoginRegisterPage = () => {
             </div>
           </form>
         </div>
+        
       </div>
+
+      <button className="bg-white absolute top-20 left-20 z-1000 text-slate-500 border shadow-md border-slate-300 flex items-center justify-center rounded-full hover:cursor-pointer hover:bg-gray-100"
+        onClick={handleLoginGoogle}
+        >Sign in with google instead
+      </button>
     </div>
   );
 };
