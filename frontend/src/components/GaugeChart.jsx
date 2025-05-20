@@ -3,9 +3,8 @@
 import { useEffect, useState, useRef } from "react";
 import { RadialBarChart, RadialBar, PolarAngleAxis } from "recharts";
 
-const targetPercentage = 90;
 
-export default function GaugeChart() {
+export default function GaugeChart({targetPercentage}) {
   const [chartSize, setChartSize] = useState(400);
   const [percentage, setPercentage] = useState(0);
   const [isVisible, setIsVisible] = useState(false);

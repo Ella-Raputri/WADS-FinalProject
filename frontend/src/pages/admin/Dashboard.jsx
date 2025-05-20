@@ -24,6 +24,7 @@ const Dashboard = () => {
   const [totalParticipants, setTotalParticipants] = useState(0);
   const [firstRespTime, setFirstRespTime] = useState([0,0]);
   const [fullResolveTime, setFullResolveTime] = useState([0,0]);
+  const [custSatisfRate, setCustSatisfRate] = useState(0);
 
   const [vertBarChartData, setVertBarChartData] = useState([]);
   const [donutChartData, setDonutChartData] = useState([]);
@@ -98,8 +99,6 @@ const Dashboard = () => {
     handleDateChange(date);
   }, [])
 
-
-  //TAMBAHIN CODE DI SETIAP PAGE (INITIALIZE SOCKET)
   useEffect(() => {
       if (!userData || !userData.id) return; 
 
@@ -148,6 +147,11 @@ const Dashboard = () => {
       const hours = Math.floor(totalMins / 60); 
       const minutes = Math.round(totalMins % 60);
       setFullResolveTime([hours, minutes]);
+
+      const { data: dataCustSat } = await axios.get(`${backendUrl}api/admindashboard/ratingmetrics`, {
+        params: { date: formattedDate, compTypeId }
+      });
+      setCustSatisfRate(dataCustSat.avgRating);
 
       const { data: dailyChartData } = await axios.get(`${backendUrl}api/admindashboard/receiveresolvebar`, {
         params: { date: formattedDate, compTypeId }
@@ -258,7 +262,7 @@ const Dashboard = () => {
         </div>
         <div className="p-6 bg-white shadow rounded-lg">
           <h2 className="font-kanit font-medium text-2xl mb-4 text-gray-500">Customer Satisfaction Rate</h2>
-          <GaugeChart/>
+          <GaugeChart targetPercentage={custSatisfRate}/>
         </div>
         <div className="p-6 bg-white shadow rounded-lg">
           <h2 className="font-kanit font-medium text-2xl mb-4 text-gray-500">Tickets by Emergency</h2>
