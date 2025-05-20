@@ -1,5 +1,5 @@
 import express from "express";
-import { getAgentTickets, getFirstRespTime, getFullResolveTime, getReceivedResolvedBar, getTicketbyEmergency, getTicketbyStatus, getTotalParticipants, getTotalTicketsInWeek } from "../controller/adminDashboardController.js";
+import { getAgentTickets, getFirstRespTime, getFullResolveTime, getRatingMetrics, getReceivedResolvedBar, getTicketbyEmergency, getTicketbyStatus, getTotalParticipants, getTotalTicketsInWeek } from "../controller/adminDashboardController.js";
 import userAuth from "../middleware/userAuth.js";
 
 const adminDashboardRouter = express.Router();
@@ -177,5 +177,26 @@ adminDashboardRouter.get("/ticketbystatus", userAuth, getTicketbyStatus);
  *         description: Internal Server Error
  */
 adminDashboardRouter.get("/agenttickets", userAuth, getAgentTickets);
+
+/**
+ * @swagger
+ * /api/admindashboard/ratingmetrics:
+ *   get:
+ *     summary: Get average rating percentage metrics
+ *     tags: [AdminDashboard]
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - $ref: '#/components/parameters/date'
+ *       - $ref: '#/components/parameters/compTypeId'
+ *     responses:
+ *       200:
+ *         description: Average rating returned
+ *       400:
+ *         description: Invalid compTypeId format
+ *       500:
+ *         description: Internal Server Error
+ */
+adminDashboardRouter.get("/ratingmetrics", userAuth, getRatingMetrics);
 
 export default adminDashboardRouter;

@@ -1,4 +1,5 @@
 import competitionRegistrationModel from "../models/competitionRegistrationModel.js";
+import ratingModel from "../models/ratingModel.js";
 import ticketModel from "../models/ticketModel.js";
 import mongoose from "mongoose";
 
@@ -448,6 +449,59 @@ export const getAgentTickets = async (req, res) => {
     } 
     catch (error) {
         console.error("Error fetching status ticket chart:", error);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+};
+
+export const getRatingMetrics = async (req, res) => {
+    try {
+        const { date, compTypeId } = req.query;
+        if (!date) {
+            return res.status(400).json({ message: "Date parameter is required" });
+        }
+
+        const selectedDate = new Date(date);
+        const endDate = new Date(selectedDate);
+        endDate.setDate(endDate.getDate() - endDate.getDay() + 6); 
+        endDate.setHours(23, 59, 59, 999); 
+
+        const pipeline = [
+            { $match: {createdAt: { $lte: endDate }}},
+            {
+                $lookup: {
+                    from: "tickets",
+                    localField: "TicketId",
+                    foreignField: "_id",
+                    as: "ticket"
+                },
+            },
+            {   $unwind: "$ticket" }
+        ];
+
+        if (compTypeId) {
+            if (!mongoose.isValidObjectId(compTypeId)) {
+                return res.status(400).json({ message: "Invalid compTypeId format" });
+            }
+            pipeline.push({ 
+                $match: { "ticket.CompTypeId": new mongoose.Types.ObjectId(compTypeId) }
+            });
+        }
+
+        pipeline.push({
+            $group: {
+                _id: "$ticket.CompTypeId",
+                averageRating: { $avg: "$Rating" }
+            }
+        });
+      
+        const result = await ratingModel.aggregate(pipeline);
+        return res.status(200).json({
+            avgRating: result.length > 0 ? (result[0].averageRating)*20 : 0
+        });
+
+    } 
+    catch (error) {
+        console.error("Error fetching rating metrics:", error);
         return res.status(500).json({ message: "Internal Server Error" });
     }
 };
