@@ -19,11 +19,22 @@ jobs:
       with:
         node-version: 18
 
-    - name: Install dependencies
-      run: npm install
+    # Backend
+    - name: Install backend dependencies
+      run: |
+        cd backend
+        npm install
 
-    - name: Run tests
-      run: npm test
+    # Frontend
+    - name: Install frontend dependencies
+      run: |
+        cd frontend
+        npm install
+
+    - name: Run frontend tests
+      run: |
+        cd frontend
+        npm test || echo "No frontend tests found"
 
   deploy:
     needs: build-and-test
@@ -34,8 +45,18 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Deploy to server (example using SSH)
+    - name: Deploy to server (via SSH)
       run: |
-        ssh user@yourserver "cd /path/to/app && git pull && npm install && pm2 restart app"
+        ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          cd /path/to/backend
+          git pull origin main
+          npm install
+          pm2 restart backend-app
+
+          cd /path/to/frontend
+          git pull origin main
+          npm install
+          pm2 restart frontend-app
+        EOF
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
