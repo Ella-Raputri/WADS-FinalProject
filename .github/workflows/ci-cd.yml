@@ -36,27 +36,27 @@ jobs:
         cd frontend
         npm test || echo "No frontend tests found"
 
-  deploy:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+  # deploy:
+  #   needs: build-and-test
+  #   runs-on: ubuntu-latest
+  #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+  #   steps:
+  #   - name: Checkout code
+  #     uses: actions/checkout@v3
 
-    - name: Deploy to server (via SSH)
-      run: |
-        ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-          cd /path/to/backend
-          git pull origin main
-          npm install
-          pm2 restart backend-app
+  #   - name: Deploy to server (via SSH)
+  #     run: |
+  #       ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+  #         cd /path/to/backend
+  #         git pull origin main
+  #         npm install
+  #         pm2 restart backend-app
 
-          cd /path/to/frontend
-          git pull origin main
-          npm install
-          pm2 restart frontend-app
-        EOF
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+  #         cd /path/to/frontend
+  #         git pull origin main
+  #         npm install
+  #         pm2 restart frontend-app
+  #       EOF
+  #     env:
+  #       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
