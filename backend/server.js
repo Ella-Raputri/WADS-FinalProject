@@ -13,6 +13,23 @@ import competitionRegistrationRouter from './routes/competitionRegistrationRoute
 import messageRouter from './routes/messageRoutes.js';
 import {app, server} from './config/socket.js'
 import { swaggerUi, swaggerSpec } from './config/swagger.js';
+import session from 'express-session';
+import passport from 'passport';
+import './config/passport.js'; // import passport config
+
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: process.env.NODE_ENV === "production", // set to true if using HTTPS
+        maxAge: 7 * 24 * 3600 * 1000, // 7 days
+    }
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 const PORT = process.env.PORT || 4000;
 connectDB();

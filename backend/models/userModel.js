@@ -15,10 +15,12 @@ const AdminSchema = new mongoose.Schema({
 
 const UserSchema = new mongoose.Schema({
     FullName: { type: String, required: true },
-    PhoneNumber: { type: String, required: true},
+    PhoneNumber: { type: String },
     Email: { type: String, required: true, unique: true },
-    Password: { type: String, required: true }, 
+    Password: { type: String }, 
     Role: { type: String, required: true },
+    GoogleId: { type: String, default: null },
+
     Participant: { type: ParticipantSchema, default: null },
     Admin: { type: AdminSchema, default: null },
     IsDeleted: { type: Boolean, default: false },
