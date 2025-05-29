@@ -10,11 +10,13 @@ const seedCompetitionRegistrations = async () => {
     await connectDB();
 
     const tickets = await ticketModel.find().lean();
-    const registeredUsers = new Set(); 
+    const registeredUsers = new Set();
 
     const registrationData = tickets.map(ticket => {
-      if (registeredUsers.has(ticket.SenderId.toString())) return null; 
-      registeredUsers.add(ticket.SenderId.toString());
+      const key = `${ticket.SenderId.toString()}|${ticket.CompTypeId.toString()}`;
+      
+      if (registeredUsers.has(key)) return null;
+      registeredUsers.add(key);
 
       return {
         UserId: ticket.SenderId,

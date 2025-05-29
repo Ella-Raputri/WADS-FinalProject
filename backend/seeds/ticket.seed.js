@@ -33,7 +33,7 @@ const seedTickets = async () => {
 
     const tickets = [];
 
-    for (let i = 0; i < 1000; i++) { 
+    for (let i = 0; i < 500; i++) { 
         const participant = participants[Math.floor(Math.random() * participants.length)];
         const compTypeId = compTypes[Math.floor(Math.random() * compTypes.length)]._id; 
 
