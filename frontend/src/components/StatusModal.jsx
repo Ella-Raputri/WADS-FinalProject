@@ -1,3 +1,4 @@
+import React from "react";
 import Modal from "react-modal";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -5,8 +6,8 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import UploadTwibbonPayment from "./UploadTwibbonPayment";
 import { AppContent } from "@/context/AppContext";
 import { useContext } from "react";
-import { data } from "react-router-dom";
 import axios from "axios";
+
 
 export const StatusModal = ({competition, isOpen, onClose}) => {
     const [uploadOpen, setUploadOpen] = useState(false);
