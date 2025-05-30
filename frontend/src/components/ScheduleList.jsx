@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { CompetitionPopUp } from "./CompetitionPopUp";
 import { StatusModal } from "./StatusModal";
+import React from "react";
 
 export const SecheduleList = ({competition}) => {
     let days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
