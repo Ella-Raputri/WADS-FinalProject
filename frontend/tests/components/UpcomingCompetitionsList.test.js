@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { UpcomingCompetitionsList } from '../../src/components/UpcomingCompetitionsList.jsx'; // Adjust path as necessary
+import { UpcomingCompetitionsList } from '@/components/UpcomingCompetitionsList';
 
 jest.mock('swiper/react', () => ({
   Swiper: jest.fn(({ children }) => <div>{children}</div>),

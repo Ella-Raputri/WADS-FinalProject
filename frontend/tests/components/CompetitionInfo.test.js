@@ -2,10 +2,10 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { CompetitionInfo } from '../../src/components/CompetitionInfo.jsx';
-import { CompetitionPopUp } from '../../src/components/CompetitionPopUp.jsx';
+import { CompetitionInfo } from '@/components/CompetitionInfo.jsx';
+import { CompetitionPopUp } from '@/components/CompetitionPopUp';
 
-jest.mock('../../src/components/CompetitionPopUp', () => ({
+jest.mock('@/components/CompetitionPopUp', () => ({
   CompetitionPopUp: jest.fn(() => <div data-testid="competition-popup">Mocked CompetitionPopUp</div>),
 }));
 

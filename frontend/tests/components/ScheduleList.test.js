@@ -1,14 +1,14 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { SecheduleList } from '../../src/components/ScheduleList.jsx';
+import { SecheduleList } from '@/components/ScheduleList';
 
 // Mock the imported components
-jest.mock('../../src/components/CompetitionPopUp', () => ({
+jest.mock('@/components/CompetitionPopUp', () => ({
   CompetitionPopUp: () => <div data-testid="competition-popup">CompetitionPopUp</div>
 }));
 
-jest.mock('../../src/components/StatusModal', () => ({
+jest.mock('@/components/StatusModal', () => ({
   StatusModal: () => <div data-testid="status-modal">StatusModal</div>
 }));
 
