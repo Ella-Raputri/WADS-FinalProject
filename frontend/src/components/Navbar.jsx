@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
 import { Bars3Icon, ChevronLeftIcon, XMarkIcon } from '@heroicons/react/24/outline';
@@ -7,15 +7,18 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 
 const Navbar = () => {
-  const [userRole, setUserRole] = useState(null); // null (guest), 'participant', 'admin'
   const location = useLocation();
   const navigate = useNavigate();
 
-  const {backendUrl, userData, setUserData, setIsLoggedIn, cleanupSocket} = useContext(AppContent)
+  const { backendUrl, userData, setUserData, setIsLoggedIn, cleanupSocket } = useContext(AppContent);
 
-  useEffect(()=>{
-    if(userData) setUserRole(userData.role);
-  }, [userData])
+  // Derive userRole directly from userData
+  const userRole = userData?.role || null;
+
+  useEffect(() => {
+    console.log('user data berubah', userData);
+    console.log('userRole', userRole);
+  }, [userData]);
 
   if (location.pathname === '/login') {
     return (
@@ -30,22 +33,20 @@ const Navbar = () => {
     );
   }
 
-  const logOut = async() => {
+  const logOut = async () => {
     try {
-      const {data} =await axios.post(backendUrl+'api/auth/logout')
-      if(data.success){
-        setUserRole(null)
-        setIsLoggedIn(false)
-        setUserData(null)
-        cleanupSocket()
-        toast.success(data.message)
-        navigate('/')
+      const { data } = await axios.post(backendUrl + 'api/auth/logout');
+      if (data.success) {
+        setIsLoggedIn(false);
+        setUserData(null);
+        cleanupSocket();
+        toast.success(data.message);
+        navigate('/');
       }
-
     } catch (error) {
-      console.error(error.message)
+      console.error(error.message);
     }
-  }
+  };
 
   const navigation = userRole === 'admin' ? [
     { name: 'Dashboard', href: '/admindashboard' },
@@ -62,15 +63,19 @@ const Navbar = () => {
   ];
 
   return (
-    <Disclosure as="nav" className={`navbar font-poppins shadow-md fixed top-0 left-0 w-full 
-      z-50 ${userRole === 'admin'? 'red-navbar' : 'bg-white'}`}>
+    <Disclosure
+      as="nav"
+      key={userRole} // Force re-render when userRole changes
+      className={`navbar font-poppins shadow-md fixed top-0 left-0 w-full 
+      z-50 ${userRole === 'admin' ? 'red-navbar' : 'bg-white'}`}
+    >
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
             <div className="relative flex h-16 items-center justify-between">
               <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
 
-                <DisclosureButton className={`p-2 z-52 ${userRole === 'admin'? 'text-white red-hover' 
+                <DisclosureButton className={`p-2 z-52 ${userRole === 'admin' ? 'text-white red-hover' 
                 : 'bg-white text-neutral-600 hover:bg-neutral-100 hover:text-black'}`}>
                   <span className="sr-only">Open main menu</span>
                   {open ? (
@@ -116,7 +121,7 @@ const Navbar = () => {
                 {userRole ? (
                   <button
                     onClick={logOut}
-                    className={`px-4 py-2 font-poppins transition duration-200 ease text-sm shadow-sm font-semibold cursor-pointer rounded-md ${userRole === 'admin'? 'bg-white text-red-700 hover:bg-neutral-100' 
+                    className={`px-4 py-2 font-poppins transition duration-200 ease text-sm shadow-sm font-semibold cursor-pointer rounded-md ${userRole === 'admin' ? 'bg-white text-red-700 hover:bg-neutral-100' 
                       : 'hover:bg-red-700 text-white bg-red-600'}
                      `}
                   >
@@ -142,7 +147,7 @@ const Navbar = () => {
                   key={item.name}
                   as={Link}
                   to={item.href}
-                  className={`block ${userRole === 'admin'? 'text-white red-hover' 
+                  className={`block ${userRole === 'admin' ? 'text-white red-hover' 
                 : 'bg-white text-neutral-600 hover:bg-neutral-100 hover:text-black'} 
                   hover:rounded-sm px-3 py-2 rounded-md text-base font-medium
                   ${location.pathname === item.href ? 'underline decoration-2 font-bold' : ''}

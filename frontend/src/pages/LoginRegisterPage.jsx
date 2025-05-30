@@ -211,7 +211,7 @@ const LoginRegisterPage = () => {
               </div>
 
               <div className="flex justify-center mt-10 font-poppins">
-              <button onClick={handleLoginGoogle} data-testid='google-login'
+              <button onClick={handleLoginGoogle} data-testid='google-login' type='button'
                 className='flex items-center gap-2 cursor-pointer px-15 transition ease duration-150 rounded-md bg-red-600 py-2 text-lg text-white hover:bg-red-700 shadow-md font-semibold focus:outline-none'>
                 <FaGoogle />
                 <span>Sign in with Google</span>
@@ -314,7 +314,7 @@ const LoginRegisterPage = () => {
               </div>
 
               <div className="flex justify-center mt-10 font-poppins">
-              <button onClick={handleLoginGoogle}
+              <button onClick={handleLoginGoogle} type="button"
                 className='flex items-center gap-2 cursor-pointer px-15 transition ease duration-150 rounded-md bg-red-600 py-2 text-lg text-white hover:bg-red-700 shadow-md font-semibold focus:outline-none'>
                 <FaGoogle />
                 <span>Sign up with Google</span>
@@ -373,7 +373,7 @@ const LoginRegisterPage = () => {
             </div>
 
             <div className="flex justify-center mt-10">
-              <button onClick={handleLoginGoogle}
+              <button onClick={handleLoginGoogle} type="button"
                 className='flex items-center gap-2 cursor-pointer px-15 transition ease duration-150 rounded-md bg-red-600 py-2 text-lg text-white hover:bg-red-700 shadow-md font-semibold focus:outline-none'>
                 <FaGoogle />
                 <span>Sign in with Google</span>
@@ -517,7 +517,7 @@ const LoginRegisterPage = () => {
             </div>
             
             <div className="flex justify-center mt-10">
-              <button onClick={handleLoginGoogle}
+              <button onClick={handleLoginGoogle} type='button'
                 className='flex items-center gap-2 cursor-pointer px-15 transition ease duration-150 rounded-md bg-red-600 py-2 text-lg text-white hover:bg-red-700 shadow-md font-semibold focus:outline-none'>
                 <FaGoogle />
                 <span>Sign up with Google</span>
