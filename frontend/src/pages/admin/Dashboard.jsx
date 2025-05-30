@@ -234,7 +234,7 @@ const Dashboard = () => {
         </div>
         <div className="p-6   bg-white shadow rounded-lg">
           <h2 className="font-kanit font-medium text-2xl mb-4 text-gray-500">First Response Time</h2>
-          <h2 className="text-5xl font-medium mb-0">{firstRespTime[0]}<span className="text-2xl ml-1">h</span> {firstRespTime[1]}<span className="text-2xl ml-1">m</span></h2>
+          <h2 data-testid="first-response-time" className="text-5xl font-medium mb-0">{firstRespTime[0]}<span className="text-2xl ml-1">h</span> {firstRespTime[1]}<span className="text-2xl ml-1">m</span></h2>
         </div>
         <div className="hidden lg:flex p-6 bg-white shadow rounded-lg lg:row-span-2 justify-center items-center">
           <Calendar 
@@ -249,7 +249,7 @@ const Dashboard = () => {
         </div>
         <div className="p-6   bg-white shadow rounded-lg">
           <h2 className="font-kanit font-medium text-2xl mb-4 text-gray-500">Full Resolve Time</h2>
-          <h2 className="text-5xl font-medium mb-0">{fullResolveTime[0]}<span className="text-2xl ml-1">h</span> {fullResolveTime[1]}<span className="text-2xl ml-1">m</span></h2>
+          <h2 data-testid="full-resolve-time" className="text-5xl font-medium mb-0">{fullResolveTime[0]}<span className="text-2xl ml-1">h</span> {fullResolveTime[1]}<span className="text-2xl ml-1">m</span></h2>
         </div>
       </div>
 
