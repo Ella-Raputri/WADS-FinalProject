@@ -42,4 +42,50 @@ describe("ScrollToTop", () => {
 
     expect(window.scrollTo).toHaveBeenCalledWith(0, 0);
   });
+
+  it("calls window.scrollTo on initial render", () => {
+    render(
+      React.createElement(
+        MemoryRouter,
+        { initialEntries: ["/"] },
+        React.createElement(
+          Routes,
+          null,
+          React.createElement(Route, { path: "*", element: React.createElement(ScrollToTop) })
+        )
+      )
+    );
+
+    expect(window.scrollTo).toHaveBeenCalledWith(0, 0);
+  });
+
+  it("does not call window.scrollTo again if pathname does not change", () => {
+    const { rerender } = render(
+      React.createElement(
+        MemoryRouter,
+        { initialEntries: ["/same-path"] },
+        React.createElement(
+          Routes,
+          null,
+          React.createElement(Route, { path: "*", element: React.createElement(ScrollToTop) })
+        )
+      )
+    );
+
+    expect(window.scrollTo).toHaveBeenCalledTimes(1);
+
+    rerender(
+      React.createElement(
+        MemoryRouter,
+        { initialEntries: ["/same-path"] },
+        React.createElement(
+          Routes,
+          null,
+          React.createElement(Route, { path: "*", element: React.createElement(ScrollToTop) })
+        )
+      )
+    );
+
+    expect(window.scrollTo).toHaveBeenCalledTimes(1);
+  });
 });
