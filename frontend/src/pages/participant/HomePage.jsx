@@ -44,8 +44,9 @@ const HomePage = () => {
   useEffect(() => {
       if (!userData || !userData.id) return; 
 
+      console.log("t\n ", userData)
+
       if(!userData.phone) {
-        console.log(userData)
         navigate('/completeinfo');
         return;
       }

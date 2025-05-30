@@ -67,8 +67,6 @@ const NewTicket = () => {
         setLoading(false);
     }
 
-    const location =useLocation();
-
 
   return (
     <div className='mt-25 ml-4 mr-8 md:ml-20 ' >

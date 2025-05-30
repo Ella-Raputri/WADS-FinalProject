@@ -9,6 +9,7 @@ const config = {
     "^@/(.*)$": "<rootDir>/src/$1",
   },
   moduleFileExtensions: ["js", "jsx"],
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.cjs"],
 };
 
 module.exports = config;

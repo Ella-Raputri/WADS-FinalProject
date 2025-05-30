@@ -1,3 +1,4 @@
+import React from "react";
 import UploadImage from "@/components/UploadImage";
 import { AppContent } from "@/context/AppContext";
 import { faCalendar, faChevronLeft, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
@@ -7,7 +8,6 @@ import { useState, useRef, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import InputField from "@/components/InputField";
-import { io } from "socket.io-client";
 import { FaGoogle } from "react-icons/fa";
 
 const LoginRegisterPage = () => {
@@ -151,7 +151,7 @@ const LoginRegisterPage = () => {
                 : "Already have an account? Login to continue competing and winning!"}
             </p>
             <button
-              onClick={() => setIsLogin(!isLogin)}
+              onClick={() => setIsLogin(!isLogin)} data-testid='toggle-signup'
               className="font-poppins font-semibold rounded-lg border-2 border-white px-10 py-2 hover:bg-white hover:text-[#DD3833]"
             >
               {isLogin ? "SIGN UP" : "LOGIN"}
@@ -203,7 +203,7 @@ const LoginRegisterPage = () => {
               </div>
               <div className="flex justify-center">
                 <button
-                  type="submit"
+                  type="submit" data-testid='login'
                   className="w-full shadow-md font-semibold rounded-md font-poppins bg-red-600 py-3 text-lg text-white hover:bg-red-700 focus:outline-none"
                 >
                   Login
@@ -211,7 +211,7 @@ const LoginRegisterPage = () => {
               </div>
 
               <div className="flex justify-center mt-10 font-poppins">
-              <button onClick={handleLoginGoogle}
+              <button onClick={handleLoginGoogle} data-testid='google-login' type='button'
                 className='flex items-center gap-2 cursor-pointer px-15 transition ease duration-150 rounded-md bg-red-600 py-2 text-lg text-white hover:bg-red-700 shadow-md font-semibold focus:outline-none'>
                 <FaGoogle />
                 <span>Sign in with Google</span>
@@ -250,6 +250,7 @@ const LoginRegisterPage = () => {
                     key='password'
                     id='password'
                     type={showPassword? 'text' : 'password'}
+                    data-testid='password'
                     value={formData.password}
                     onChange={handleChange}
                     placeholder="Min 8 chars, letter & number"
@@ -257,6 +258,7 @@ const LoginRegisterPage = () => {
                 />  
                 <button
                   type="button"
+                  data-testid='icon-eye1'
                   className="absolute cursor-pointer right-2 top-1.5 text-gray-500 w-5 h-5"
                   onClick={() => setShowPassword(!showPassword)}
                 >
@@ -312,7 +314,7 @@ const LoginRegisterPage = () => {
               </div>
 
               <div className="flex justify-center mt-10 font-poppins">
-              <button onClick={handleLoginGoogle}
+              <button onClick={handleLoginGoogle} type="button"
                 className='flex items-center gap-2 cursor-pointer px-15 transition ease duration-150 rounded-md bg-red-600 py-2 text-lg text-white hover:bg-red-700 shadow-md font-semibold focus:outline-none'>
                 <FaGoogle />
                 <span>Sign up with Google</span>
@@ -371,7 +373,7 @@ const LoginRegisterPage = () => {
             </div>
 
             <div className="flex justify-center mt-10">
-              <button onClick={handleLoginGoogle}
+              <button onClick={handleLoginGoogle} type="button"
                 className='flex items-center gap-2 cursor-pointer px-15 transition ease duration-150 rounded-md bg-red-600 py-2 text-lg text-white hover:bg-red-700 shadow-md font-semibold focus:outline-none'>
                 <FaGoogle />
                 <span>Sign in with Google</span>
@@ -515,7 +517,7 @@ const LoginRegisterPage = () => {
             </div>
             
             <div className="flex justify-center mt-10">
-              <button onClick={handleLoginGoogle}
+              <button onClick={handleLoginGoogle} type='button'
                 className='flex items-center gap-2 cursor-pointer px-15 transition ease duration-150 rounded-md bg-red-600 py-2 text-lg text-white hover:bg-red-700 shadow-md font-semibold focus:outline-none'>
                 <FaGoogle />
                 <span>Sign up with Google</span>
