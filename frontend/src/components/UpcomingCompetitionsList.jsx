@@ -2,6 +2,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { SwiperSlide, Swiper } from "swiper/react";
 import { useRef } from "react";
+import React from "react";
 
 export const UpcomingCompetitionsList = ({competitions}) => {
     const swiperRef = useRef(null);
