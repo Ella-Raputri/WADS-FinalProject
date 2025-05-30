@@ -3,8 +3,9 @@ import Modal from "react-modal";
 import { faCalendar, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { toast } from "react-toastify";
+import React from "react";
 
-Modal.setAppElement("#root");
+// Modal.setAppElement("#root");
 
 const FilterModal = ({ isOpen, onClose, onApply, currFilters }) => {
   const [filters, setFilters] = useState({
@@ -135,10 +136,14 @@ const FilterModal = ({ isOpen, onClose, onApply, currFilters }) => {
 
         {/* Created At */}
         <div className="mt-4">
-          <label className="block text-md mb-2 font-poppins font-medium">CREATED AT:</label>
+          <label htmlFor="createdStart" className="block text-md mb-2 font-poppins font-medium">
+            CREATED AT:
+          </label>
           <div className="md:flex gap-2">
             <div className="relative w-full">
               <input
+                id='createdStart'
+                 data-testid="createdStart"
                 type="date"
                 name="createdStart"
                 className="p-2 font-poppins w-full pr-10 bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
@@ -158,6 +163,7 @@ const FilterModal = ({ isOpen, onClose, onApply, currFilters }) => {
             <div className="relative w-full">
               <input
                 type="date"
+                data-testid='createdEnd'
                 name="createdEnd"
                 className="bg-white font-poppins placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 pr-10 py-2 transition duration-300 ease focus:outline-none w-full focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
                 value={filters.createdEnd}
@@ -177,10 +183,11 @@ const FilterModal = ({ isOpen, onClose, onApply, currFilters }) => {
 
         {/* Updated At */}
         <div className="mt-6">
-          <label className="block text-md mb-2 font-poppins font-medium">UPDATED AT:</label>
+          <label htmlFor="updatedStart" className="block text-md mb-2 font-poppins font-medium">UPDATED AT:</label>
           <div className="md:flex gap-2">
             <div className="relative w-full">
               <input
+                id="updatedStart"
                 type="date"
                 name="updatedStart"
                 className="w-full font-poppins bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 pr-10 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
@@ -219,8 +226,9 @@ const FilterModal = ({ isOpen, onClose, onApply, currFilters }) => {
 
         {/* Priority Dropdown */}
         <div className="mt-6">
-          <label className="block text-md font-poppins mb-2 font-medium">PRIORITY:</label>
+          <label htmlFor="priority" className="block text-md font-poppins mb-2 font-medium">PRIORITY:</label>
           <select
+            id="priority"
             name="priority"
             className="w-full font-poppins cursor-pointer bg-white  text-slate-700 text-md border border-slate-300 rounded-md pl-3 pr-10 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
             value={filters.priority}
@@ -236,8 +244,9 @@ const FilterModal = ({ isOpen, onClose, onApply, currFilters }) => {
 
         {/* Status Dropdown */}
         <div className="mt-6">
-          <label className="block text-md font-poppins mb-2 font-medium">STATUS:</label>
+          <label htmlFor="status" className="block text-md font-poppins mb-2 font-medium">STATUS:</label>
           <select
+            id="status"
             name="status"
             className="w-full cursor-pointer bg-white placeholder:text-slate-400 text-slate-700 text-md border border-slate-300 rounded-md pl-3 pr-10 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
             value={filters.status}
@@ -253,8 +262,9 @@ const FilterModal = ({ isOpen, onClose, onApply, currFilters }) => {
 
         {/* Sort Method */}
         <div className="mt-6">
-          <label className="block text-md font-poppins mb-2 font-medium">SORT METHOD:</label>
+          <label htmlFor="sortMethod" className="block text-md font-poppins mb-2 font-medium">SORT METHOD:</label>
           <select
+            id="sortMethod"
             name="sortMethod"
             className="w-full cursor-pointer bg-white placeholder:text-slate-400 text-slate-700 text-md border border-slate-300 rounded-md pl-3 pr-10 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
             value={filters.sortMethod}
@@ -268,8 +278,9 @@ const FilterModal = ({ isOpen, onClose, onApply, currFilters }) => {
 
         {/* Sort by */}
         <div className="mt-6">
-          <label className="block text-md font-poppins mb-2 font-medium">SORT BY:</label>
+          <label htmlFor="sortBy" className="block text-md font-poppins mb-2 font-medium">SORT BY:</label>
           <select
+            id="sortBy"
             name="sortBy"
             className="w-full cursor-pointer bg-white placeholder:text-slate-400 text-slate-700 text-md border border-slate-300 rounded-md pl-3 pr-10 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
             value={filters.sortBy}

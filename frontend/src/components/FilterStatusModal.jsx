@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import Modal from "react-modal";
+import React from "react";
 import { faCalendar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-Modal.setAppElement("#root");
+// Modal.setAppElement("#root");
 
 const FilterStatusModal = ({ isOpen, onClose, onApply }) => {
   const [filters, setFilters] = useState({
@@ -72,8 +73,9 @@ const FilterStatusModal = ({ isOpen, onClose, onApply }) => {
 
       {/* Status Dropdown */}
       <div className="mt-6">
-        <label className="block text-sm font-poppins mb-1 font-medium">STATUS:</label>
+        <label htmlFor="status" className="block text-sm font-poppins mb-1 font-medium">STATUS:</label>
         <select
+          id="status"
           name="status"
           className="p-2 font-poppins w-full pr-10 bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
           value={filters.status}

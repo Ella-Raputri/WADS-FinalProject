@@ -1,6 +1,5 @@
+import React from "react";
 import { useState, useEffect, useContext, useRef } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AppContent } from "@/context/AppContext";
 import { toast } from "react-toastify";

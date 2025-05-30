@@ -114,7 +114,7 @@ function CompleteInfoPage() {
 
       <button
         className="bg-white absolute top-8 left-8 z-1000 text-slate-500 border shadow-md border-slate-300 w-10 h-10 flex items-center justify-center rounded-full hover:cursor-pointer hover:bg-gray-100"
-        onClick={logOut}
+        onClick={logOut} data-testid='logout'
       >
         <FontAwesomeIcon icon={faChevronLeft} />
       </button>
@@ -143,7 +143,7 @@ function CompleteInfoPage() {
               type="text"
               value={formData.address}
               onChange={handleChange}
-              placeholder=""
+              placeholder="Your address"
               ref={addressRef}
               onKeyDown={(e) => handleKeyDown(e, phoneRef)}
             />
@@ -161,39 +161,19 @@ function CompleteInfoPage() {
               type="text"
               value={formData.institution}
               onChange={handleChange}
-              placeholder=""
+              placeholder="Your institution"
               ref={institutionRef}
               onKeyDown={(e) => handleKeyDown(e, dobRef)}
             />
 
-            {/* <p className="ml-1 mb-2 font-semibold font-poppins text-md xl:text-lg">Password</p>
-            <div className="w-full relative">
-            <input
-                key='password'
-                id='password'
-                type={showPassword? 'text' : 'password'}
-                value={formData.password}
-                onChange={handleChange}
-                placeholder='Min 8 chars, letter & number'
-                ref={passwordRef}
-                onKeyDown={(e) => handleKeyDown(e, dobRef)}
-                className="p-2 font-poppins w-full pr-10 bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
-            />  
-            <button
-                type="button"
-                className="absolute cursor-pointer right-2 top-1.5 text-gray-500 w-5 h-5"
-                onClick={() => setShowPassword(!showPassword)}
-            >
-                <FontAwesomeIcon icon={showPassword? faEyeSlash: faEye} />
-            </button>
-            </div> */}
 
 
               <p className="ml-1 mb-2 font-semibold font-poppins text-md xl:text-lg">Date of Birth</p>
               <div className="w-full relative">
                 <input
                   type="date"
-                  name="createdStart"
+                  name="dob"
+                  data-testid='dob'
                   id="dob"
                   className="p-2 font-poppins w-full pr-10 bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
                   value={formData.dob}
@@ -214,6 +194,7 @@ function CompleteInfoPage() {
               <p className="ml-1 mb-2 font-semibold font-poppins text-md xl:text-lg">Gender</p>
               <select
                 id="gender"
+                data-testid='gender'
                 value={formData.gender}
                 onChange={handleChange}
                 ref={genderRef}
@@ -224,7 +205,7 @@ function CompleteInfoPage() {
                 <option value="Female">Female</option>
               </select>
               
-              <label className="block font-poppins text-md xl:text-lg mb-2 font-semibold mt-2">Upload Student Card</label>
+              <label htmlFor='student-card-upload-complete' className="block font-poppins text-md xl:text-lg mb-2 font-semibold mt-2">Upload Student Card</label>
               <UploadImage image={image} setImage={setImage} imageName={imageName} setImageName={setImageName} inputId={'student-card-upload-complete'}/>
             
             

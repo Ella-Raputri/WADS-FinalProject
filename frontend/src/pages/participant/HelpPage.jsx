@@ -171,7 +171,7 @@ const HelpPage = () => {
         <AccordionFAQ />
       </div>
 
-      <button 
+      <button data-testid='btnai' 
       onClick={() => setIsOpenChatAI(true)}
       class="fixed bottom-4 right-4 bg-red-600 text-white py-3 px-4 rounded-full hover:bg-red-700 transition shadow-md cursor-pointer">
         <FontAwesomeIcon icon={faMessage}/>
@@ -202,7 +202,7 @@ const HelpPage = () => {
       </div>
 
 
-      <div className="md:ml-20 mb-30 p-4 pt-0 pl-0">
+      <div className="md:ml-20 mb-30 p-4 pt-0 pl-0" data-testid='table'>
         {loading ? (
           <div className="text-center font-semibold text-gray-500 p-5">Loading...</div>
         ) : currentData.length > 0 ? (

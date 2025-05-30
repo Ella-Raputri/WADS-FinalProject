@@ -219,6 +219,7 @@ function ChatModal({isOpen, onClose, user}) {
     />
 
     <Button
+        data-testid='button-send'
         type="submit"
         className="px-4 py-2 bg-white text-slate-500 border shadow-md border-slate-300 hover:bg-gray-100 text-xs md:text-sm"
     >

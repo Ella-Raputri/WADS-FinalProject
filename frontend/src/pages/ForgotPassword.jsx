@@ -1,3 +1,4 @@
+import React from "react";
 import { useState, useEffect, useContext, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
@@ -6,6 +7,7 @@ import InputField from "@/components/InputField";
 import { toast } from "react-toastify";
 import { AppContent } from "@/context/AppContext";
 import axios from "axios";
+
 
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState("");
@@ -203,7 +205,7 @@ const ForgotPasswordPage = () => {
               <p className="text-center text-gray-700 font-poppins">
                 Enter the 6-digit code sent to your email:
               </p>
-              <div className="flex justify-center space-x-2" onPaste={handlePaste}>
+              <div data-testid='icon-eye' className="flex justify-center space-x-2" onPaste={handlePaste}>
               {Array(6).fill(0).map((_, index) => (
                   <input
                     key={index}

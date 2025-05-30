@@ -33,7 +33,7 @@ passport.use(
             FullName: profile.displayName,
             Email: profile.emails[0].value,
             GoogleId: profile.id,
-            Role: "Participant", // or "Guest"
+            Role: "participant", // or "Guest"
             IsAccountVerified: true,
         });
 

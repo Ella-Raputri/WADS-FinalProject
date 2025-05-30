@@ -10,6 +10,7 @@ const config = {
     "\\.(css|less|scss|sass)$": "identity-obj-proxy",
   },
   moduleFileExtensions: ["js", "jsx"],
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.cjs"],
 };
 
 module.exports = config;

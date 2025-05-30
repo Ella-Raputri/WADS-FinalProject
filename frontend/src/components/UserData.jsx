@@ -1,4 +1,5 @@
 import { Button } from "./ui/button";
+import React from "react";
 
 export const UserData = ({ 
     name, mandarinName, DOB, gender, fullAddress, phoneNumber, email, institution, studentCardUrl 
