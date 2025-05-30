@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { CompetitionPopUp } from "./CompetitionPopUp";
+import React from 'react';
 
 export const CompetitionInfo = ({competition, isFirst}) => {
     const [isOpen, setIsOpen] = useState(false);
