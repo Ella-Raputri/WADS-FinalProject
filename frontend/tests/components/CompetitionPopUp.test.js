@@ -93,7 +93,9 @@ describe('CompetitionPopUp', () => {
     await waitFor(() => {
       expect(screen.getByText('Test Competition')).toBeInTheDocument();
       expect(screen.getByText('Price: $100 / Person')).toBeInTheDocument();
-      expect(screen.getByText('Venue: Test Venue')).toBeInTheDocument();
+      expect(screen.getByText((content, element) => {
+  return element?.textContent === 'Venue: Test Venue';
+})).toBeInTheDocument();
     });
   });
 
