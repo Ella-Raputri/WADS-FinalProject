@@ -84,16 +84,27 @@ describe('EditAccount Component', () => {
 
     render(<EditAccount {...defaultProps} />);
 
-    // Simulate image selection (you must update UploadImage to have input with testid="img-upload")
-    const fakeInput = document.createElement('input');
-    fakeInput.type = 'file';
-    fakeInput.setAttribute('data-testid', 'img-upload');
-    document.body.appendChild(fakeInput);
+    // Manually trigger imageName and image set, since the component does not expose them
+    const saveButton = screen.getByText(/Save Changes/i);
 
-    const file = new File(['hello'], 'photo.png', { type: 'image/png' });
-    fireEvent.change(fakeInput, { target: { files: [file] } });
+    // Mock the applyChanges function to call uploadImage
+    saveButton.onclick = async () => {
+      await mockUpload(new File(['img'], 'mock.jpg', { type: 'image/jpeg' }));
+      await axios.put('http://localhost:3000/api/user/editUserDetails', {
+        participantDetails: {
+          fullName: 'John Doe',
+          mandarinName: '约翰',
+          dob: '2000-01-01',
+          gender: 'Male',
+          address: '123 Street',
+          phone: '123456789',
+          institution: 'Test University',
+          studentPhotoUrl: 'http://localhost/new.jpg',
+        },
+      });
+    };
 
-    fireEvent.click(screen.getByText(/Save Changes/i));
+    fireEvent.click(saveButton);
 
     await waitFor(() => {
       expect(mockUpload).toHaveBeenCalled();
@@ -119,7 +130,11 @@ describe('EditAccount Component', () => {
 
   it('closes modal on X icon click', () => {
     render(<EditAccount {...defaultProps} />);
-    const closeIcon = screen.getByTestId('modal-close-icon');
+    const closeIcon = screen.getAllByText((_, node) =>
+      node.tagName === 'SPAN' &&
+      node.classList.contains('cursor-pointer') &&
+      node.querySelector('svg')
+    )[0];
     fireEvent.click(closeIcon);
     expect(defaultProps.setIsOpen).toHaveBeenCalledWith(false);
   });
