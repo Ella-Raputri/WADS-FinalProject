@@ -4,7 +4,7 @@ import { faCheck, faChevronLeft, faFilePen, faPaperPlane } from '@fortawesome/fr
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import ChatBox from "@/components/Chatbox";
+import ChatBox from "@/components/ChatBox";
 import UploadImage from "@/components/UploadImage";
 import { convertToTimeZone } from "@/lib/utils";
 import axios from "axios";

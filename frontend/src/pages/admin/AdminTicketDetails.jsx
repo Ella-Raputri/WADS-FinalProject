@@ -4,7 +4,7 @@ import { faChevronLeft, faMessage, faPaperPlane } from '@fortawesome/free-solid-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import ChatBox from "@/components/Chatbox";
+import ChatBox from "@/components/ChatBox";
 import UploadImage from "@/components/UploadImage";
 import axios from "axios";
 import { toast } from "react-toastify";
