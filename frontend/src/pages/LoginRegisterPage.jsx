@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import InputField from "@/components/InputField";
 import { FaGoogle } from "react-icons/fa";
+import bgImage from '../assets/Bg.webp'
 
 const LoginRegisterPage = () => {
   const navigate = useNavigate();
@@ -134,7 +135,7 @@ const LoginRegisterPage = () => {
 
 
   return (
-    <div className="relative flex min-h-screen w-full items-center justify-center bg-cover bg-center px-4 py-8" style={{ backgroundImage: "url('/src/assets/Bg.webp')" }}>
+    <div className="relative flex min-h-screen w-full items-center justify-center bg-cover bg-center px-4 py-8" style={{ backgroundImage: `url(${bgImage})` }}>
       <div className="absolute inset-0 bg-black/30 backdrop-blur-xl"></div>
 
       {/* back button */}

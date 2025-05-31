@@ -1,4 +1,5 @@
 import React from 'react'
+import pandaImage from '../assets/panda.png'
 
 // not found page for links that does not exist for the project
 
@@ -13,7 +14,7 @@ const NotFound = () => {
         </p>
       </div>
       <div className="lg:w-1/2 flex justify-center mt-10 lg:mt-0">
-        <img src="src/assets/panda.png" alt="Confused Panda" className="max-w-sm xl:w-xs" />
+        <img src={pandaImage} alt="Confused Panda" className="max-w-sm xl:w-xs" />
       </div>
     </div>
 
