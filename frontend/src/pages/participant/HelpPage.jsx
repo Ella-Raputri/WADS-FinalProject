@@ -171,11 +171,21 @@ const HelpPage = () => {
         <AccordionFAQ />
       </div>
 
-      <button data-testid='btnai' 
-      onClick={() => setIsOpenChatAI(true)}
-      class="fixed bottom-4 right-4 bg-red-600 text-white py-3 px-4 rounded-full hover:bg-red-700 transition shadow-md cursor-pointer">
-        <FontAwesomeIcon icon={faMessage}/>
+      <div className="fixed bottom-2 right-4 lg:bottom-10 lg:right-8 flex flex-col items-end space-y-1 group">
+      <div className="opacity-100 group-hover:opacity-0 transition-opacity duration-300 bg-white text-gray-700 text-sm font-medium px-3 py-1 rounded-md shadow-md mb-1 font-poppins">
+        Chat me!
+      </div>
+
+      {/* Chat button */}
+      <button
+        data-testid="btnai"
+        onClick={() => setIsOpenChatAI(true)}
+        className="bg-red-600 text-white py-3 px-4 rounded-full hover:bg-red-700 transition shadow-md cursor-pointer"
+      >
+        <FontAwesomeIcon icon={faMessage} />
       </button>
+    </div>
+
 
 
       {isLoggedIn && 

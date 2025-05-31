@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { CompetitionPopUp } from "./CompetitionPopUp";
 import React from 'react';
 
-export const CompetitionInfo = ({competition, isFirst}) => {
+export const CompetitionInfo = ({competition, isFirst, userData}) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const slides = [
@@ -23,7 +23,7 @@ export const CompetitionInfo = ({competition, isFirst}) => {
 
     return(
     <>
-    <div className={`w-[90%] break-words justify-self-center flex flex-col gap-8 items-center md:flex-row lg:w-[80%] ${isFirst ? "mt-[8em]" : "md:mt-[4em] mt-[5em]"} xl:max-w-[1200px] 2xl:max-w-[1800px]`}>    
+    <div data-aos={`${userData? "none" : "fade-up"}`} className={`w-[90%] break-words justify-self-center flex flex-col gap-8 items-center md:flex-row lg:w-[80%] ${isFirst ? "mt-[8em]" : "md:mt-[4em] mt-[5em]"} xl:max-w-[1200px] 2xl:max-w-[1800px]`}>    
         <div className="w-[28%] bg-gray-400 rounded-[10px] shrink-0 min-w-[250px] sm:min-w-[300px] max-w-[350px] aspect-[7/5] flex items-center justify-center">
             <img className="w-[70%]" src={imageSrc} alt={competition.Name} />
         </div>

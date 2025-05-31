@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import Carousel from '../components/Carousel';
 import Tassle from '../components/Tassle';
 import { AppContent } from '@/context/AppContext';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 const WelcomePage = () => {
   const navigate = useNavigate();
@@ -11,6 +13,10 @@ const WelcomePage = () => {
   const [animateCompetition, setAnimateCompetition] = useState(false);
 
   const {isLoggedIn, userData} = useContext(AppContent);
+
+  useEffect(()=>{
+    AOS.init()
+  }, [])
 
   useEffect(()=>{
     if(isLoggedIn){
@@ -169,7 +175,7 @@ const WelcomePage = () => {
       </section>
 
       <div className="flex items-center justify-center min-h-screen md:min-h-[80vh] color-component-cream -translate-y-4">
-        <div className="max-w-5xl w-full flex flex-col md:flex-row items-center p-8 xl:p-0">
+        <div className="max-w-5xl w-full flex flex-col md:flex-row items-center p-8 xl:p-0" data-aos="fade-up" data-aos-duration="2000">
           <div className="md:w-1/2">
             <h2 className="text-2xl lg:text-3xl xl:text-4xl font-bold mb-4 font-kanit">ABOUT US</h2>
             <p className="text-gray-700 mb-4 font-poppins text-md lg:text-lg xl:text-xl">
@@ -221,7 +227,7 @@ const WelcomePage = () => {
         <Carousel/>
       </div>
 
-      <div className="flex flex-col items-center w-full mt-20 md:mt-10 mb-20 ">
+      <div className="flex flex-col items-center w-full mt-20 md:mt-10 mb-20" data-aos="flip-right">
         <div className="rounded-xl border-5 w-3/4 lg:w-1/2 text-center min-h-80 flex flex-col items-center justify-center p-4" style={{ borderColor: "#DD3833" }}>
           <h1 className="text-2xl md:text-3xl font-poppins text-black font-semibold mb-15">Contact us if you have any questions!</h1>
           <div className="flex gap-6">

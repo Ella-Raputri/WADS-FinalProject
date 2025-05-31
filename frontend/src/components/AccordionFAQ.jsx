@@ -25,7 +25,7 @@ function FAQItem({ id, open, handleOpen, question, answer }) {
       >
         {question}
       </AccordionHeader>
-      <AccordionBody className="p-3 font-normal break-words text-md color-text-brown bg-red-200 rounded-xl">
+      <AccordionBody className="p-3 font-poppins font-normal break-words text-md color-text-brown bg-red-200 rounded-xl">
         {answer}
       </AccordionBody>
     </Accordion>
@@ -37,11 +37,11 @@ function AccordionFAQ() {
   const handleOpen = (value) => setOpen(open === value ? 0 : value);
 
   const faqData = [
-    { id: 1, question: "What is Material Tailwind?", answer: "Material Tailwind is a component library for Tailwind CSS." },
-    { id: 2, question: "How does it work?", answer: "It provides ready-to-use components styled with Tailwind CSS." },
-    { id: 3, question: "Is it free to use?", answer: "Yes, Material Tailwind is open-source and free to use." },
-    { id: 4, question: "Can I customize the styles?", answer: "Yes, you can extend or modify styles using Tailwind classes." },
-    { id: 5, question: "Where can I learn more?", answer: "Visit the official Material Tailwind documentation." }
+    { id: 1, question: "What is National Mandarin Competition?", answer: "NMC (National Mandarin Competition) is an event organized by BNMC (BINUS Mandarin Club) with the aim of improving Mandarin language skills and preserving Chinese culture." },
+    { id: 2, question: "How many competitions are there in NMC?", answer: "There are 3 categories of competitions in NMC: Main Competition (Junior Singing, Senior Singing, Storytelling, Speech), Special Contest (Dubbing), and Mini Contest (Poster Design)." },
+    { id: 3, question: "How much is the registration fee?", answer: "The registration fees for each competition are as follows: Rp200.000 for Singing Senior, Storytelling, and Speech, Rp180.000 for Singing Junior, Rp120.000 for Dubbing, and Rp75.000 for Poster Design." },
+    { id: 4, question: "What is the age restriction for each competition?", answer:"The age restrictions for each competition: Singing (Junior): 8 – 15 years, Singing (Senior): 16 – 24 years, Storytelling: 13 – 21 years, Speech: 13 – 21 years, Dubbing: 16 – 24 years, Poster Design: 16 – 24 years." },
+    { id: 5, question: "Where can I get more information about NMC?", answer: "You can get more information about NMC through the official Instagram NMC: @nmcbnmc" }
   ];
 
   return (

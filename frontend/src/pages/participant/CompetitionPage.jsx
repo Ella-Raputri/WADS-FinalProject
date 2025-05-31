@@ -4,13 +4,14 @@ import { useState } from 'react';
 import { AppContent } from '@/context/AppContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 const CompetitionPage = ({}) => {
   const [competitions, setCompetitions] = useState([]);
   const {backendUrl, userData, socket, initializeSocket} = useContext(AppContent);
 
   const fetchComps = async()=>{
-    console.log('masuk')
     try {
       const response = await axios.get(backendUrl+'api/competition/getAllCompetitions');
       if(response.data.success){
@@ -39,12 +40,16 @@ const CompetitionPage = ({}) => {
         fetchComps();
     }, [backendUrl])
 
+    useEffect(()=>{
+      if(!userData) AOS.init()
+    },[])
+
 
   if (competitions.length !== 0){ 
     return(
       <div className="pb-10">
           {competitions.map((competition, index) => (
-            <CompetitionInfo competition={competition} key={index} isFirst={index===0} />
+            <CompetitionInfo competition={competition} key={index} isFirst={index===0} userData={userData}/>
       ))}
       </div>
     );

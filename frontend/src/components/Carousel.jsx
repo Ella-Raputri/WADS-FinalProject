@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 
 import '../carousel.css';
 import { Navigation} from 'swiper/modules';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 export default function Carousel() {
   const slides = [
@@ -16,8 +18,12 @@ export default function Carousel() {
     { title: "Dubbing", image: "src/assets/dubbing.png" },
   ];
 
+  useEffect(()=>{
+    AOS.init()
+  },[])
+
   return (
-    <div className="relative w-3/4 h-full mx-auto">
+    <div className="relative w-3/4 h-full mx-auto" data-aos="fade-up" data-aos-duration="3000">
       <Swiper
         breakpoints={{
           320: { slidesPerView: 1, spaceBetween: 10 }, // Phones
