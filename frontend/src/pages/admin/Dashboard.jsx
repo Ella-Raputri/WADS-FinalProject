@@ -113,12 +113,10 @@ const Dashboard = () => {
     setDate(newDate);
     const formattedFull = convertToTimeZone(newDate.toISOString()); // example: "11-04-2025 11:10:03"
 
-    // console.log("full: ", formattedFull)
     const [day, month, yearWithTime] = formattedFull.split("-");
     const [year] = yearWithTime.split(",");
     const formattedDate = `${year}-${month}-${day}`; 
 
-    // console.log("f:", formattedDate);
     const compTypeId = userData.admin.CompTypeId;
 
     try {
@@ -184,7 +182,7 @@ const Dashboard = () => {
   const handleDownload = async () => {
     const zip = new JSZip();
   
-    const csv1 = convertToCSV(vertBarChartData, ["dayName", "received", "resolved"]);
+    const csv1 = convertToCSV(vertBarChartData, ["date", "received", "resolved"]);
     zip.file("resolved_vs_received.csv", csv1);
   
     const csv2 = convertToCSV(donutChartData, ["priority", "count"]);
