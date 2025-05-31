@@ -22,7 +22,7 @@ const seedAdmins = async () => {
           PhoneNumber: `081234567${i}${compType._id.toString().slice(-2)}`, 
           Email: `admin${i}@${compType.Name.toLowerCase().replace(/\s/g, '')}.com`,
           Password: hashedPassword,
-          Role: "Admin",
+          Role: "admin",
           Admin: { CompTypeId: [compType._id] }, 
           IsAccountVerified: true
         };

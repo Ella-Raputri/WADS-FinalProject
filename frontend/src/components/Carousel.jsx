@@ -8,10 +8,12 @@ import { Navigation} from 'swiper/modules';
 
 export default function Carousel() {
   const slides = [
-    { title: "Slide 1", image: "src/assets/logo_nmc.png" },
-    { title: "Slide 2", image: "src/assets/logo_nmc.png" },
-    { title: "Slide 3", image: "src/assets/logo_nmc.png" },
-    { title: "Slide 4", image: "src/assets/logo_nmc.png" },
+    { title: "Junior Singing", image: "src/assets/junior_singing.png" },
+    { title: "Senior Singing", image: "src/assets/senior_singing.png" },
+    { title: "Storytelling", image: "src/assets/storytelling.png" },
+    { title: "Speech", image: "src/assets/speech.png" },
+    { title: "Poster Design", image: "src/assets/poster_design.png" },
+    { title: "Dubbing", image: "src/assets/dubbing.png" },
   ];
 
   return (
@@ -32,7 +34,7 @@ export default function Carousel() {
       >
         {slides.map((slide, index) => (
           <SwiperSlide key={index} className="relative flex flex-col items-center justify-center">
-            <img src={slide.image} alt={slide.title} className="w-3/4 mt-4 object-cover rounded-lg" />
+            <img src={slide.image} alt={slide.title} className="mt-4 p-10 object-cover rounded-lg" />
             
             <h3 className="mt-2 text-center text-2xl font-poppins text-white font-semibold mb-4">
               {slide.title}

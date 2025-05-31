@@ -5,6 +5,17 @@ import React from 'react';
 export const CompetitionInfo = ({competition, isFirst}) => {
     const [isOpen, setIsOpen] = useState(false);
 
+    const slides = [
+        { title: "Junior Singing", image: "src/assets/junior_singing.png" },
+        { title: "Senior Singing", image: "src/assets/senior_singing.png" },
+        { title: "Storytelling", image: "src/assets/storytelling.png" },
+        { title: "Speech", image: "src/assets/speech.png" },
+        { title: "Poster Design", image: "src/assets/poster_design.png" },
+        { title: "Dubbing", image: "src/assets/dubbing.png" },
+    ];
+    const matchedSlide = slides.find(slide => slide.title === competition.Name);
+    const imageSrc = matchedSlide.image;
+
     let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
     let competitionStartDate, competitionFinalDate = null;
     competitionStartDate = new Date(competition.CompetitionDate.StartDate);
@@ -13,7 +24,10 @@ export const CompetitionInfo = ({competition, isFirst}) => {
     return(
     <>
     <div className={`w-[90%] break-words justify-self-center flex flex-col gap-8 items-center md:flex-row lg:w-[80%] ${isFirst ? "mt-[8em]" : "md:mt-[4em] mt-[5em]"} xl:max-w-[1200px] 2xl:max-w-[1800px]`}>    
-        <div className="w-[28%] bg-gray-400 rounded-[10px] shrink-0 min-w-[250px] sm:min-w-[300px] max-w-[350px] aspect-[7/5]"></div>
+        <div className="w-[28%] bg-gray-400 rounded-[10px] shrink-0 min-w-[250px] sm:min-w-[300px] max-w-[350px] aspect-[7/5] flex items-center justify-center">
+            <img className="w-[70%]" src={imageSrc} alt={competition.Name} />
+        </div>
+
         <div className="w-[90%] flex flex-col justify-center md:min-w-[200px] md:w-[72%]">
             <p className="font-medium text-2xl mb-2 font-kanit">{competition.Name}</p>
             <div className="text-md mt-1 leading-7 text-justify text-[#000000] font-poppins">{competition.Description[0]+ ' '+competition.Description[1]+' '+competition.Description[2]}</div>

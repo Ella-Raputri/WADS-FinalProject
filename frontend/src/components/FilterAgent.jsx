@@ -1,13 +1,15 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Modal from "react-modal";
-
-Modal.setAppElement("#root");
 
 const FilterAgent = ({ isOpen, onClose, onApply, currFilters }) => {
   const [filters, setFilters] = useState({
     status: currFilters['status'],
     sort: currFilters['sort'],
   });
+
+  useEffect(() => {
+    Modal.setAppElement("#root");
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
@@ -41,9 +43,6 @@ const FilterAgent = ({ isOpen, onClose, onApply, currFilters }) => {
     };
   }, [isOpen]);
   
-  
-  
-
   const handleFilterChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
   };
