@@ -32,6 +32,7 @@ const ForgotPasswordPage = () => {
     }
   };
 
+  // paste to all six square inputs
   const handlePaste = (e) => {
     e.preventDefault();
     const pasteData = e.clipboardData.getData('text/plain').trim();
@@ -46,6 +47,7 @@ const ForgotPasswordPage = () => {
     }
   };
 
+  // handle timer
   useEffect(() => {
     if (resendTimer > 0) {
       const timer = setTimeout(() => setResendTimer(resendTimer - 1), 1000);
@@ -61,6 +63,7 @@ const ForgotPasswordPage = () => {
     }
   }, [showOtp]);
 
+  // reset sending otp
   const sendingOtp =async()=>{
     setLoading(true);
     try {
@@ -104,18 +107,19 @@ const ForgotPasswordPage = () => {
     }
   };
 
+  // submit handler
   const onSubmitOtp =async(e)=>{
     e.preventDefault()
+
+    // prevent otp bruteforcing
     if(wrongOtp >=3) {
       toast.error("Too many times of wrong OTP, please resend a new OTP");
       return;
     }
 
     const inputtedOtp = otp.join('')
-    
     try {
-      console.log(email)
-      console.log(inputtedOtp)
+      // verify otp
       const {data} =await axios.post(backendUrl+'api/auth/verify-otp-reset', {email:email, otp:inputtedOtp})
       if(data.success){
         setShowNewPassword(true)
@@ -134,6 +138,7 @@ const ForgotPasswordPage = () => {
     }
   }
 
+  // make new password
   const onSubmitNewPassword =async(e)=>{
     e.preventDefault()
     try {
@@ -155,6 +160,7 @@ const ForgotPasswordPage = () => {
     >
       <div className="absolute inset-0 bg-black/30 backdrop-blur-xl"></div>
 
+      {/* back button */}
       <button
         className="bg-white absolute top-8 left-8 z-1000 text-slate-500 border shadow-md border-slate-300 w-10 h-10 flex items-center justify-center rounded-full hover:cursor-pointer hover:bg-gray-100"
         onClick={() => navigate("/login")}
@@ -162,6 +168,7 @@ const ForgotPasswordPage = () => {
         <FontAwesomeIcon icon={faChevronLeft} />
       </button>
 
+      {/* headers */}
       <div className="relative z-10 flex w-full max-w-md flex-col overflow-hidden rounded-lg bg-white shadow-lg">
         <div className="bg-red-600 p-6 text-white text-center">
           <p className="mb-3 font-kanit text-3xl font-medium">Forgot Password</p>
@@ -174,6 +181,7 @@ const ForgotPasswordPage = () => {
 
         <div className="p-6">
           {!showOtp && !showNewPassword && (
+            // email field
             <form onSubmit={handleResetRequest} className="space-y-6">
               <InputField
                 id="email"
@@ -205,6 +213,7 @@ const ForgotPasswordPage = () => {
               <p className="text-center text-gray-700 font-poppins">
                 Enter the 6-digit code sent to your email:
               </p>
+              {/* otp field */}
               <div data-testid='icon-eye' className="flex justify-center space-x-2" onPaste={handlePaste}>
               {Array(6).fill(0).map((_, index) => (
                   <input
@@ -221,6 +230,7 @@ const ForgotPasswordPage = () => {
                 ))}
               </div>
 
+                {/* resend button */}
               <div className="flex justify-center mb-8">
                 <p className="font-poppins text-md text-gray-600" >Haven't got the code? &nbsp;</p>
                 <p
@@ -233,7 +243,7 @@ const ForgotPasswordPage = () => {
                 </p>
               </div>
 
-              
+              {/* submit button for otp */}
               <div className="flex justify-center">
                 <button
                     type="submit"
@@ -247,6 +257,7 @@ const ForgotPasswordPage = () => {
           )}
 
           {showOtp && showNewPassword && (
+            // new password field
             <form onSubmit={onSubmitNewPassword} className="space-y-6">
               <div className="w-full relative">
                 <InputField

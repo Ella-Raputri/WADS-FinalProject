@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import { faChevronLeft, faImage } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import UploadImage from '@/components/UploadImage';
 import { AppContent } from '@/context/AppContext';
 import axios from 'axios';
@@ -20,24 +20,26 @@ const NewTicket = () => {
     const {backendUrl, userData, socket, initializeSocket, uploadImage} = useContext(AppContent)
 
     useEffect(() => {
-            if (!userData || !userData.id) return; 
-      
-            if (!socket) {
-                console.log("🔄 Initializing socket...");
-                initializeSocket(userData.id);
-            }
-        }, [userData]);
+        if (!userData || !userData.id) return; 
+    
+        if (!socket) {
+            initializeSocket(userData.id);
+        }
+    }, [userData]);
 
 
+    // submit handler
     const handleSubmit=async(e)=>{
         setLoading(true);
         e.preventDefault();
         axios.defaults.withCredentials =true
 
         try {
+            // get competition id
             const response = await axios.get(backendUrl + `api/competition/getCompetitionIdByName?compName=${compType}`);
             const compData = response.data
 
+            // create new ticket
             let newTicketData = {
                 subject: subj,
                 priorityType: priority,
@@ -45,17 +47,17 @@ const NewTicket = () => {
                 compTypeId: compData.id,
             }
 
+            // upload image if there is image
             if(image){
                 const linkResult = await uploadImage(image);
-
                 newTicketData = {
                     ...newTicketData,
                     imageUrl: linkResult
                 };
             }
 
+            // make new ticket
             const { data } = await axios.post(backendUrl + 'api/ticket/uploadNewTicket', {newTicketDetails: newTicketData});
-            
             if(data.success) {
               navigate('/userhelp');
               toast.success("Ticket created successfully.")
@@ -70,7 +72,7 @@ const NewTicket = () => {
 
   return (
     <div className='mt-25 ml-4 mr-8 md:ml-20 ' >
-        
+        {/* headers */}
         <div className='flex'>
             <button className="bg-white text-slate-500 border shadow-md border-slate-300 w-10 h-10 flex items-center justify-center rounded-full hover:cursor-pointer hover:bg-gray-100"
             onClick={() => navigate('/userhelp')}>

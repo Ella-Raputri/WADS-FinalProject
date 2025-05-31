@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { faChevronLeft, faImage, faMessage, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faMessage, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -26,6 +26,7 @@ const AdminTicketDetails = () => {
   const [isLoading, setIsLoading] =useState(true);
   const [msgLoading, setMsgLoading] = useState(false);
 
+  // ensure the latest message into view
   const messagesEndRef = useRef(null);
   useEffect(() => {
     if (messages.length > 0) {
@@ -37,29 +38,28 @@ const AdminTicketDetails = () => {
         if (!user || !user.id) return; // Ensure user data is available
   
         if (!socket) {
-            // console.log("🔄 Initializing socket...");
             initializeSocket(user.id);
         }
     }, [user, socket]); // Run when userData or socket changes
   
+
+    // joining the admin room
     useEffect(() => {
         if (!data || !data._id || !socket) return;
   
-        // console.log("🔄 Joining admin Room:", "admin"+data._id);
         socket.emit("joinAdminRoom", "admin"+data._id);
   
         return () => {
-            // console.log("⚠️ Leaving adminRoom:", "admin"+data._id);
             socket.off("joinAdminRoom");
         };
     }, [socket, data]); // Run when socket or data changes
   
   
+    // listening for new admin room message
     useEffect(()=>{
       if(!socket) return;
   
       socket.on("newAdminRoomMessage", (newMessage) => {
-        // console.log("ada new admin room message")
         setMessages((prevMessages) => [...prevMessages, newMessage]); // Update chat
       });
   
@@ -69,6 +69,7 @@ const AdminTicketDetails = () => {
     }, [socket])
 
 
+  // sending message
   const handleSend = async (e) => {
     setMsgLoading(true);
     e.preventDefault();
@@ -124,7 +125,6 @@ const fetchMessagesWithAdminNames = async () => {
             })
         );
 
-        // setMessages(messagesWithAdminNames);
         if (messagesWithAdminNames.length > 0) {
             const lastMessage = messagesWithAdminNames[messagesWithAdminNames.length - 1]; 
             socket.emit("sendAdminRoomMessage", { roomId: "admin"+data._id, message: lastMessage });
@@ -136,6 +136,7 @@ const fetchMessagesWithAdminNames = async () => {
 };
 
 
+  // fetching data for competitions, users, and tickets
   const fetchData = async () => {
     if (!data || !data.CompTypeId || !data.SenderId) return; // Ensure valid data
   
@@ -144,7 +145,6 @@ const fetchMessagesWithAdminNames = async () => {
     if(fetchNum>=5) return;
   
     try {
-      // console.log("Fetching data...");
       setFetchNum(fetchNum+1);
       
       const [compResponse, senderResponse, messageResponse] = await Promise.all([
@@ -171,7 +171,6 @@ const fetchMessagesWithAdminNames = async () => {
         })
       );
       
-      // console.log(messagesWithAdminNames)
       setMessages(messagesWithAdminNames);
       setIsLoading(false);
   
@@ -193,10 +192,6 @@ const fetchMessagesWithAdminNames = async () => {
       setIsLoading(false);
     }
   }, [data])
-
-  useEffect(()=>{
-    // console.log(data);
-  },[data])
 
   
   return (
@@ -220,8 +215,7 @@ const fetchMessagesWithAdminNames = async () => {
       </button>
     </div>
 
-
-
+      {/* white header */}
       <div className="max-w-6xl mt-2 mx-auto p-6 bg-white rounded-lg shadow-lg">
       <div className="border-b pb-4 mb-4 flex flex-col md:flex-row justify-between">
         <div>
@@ -261,7 +255,7 @@ const fetchMessagesWithAdminNames = async () => {
 
     </div>
     
-    {/* chat sesama admin */}
+    {/* admin chat */}
     <div className='m-auto mb-8 border border-black max-w-9/12 p-4 mt-10'>
 
         <div className="pr-8 min-h-[60vh] max-h-[60vh] md:max-h-[70vh] md:min-h-[70vh] overflow-y-scroll chat-container">
@@ -271,9 +265,8 @@ const fetchMessagesWithAdminNames = async () => {
             {/* This empty div will be used as the scroll target */}
             <div ref={messagesEndRef}></div>
         </div>
-        
-
-
+  
+        {/* message input and buttons */}
         <Card className="max-w-6xl mt-6 py-8 mb-8 mx-auto font-poppins">
           <form onSubmit={handleSend}>
         <CardContent>
@@ -312,12 +305,6 @@ const fetchMessagesWithAdminNames = async () => {
         </form>
         </Card>
     </div>
-
-      
-      
-
-
-
 
     </div>
     }

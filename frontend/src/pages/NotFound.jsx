@@ -1,5 +1,7 @@
 import React from 'react'
 
+// not found page for links that does not exist for the project
+
 const NotFound = () => {
   return (
     <div className="flex flex-col lg:flex-row items-center justify-center min-h-screen text-center px-10 md:px-40 xl:px-90">

@@ -21,11 +21,13 @@ export function AgentsTable({data}) {
     setOpenFilter(false);
     setCurrentFilter(newFilters);
     const { sort, status } = newFilters; 
-  
+    
+    // filter the agents based on the status 
     const filtered = data.filter(ticket => {
       return status ? ticket.status.toLowerCase() === status.toLowerCase() : true;
     });
-  
+    
+    // filter the agents based on how to sort the ticket amount
     const sortedArray = [...filtered].sort((a, b) => {
       if (a.tickets < b.tickets) return sort === "ascending" ? -1 : 1;
       if (a.tickets > b.tickets) return sort === "ascending" ? 1 : -1;

@@ -1,7 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 
 const FilterAgent = ({ isOpen, onClose, onApply, currFilters }) => {
+
+  // filter based on status or sorting
   const [filters, setFilters] = useState({
     status: currFilters['status'],
     sort: currFilters['sort'],
@@ -11,6 +13,7 @@ const FilterAgent = ({ isOpen, onClose, onApply, currFilters }) => {
     Modal.setAppElement("#root");
   }, []);
 
+  // ensure the popup doesnt break the window
   useEffect(() => {
     if (isOpen) {
       const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
@@ -87,6 +90,7 @@ const FilterAgent = ({ isOpen, onClose, onApply, currFilters }) => {
         </select>
       </div>
 
+      {/* sorting dropdown */}
       <div className="mt-8">
         <label className="block text-md font-poppins mb-1 font-medium">SORT TICKET NUMBER:</label>
         <select

@@ -44,9 +44,8 @@ const LoginRegisterPage = () => {
   const institutionRef = useRef(null);
   const passwordRef2 = useRef(null);
   const genderRef = useRef(null);
-  
 
-  // KeyDown handler
+  // KeyDown handler (press enter to next field)
   const handleKeyDown = (e, nextRef) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -54,25 +53,26 @@ const LoginRegisterPage = () => {
     }
   };
 
+  // change for each field
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
 
+  // redirect based on role
   useEffect(()=>{
     if(userData){
-      console.log(userData.role)
       if(userData.role === 'admin') navigate('/admindashboard') 
       else if(userData.role === 'participant') navigate('/userhome')
     }
   },[userData])
 
+  // login handler
   const handleLogin = async(e) => {
     try {
       e.preventDefault();
       axios.defaults.withCredentials =true
       const {data}=await axios.post(backendUrl+'api/auth/login', {email:emailLogin,password})
-      console.log(data)
         
       if (data.success) {
           setIsLoggedIn(true);
@@ -85,6 +85,7 @@ const LoginRegisterPage = () => {
     }
   };
 
+  // signup handler
   const handleSignUp = async(e) => {
     e.preventDefault();
     if(loading) return;
@@ -109,7 +110,6 @@ const LoginRegisterPage = () => {
         
         if(data.success) {
           navigate('/verifyemail', { state: { email: registrationData.email } });
-          console.log("passing emaill: "+registrationData.email);
         } 
     } catch (error) {
         console.error("Signup error:", error);
@@ -119,6 +119,7 @@ const LoginRegisterPage = () => {
     setLoading(false);
 };
 
+  // KeyDown handler (press enter to next field)
   const handleKeyDownLogin = (e) => {
     if (e.key === "Enter") {
       e.preventDefault(); // Optional: prevent form submit
@@ -126,6 +127,7 @@ const LoginRegisterPage = () => {
     }
   };
 
+  // login handler for Google
   const handleLoginGoogle = () =>{
     window.location.href = backendUrl+'api/auth/google'
   }
@@ -135,12 +137,13 @@ const LoginRegisterPage = () => {
     <div className="relative flex min-h-screen w-full items-center justify-center bg-cover bg-center px-4 py-8" style={{ backgroundImage: "url('/src/assets/Bg.webp')" }}>
       <div className="absolute inset-0 bg-black/30 backdrop-blur-xl"></div>
 
+      {/* back button */}
       <button className="bg-white absolute top-8 left-8 z-1000 text-slate-500 border shadow-md border-slate-300 w-10 h-10 flex items-center justify-center rounded-full hover:cursor-pointer hover:bg-gray-100"
         onClick={() => navigate('/')}>
             <FontAwesomeIcon icon={faChevronLeft} />
         </button>
 
-
+      {/* headers for small screen */}
       <div className="relative z-10 flex w-full max-w-md flex-col overflow-hidden rounded-lg bg-white shadow-lg lg:hidden">
         <div className="bg-red-600 p-6 text-white">
           <div className="flex flex-col items-center justify-center">
@@ -159,7 +162,7 @@ const LoginRegisterPage = () => {
           </div>
         </div>
 
-        {/* Animated Container */}
+        {/* Animated login container for small screen*/}
         <div
           className={`transition-all duration-500 overflow-hidden ${
             isLogin ? "max-h-[100vh] opacity-100" : "max-h-0 opacity-0"
@@ -221,6 +224,7 @@ const LoginRegisterPage = () => {
           </div>
         </div>
 
+          {/* signup container for small screen */}
         <div
           className={`transition-all duration-500 overflow-scroll ${
             isLogin ? "max-h-0 opacity-0" : "max-h-[100vh] opacity-100"
@@ -325,7 +329,8 @@ const LoginRegisterPage = () => {
         </div>
       </div>
 
-
+      
+      {/* header for large screen */}
       <div className="relative font-poppins z-10 hidden w-[70%] h-[70%] flex-row overflow-hidden rounded-lg bg-white shadow-lg lg:flex">
         <div className={`absolute top-0 h-full w-1/2 bg-red-600 p-6 text-white transition-all duration-500 ${isLogin ? "translate-x-full rounded-l-[80px]" : "translate-x-0 rounded-r-[80px]"}`}>
           <div className="flex flex-col items-center justify-center h-full">
@@ -339,6 +344,7 @@ const LoginRegisterPage = () => {
           </div>
         </div>
         
+        {/* login container for large screen */}
         <div className={`w-1/2 p-6 md:p-8 overflow-y-scroll max-h-[60vh] transition-all duration-500 ease-in-out 
           ${isLogin ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full pointer-events-none"}`} style={{scrollbarWidth:"none", scrollbarColor:"#ccc transparent"}}>
           <p className="mb-4 text-center font-poppins text-2xl font-semibold md:text-3xl">USER LOGIN</p>
@@ -382,6 +388,7 @@ const LoginRegisterPage = () => {
           </form>
         </div>
 
+          {/* signup container for large screen */}
         <div className={`w-1/2 p-4 md:p-8 overflow-y-auto max-h-[60vh] transition-all duration-500 ease-in-out
           ${isLogin ? "opacity-0 translate-x-full pointer-events-none" : "opacity-100 translate-x-0"}`} style={{scrollbarWidth:"thin", scrollbarColor:"#ccc transparent"}}>
           <p className="mb-4 text-center font-poppins text-2xl font-semibold md:text-3xl">USER SIGNUP</p>
@@ -501,8 +508,6 @@ const LoginRegisterPage = () => {
               
               <label className="block font-poppins text-md xl:text-lg mb-2 font-semibold mt-2">Upload Student Card</label>
               <UploadImage image={image} setImage={setImage} imageName={imageName} setImageName={setImageName} inputId={'student-card-upload'}/>
-            
-            
             
             <div className="flex justify-center mt-10">
               <button type="submit" 

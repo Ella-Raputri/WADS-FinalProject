@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { SecheduleList } from '../../components/ScheduleList';
-import { UpcomingCompetitionsList } from '../../components/UpcomingCompetitionsList';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { UserData } from '../../components/UserData';
@@ -12,7 +11,6 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const HomePage = () => {
-
   const {userData, backendUrl, socket, initializeSocket} = useContext(AppContent);
   const [upcomingCompetitions, setUpcomingCompetitions] = useState([]);
 
@@ -28,6 +26,7 @@ const HomePage = () => {
   const [institution, setInstitution] = useState('');
   const [studentCardUrl, setStudentCardUrl] = useState('')
 
+  // fetch competition details
   const fetchCompetitions =async()=>{
     try {
       const {data} =await axios.get(backendUrl+'api/competitionRegistration/userRegistrations');
@@ -44,15 +43,12 @@ const HomePage = () => {
   useEffect(() => {
       if (!userData || !userData.id) return; 
 
-      console.log("t\n ", userData)
-
       if(!userData.phone) {
         navigate('/completeinfo');
         return;
       }
 
       if (!socket) {
-          console.log("🔄 Initializing socket...");
           initializeSocket(userData.id);
       }    
       setUsername(userData.name);
@@ -68,17 +64,16 @@ const HomePage = () => {
       fetchCompetitions();
 
   }, [userData]);
-
   
 
   return (
     <>
+      {/* headers */}
       <div className='mt-[7em] text-center flex flex-col justify-center sm:text-start sm:ml-[4em]'>
         <p className='font-kanit mx-auto text-3xl font-medium'>Dashboard</p>
         <p className='font-poppins mx-auto text-[#7D7979] text-xl'>{new Date().toDateString()}</p>
         <p className='font-poppins mx-auto text-lg mt-[1em]'>Welcome Back, {userName}!</p>
       </div>
-
 
       <div className="flex flex-col mt-4 md:mt-0 w-[95%] sm:w-[80%] md:w-[70%] mx-auto p-[2em] sm:p-[3em] xl:max-w-[1200px] 2xl:max-w-[1800px]">
         {/* User Info */}
@@ -123,8 +118,7 @@ const HomePage = () => {
         />
       </div>
 
-
-      
+      {/* upcoming competition list */}
       <div className='bg-[#F4F4F4] w-[100%] mt-[2.5em] flex justify-center items-center relative'>
         <div className='bg-[#FFFFFF] w-[90%] md:w-[70%] shadow-xl rounded-[20px] py-6 my-[3em] xl:max-w-[1200px] 2xl:max-w-[1800px]'>
           <p className='font-kanit text-3xl font-medium sm:ml-25 justify-self-center mt-2 md:mt-6 pb-[0.5em] sm:justify-self-start'>Schedule</p>
@@ -138,9 +132,7 @@ const HomePage = () => {
         </div>
       </div>
       
-
-      {/* <p className='font-kanit text-[1.4rem] ml-[3em] mt-[3em] font-medium'>Upcoming Competitions</p>
-      <UpcomingCompetitionsList competitions={upcomingCompetitions} /> */}
+      {/* edit account pop up */}
       { isEditingAccount && 
         <EditAccount isOpen={isEditingAccount} setIsOpen = {setIsEditingAccount}
         userName={userName} mandarinName={mandarinName} dateOfBirth={dateOfBirth} gender={gender} address={address} phoneNumber={phoneNumber} institution={institution}

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCalendar, faChevronLeft, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
+import { faCalendar, faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 import InputField from '@/components/InputField';
 import UploadImage from '@/components/UploadImage';
 import { toast } from 'react-toastify';
@@ -19,7 +19,6 @@ function CompleteInfoPage() {
     });
     const [image, setImage] =useState(null);
     const [imageName, setImageName] =useState("");
-    const [showPassword, setShowPassword] =useState(false);  
     const [loading, setLoading] = useState(false);
     const {backendUrl, setIsLoggedIn, setUserData, cleanupSocket, uploadImage, getUserData, userData} = useContext(AppContent);
 
@@ -27,22 +26,20 @@ function CompleteInfoPage() {
     const mandarinNameRef = useRef(null);
     const addressRef = useRef(null);
     const phoneRef = useRef(null);
-    const emailRef = useRef(null);
     const institutionRef = useRef(null);
-    const passwordRef = useRef(null);
     const genderRef = useRef(null);
     const navigate = useNavigate();
 
+    // if user data is completed, redirect to home page
     useEffect(() => {
         if (userData && userData.phone) {
             navigate('/userhome');
         }
     }, [userData]);
     
-
+    //submit handler
     const handleSubmitInfo = async(e)=>{
         e.preventDefault();
-
         if(!userData) return;
 
         setLoading(true);
@@ -54,17 +51,14 @@ function CompleteInfoPage() {
 
         try {
             const linkResult = await uploadImage(image);
-
             const registrationData = {
                 ...formData,
                 studentPhotoUrl: linkResult,
                 fullName: userData.name
             };
-            console.log(registrationData)
     
             axios.defaults.withCredentials =true
             const { data } = await axios.put(backendUrl + 'api/user/editUserDetails', {participantDetails: registrationData});
-
             if(data.success) {
                 await getUserData();
                 toast.success("Changes applied!");
@@ -77,11 +71,13 @@ function CompleteInfoPage() {
         setLoading(false);
     }
 
+    // change handler for each field
     const handleChange = (e) => {
         const { id, value } = e.target;
         setFormData((prev) => ({ ...prev, [id]: value }));
     };
 
+    // press enter to next field
     const handleKeyDown = (e, nextRef) => {
         if (e.key === "Enter") {
         e.preventDefault();
@@ -89,6 +85,7 @@ function CompleteInfoPage() {
         }
     };
 
+    // logout function
     const logOut = async() => {
         try {
             const {data} =await axios.post(backendUrl+'api/auth/logout')
@@ -120,6 +117,8 @@ function CompleteInfoPage() {
       </button>
 
       <div className="relative z-10 flex w-full max-w-md flex-col overflow-hidden rounded-lg bg-white shadow-lg">
+        
+        {/* header */}
         <div className="bg-red-600 p-6 text-white text-center">
           <p className="mb-3 font-kanit text-3xl font-medium">Complete Registration Info</p>
           <p className="mb-3 text-md font-poppins">
@@ -127,6 +126,7 @@ function CompleteInfoPage() {
           </p>
         </div>
 
+        {/* inputs */}
         <div className="p-6">
             <form onSubmit={handleSubmitInfo} className="space-y-6">
             <InputField
@@ -166,8 +166,6 @@ function CompleteInfoPage() {
               onKeyDown={(e) => handleKeyDown(e, dobRef)}
             />
 
-
-
               <p className="ml-1 mb-2 font-semibold font-poppins text-md xl:text-lg">Date of Birth</p>
               <div className="w-full relative">
                 <input
@@ -190,7 +188,6 @@ function CompleteInfoPage() {
                 </button>
               </div>
               
-              
               <p className="ml-1 mb-2 font-semibold font-poppins text-md xl:text-lg">Gender</p>
               <select
                 id="gender"
@@ -208,8 +205,7 @@ function CompleteInfoPage() {
               <label htmlFor='student-card-upload-complete' className="block font-poppins text-md xl:text-lg mb-2 font-semibold mt-2">Upload Student Card</label>
               <UploadImage image={image} setImage={setImage} imageName={imageName} setImageName={setImageName} inputId={'student-card-upload-complete'}/>
             
-            
-            
+            {/* submit button */}
             <div className="flex justify-center mt-10">
               <button type="submit" 
               className={`${loading? 'cursor-not-allowed': 'cursor-pointer'} px-15 transition ease duration-150 rounded-md bg-red-600 py-2 text-lg text-white hover:bg-red-700 shadow-md font-semibold focus:outline-none`}>
@@ -221,13 +217,7 @@ function CompleteInfoPage() {
                 :'Submit'}
                 </button>
             </div>
-
-
-
-            </form>
-          
-
-          
+            </form>          
         </div>
       </div>
     </div>

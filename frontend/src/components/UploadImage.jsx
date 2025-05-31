@@ -13,13 +13,15 @@ function UploadImage({image, setImage, imageName, setImageName, inputId}) {
             return;
         }
 
+        // shows shortened image name
         const nm = shortenFileName(file.name);
         setImageName(nm);
     
         const img = new Image();
         const objectURL = URL.createObjectURL(file); // Ensure valid file before calling this
         img.src = objectURL;
-    
+        
+        // shows the image
         img.onload = () => {
             const canvas = document.createElement("canvas");
             const ctx = canvas.getContext("2d");
@@ -57,7 +59,6 @@ function UploadImage({image, setImage, imageName, setImageName, inputId}) {
         };
     };
     
-    
 
     const shortenFileName = (name) => {
         const maxLength = 50; // Adjust the length as needed
@@ -73,13 +74,15 @@ function UploadImage({image, setImage, imageName, setImageName, inputId}) {
   return (
     <div className='w-full font-poppins'>
         <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" id={inputId} />
+            {/* upload button */}
             <Button type='button' className={`pl-3 pr-2 py-5 mb-2 text-sm bg-white border shadow-md border-slate-300 hover:bg-gray-100 cursor-pointer text-gray-700 ${image ? "text-green-500" : "text-slate-500"}`}>
             <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" id={inputId} />
             <label htmlFor={inputId} className="cursor-pointer flex items-center">
                 Upload Image &nbsp; <FontAwesomeIcon icon={faImage} />
             </label>
-
             </Button>
+
+            {/* image name and image preview */}
             {imageName && (
                     <span className="text-gray-700 ml-1 break-all font-poppins md:ml-2 text-sm">{imageName}</span>
                 )}
@@ -91,7 +94,7 @@ function UploadImage({image, setImage, imageName, setImageName, inputId}) {
                     className="mt-5 w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg max-h-72 rounded-lg border-2 border-dashed border-gray-500 object-contain"
                     />
 
-
+                {/* button to remove image */}
                 <Button type='button' className="mt-4 hover:bg-red-50 cursor-pointer text-red-500 border border-red-300 bg-white" onClick={() => {setImage(null); setImageName("")}}>
                     Remove
                 </Button>

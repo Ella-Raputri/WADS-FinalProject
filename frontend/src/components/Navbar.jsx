@@ -1,5 +1,5 @@
 import React from 'react'; 
-import { useContext, useEffect, useState } from 'react'
+import { useContext } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
 import { Bars3Icon, ChevronLeftIcon, XMarkIcon } from '@heroicons/react/24/outline';
@@ -16,11 +16,7 @@ const Navbar = () => {
   // Derive userRole directly from userData
   const userRole = userData?.role || null;
 
-  useEffect(() => {
-    console.log('user data berubah', userData);
-    console.log('userRole', userRole);
-  }, [userData]);
-
+  // Link to welcome page from login
   if (location.pathname === '/login') {
     return (
       <Link
@@ -49,6 +45,7 @@ const Navbar = () => {
     }
   };
 
+  // navigation lists based on userRole
   const navigation = userRole === 'admin' ? [
     { name: 'Dashboard', href: '/admindashboard' },
     { name: 'Competition', href: '/admincomp' },
@@ -68,7 +65,7 @@ const Navbar = () => {
       as="nav"
       key={userRole} // Force re-render when userRole changes
       className={`navbar font-poppins shadow-md fixed top-0 left-0 w-full 
-      z-50 ${userRole === 'admin' ? 'red-navbar' : 'bg-white'}`}
+      z-50 ${userRole === 'admin' ? 'red-navbar' : 'bg-white'}`}    //red navbar for admin, white navbar for user and guest
     >
       {({ open }) => (
         <>
@@ -88,6 +85,7 @@ const Navbar = () => {
               </div>
               
               <div className="flex flex-1 items-center sm:justify-between">
+
                 {/* Logo */}
                 <div className="absolute inset-x-0 flex justify-center sm:static sm:justify-start">
                   <div className="flex items-center space-x-1">

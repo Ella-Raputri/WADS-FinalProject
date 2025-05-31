@@ -1,9 +1,8 @@
 import React from 'react';
 import Modal from "react-modal";
-import { Button } from "./ui/button";
 import { useContext, useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCalculator, faCalendar, faImage, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faCalendar, faTimes } from "@fortawesome/free-solid-svg-icons";
 import UploadImage from "./UploadImage";
 import { AppContent } from "@/context/AppContext";
 import axios from "axios";
@@ -11,6 +10,7 @@ import { toast } from "react-toastify";
 
 export const EditAccount = ({isOpen, setIsOpen, userName, mandarinName, dateOfBirth, gender, address, phoneNumber, institution, studentCardUrl}) => {
 
+    // ensure the popup doesnt break the window size
     useEffect(() => {
         if (isOpen) {
           const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
@@ -47,10 +47,10 @@ export const EditAccount = ({isOpen, setIsOpen, userName, mandarinName, dateOfBi
     const [mandarinNameText, setMandarinNameText] = useState(mandarinName);
     const [dateOfBirthText, setDateOfBirthText] = useState(() => {
         if (dateOfBirth) {
-            const [day, month, year] = dateOfBirth.split('-'); // Split DD-MM-YYYY
+            const [day, month, year] = dateOfBirth.split('-'); 
             return `${year}-${month}-${day}`; // Convert to YYYY-MM-DD
         }
-        return ''; // Default to empty if no dateOfBirth is provided
+        return ''; 
     });
     const [genderText, setGenderText] = useState(gender);
     const [addressText, setAddressText] = useState(address);
@@ -64,6 +64,7 @@ export const EditAccount = ({isOpen, setIsOpen, userName, mandarinName, dateOfBi
     const {backendUrl, getUserData, uploadImage} = useContext(AppContent);
 
 
+    // save changes that user made
     const applyChanges = async() => {
         setLoading(true);
         try {
@@ -74,7 +75,7 @@ export const EditAccount = ({isOpen, setIsOpen, userName, mandarinName, dateOfBi
                 if(linkResult) imageUrl = linkResult;
             }
             
-            // 3. Prepare registration data
+            // Prepare registration data
             const registrationData = {
                 fullName:userNameText, 
                 mandarinName:mandarinNameText, 
@@ -86,7 +87,7 @@ export const EditAccount = ({isOpen, setIsOpen, userName, mandarinName, dateOfBi
                 studentPhotoUrl: (imageUrl? imageUrl : studentCardUrl)
             };
     
-            // 4. Register user
+            // edit user
             axios.defaults.withCredentials =true
             const { data } = await axios.put(backendUrl + 'api/user/editUserDetails', {participantDetails: registrationData});
 

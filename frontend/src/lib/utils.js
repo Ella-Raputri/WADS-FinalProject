@@ -17,7 +17,7 @@ export function convertToTimeZone (isoString) {
       second: "2-digit",
       hour12: false,
       timeZone: "Asia/Jakarta"
-  }).format(dateObj).replace(/\//g, '-'); // Replace "/" with "-" for consistency
+  }).format(dateObj).replace(/\//g, '-'); 
 };
 
 export function convertToCSV (data, columns) {

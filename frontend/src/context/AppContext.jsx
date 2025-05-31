@@ -56,7 +56,6 @@ export const AppContextProvider = (props) => {
             });
 
             newSocket.on("getOnlineUsers", (users) => {
-                console.log("online user berubah");
                 setOnlineUsers(users);
                 onlineUsersRef.current =users;
             });
@@ -102,7 +101,7 @@ export const AppContextProvider = (props) => {
         const imageFormData = new FormData();
         imageFormData.append('file', image); 
 
-        // 2. Upload image first
+        // Upload image first
         const { data: uploadData } = await axios.post(
             backendUrl + 'api/image/upload', 
             imageFormData, 
@@ -112,7 +111,6 @@ export const AppContextProvider = (props) => {
             }
         ).catch(error => {
             // Handle image upload failure
-            console.error("Image upload error:", error);
             toast.error("Image upload failed. Please try again.");
             return '';
         });
@@ -120,7 +118,7 @@ export const AppContextProvider = (props) => {
         if(!uploadData?.imageUrl) {
             return '';
         }
-        else return uploadData.imageUrl;
+        else return uploadData.imageUrl;    //return the image link
     }
 
 

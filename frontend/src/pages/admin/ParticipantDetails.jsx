@@ -3,7 +3,7 @@ import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Loading from '@/components/Loading';
-import { Card, CardContent, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { AppContent } from '@/context/AppContext';
 import { convertToTimeZone } from '@/lib/utils';
 import axios from 'axios';
@@ -21,7 +21,6 @@ const ParticipantDetails = () => {
         if (location.state?.data) {
             setData(location.state.data);
             setUpdatedStatus(location.state.data.status);
-            console.log(location.state.data)
         }
     }, [location.state?.data]);
 
@@ -29,12 +28,12 @@ const ParticipantDetails = () => {
           if (!userData || !userData.id) return; 
     
           if (!socket) {
-              console.log("🔄 Initializing socket...");
               initializeSocket(userData.id);
           }
       }, [userData]);
 
 
+    // accept or reject the registration
     const handleButtons = async(val) => {
         axios.defaults.withCredentials = true
         const up = val === 'accept' ? 'Accepted' : 'Rejected';
@@ -61,6 +60,8 @@ const ParticipantDetails = () => {
 
     return (
         <div className='mt-25 ml-4 mr-8 md:ml-20'>
+
+            {/* headers */}
             <div className='flex'>
                 <button className="bg-white text-slate-500 border shadow-md border-slate-300 w-10 h-10 flex items-center justify-center rounded-full hover:cursor-pointer hover:bg-gray-100"
                         onClick={() => navigate('/admincomp', { state: { updatedData: { ...data, status: updatedStatus } } })}>
@@ -70,7 +71,8 @@ const ParticipantDetails = () => {
                     Participant Details
                 </h1>
             </div>
-
+            
+            {/* participant details */}
             <div className='p-8 text-lg mt-5 ml-15 font-poppins w-60% bg-white rounded-2xl shadow-md border-l border-b border-l-neutral-300 border-b-neutral-300'>
                 <p className="mb-3"> <b className="text-[#DD3833]">Full Name: </b>
                     &nbsp;{data.userDetails.FullName}
@@ -107,6 +109,7 @@ const ParticipantDetails = () => {
                 <img src={data.TwibbonProof} alt="Twibbon Proof" className='mb-5 w-80 rounded-lg' />
             </div>
             
+            {/* buttons to accept or reject, comments */}
             <div className='flex flex-col text-lg justify-center ml-15 mt-5 mb-15 '>
                 {data.Status === 'Accepted' && (
                     <span className="px-2 py-1 text-white bg-lime-500 rounded-full text-center font-poppins font-semibold">Accepted</span>

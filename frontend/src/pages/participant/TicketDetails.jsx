@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { useHref, useLocation, useNavigate } from "react-router-dom";
-import { faCheck, faChevronLeft, faClipboardCheck, faFileCircleCheck, faFilePen, faImage, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { useLocation, useNavigate } from "react-router-dom";
+import { faCheck, faChevronLeft, faFilePen, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -11,8 +11,6 @@ import axios from "axios";
 import { AppContent } from "@/context/AppContext";
 import { toast } from "react-toastify";
 import RatingPopup from "@/components/RatingPopup";
-
-
 
 const TicketDetails = () => {
   const [messages, setMessages] = useState([]);
@@ -36,6 +34,7 @@ const TicketDetails = () => {
   const [ratingResult, setRatingResult] = useState(null);
   const [msgLoading, setMsgLoading] = useState(false);
 
+  // scroll the latest message into view
   useEffect(() => {
     if (messages.length > 0) {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -43,18 +42,16 @@ const TicketDetails = () => {
   }, [messages]);
 
   useEffect(() => {
-      if (!user || !user.id) return; // Ensure user data is available
+      if (!user || !user.id) return; 
 
       if (!socket) {
-          console.log("🔄 Initializing socket...");
           initializeSocket(user.id);
       }
-  }, [user, socket]); // Run when userData or socket changes
+  }, [user, socket]); 
 
   useEffect(() => {
       if (!data || !data._id || !socket) return;
 
-      console.log("🔄 Joining Room:", data._id);
       socket.emit("joinRoom", data._id);
 
       socket.on("updatedStatus", (newStatus) =>{
@@ -63,17 +60,15 @@ const TicketDetails = () => {
       }); 
 
       return () => {
-          console.log("⚠️ Leaving Room:", data._id);
           socket.off("joinRoom");
       };
-  }, [socket, data]); // Run when socket or data changes
+  }, [socket, data]); 
 
-
+  // listen on new room message
   useEffect(()=>{
     if(!socket) return;
 
     socket.on("newRoomMessage", (newMessage) => {
-      console.log("ada new room message")
       setMessages((prevMessages) => [...prevMessages, newMessage]); // Update chat
       if(newMessage.SenderId.Role==='admin'){
         const newAdminNames = [...adminNames, newMessage.SenderId.FullName];
@@ -85,9 +80,8 @@ const TicketDetails = () => {
       socket.off("newRoomMessage"); // Cleanup on unmount
     };
   }, [socket])
-  
 
-
+  // sending message
   const handleSend = async(e) => {
     setMsgLoading(true);
     e.preventDefault();
@@ -103,7 +97,6 @@ const TicketDetails = () => {
     try {
         if(imageUploaded){
             const linkRes = await uploadImage(imageUploaded);
-
             newMessage = {
                 ...newMessage,
                 imageUrl: linkRes
@@ -111,7 +104,6 @@ const TicketDetails = () => {
         }
 
         const { data } = await axios.post(backendUrl + 'api/message/sendParticipantAdminMessage', {request: newMessage});
-        
         if(data.success) {
             fetchMessages()
             setSubject("");
@@ -127,12 +119,15 @@ const TicketDetails = () => {
     setMsgLoading(false);
   };
 
+
+  // go to previous page based on their role
   const handlePreviousLink=(e)=>{
     e.preventDefault();
     if(user.role==='participant')navigate('/userhelp');
     else navigate('/adminticketdetails', { state: { data: data, user: user } });
   }
 
+  // click resolve or close 
   const handleClickResolveClose=async(e)=>{
     if((data.Status==='Resolved' && user.role==='admin') || data.Status==='Closed') return;
 
@@ -145,6 +140,7 @@ const TicketDetails = () => {
       message: `The ticket status has been changed to ${up.toLowerCase()}.`,
     };
 
+    // send system message that the ticket status has been updated
     const response = await axios.post(backendUrl + 'api/message/sendParticipantSystemMessage', {request: systemMessage});    
     if(response.data.success) {
         fetchMessages()   
@@ -152,6 +148,7 @@ const TicketDetails = () => {
         toast.error(response.data.message);
     }
 
+    // update ticket status in database
     const response2 = await axios.put(backendUrl + 'api/ticket/updateTicketStatus', {request: {ticketId: data._id, status: up}});    
     if(response2.data.success) {
         toast.success(response2.data.message);
@@ -168,11 +165,11 @@ const TicketDetails = () => {
     }
   }
 
+  // fetch messages of admin and participants
   const fetchMessages = async()=>{
     try {
       const response = await axios.get(`${backendUrl}api/message/getParticipantAdminMessage?ticketId=${data._id}`);
       const latestMessages = response.data.adminUserChat; 
-      // setMessages(latestMessages);
 
       if (latestMessages.length > 0) {
           const lastMessage = latestMessages[latestMessages.length - 1]; 
@@ -184,6 +181,7 @@ const TicketDetails = () => {
     }
   }
 
+  // fetch data of competitions, users, messages, and ratings
   const fetchData = async () => {
     if (!data || !data.CompTypeId || !data.SenderId) return; // Ensure valid data
   
@@ -192,7 +190,6 @@ const TicketDetails = () => {
     if(fetchNum>=5) return;
   
     try {
-      console.log("Fetching data...");
       setFetchNum(fetchNum+1);
       
       const [compResponse, senderResponse, messageResponse, ratingResponse] = await Promise.all([
@@ -207,9 +204,6 @@ const TicketDetails = () => {
         compData: compResponse.data.success ? compResponse.data.comp : null,
         senderData: senderResponse.data.success ? senderResponse.data.userData : null
       }));
-
-      console.log("fecthed data:")
-      console.log(data)
 
       setMessages(messageResponse.data.adminUserChat || []);
       const admins = messageResponse.data.adminUserChat.filter(msg => msg.SenderId && msg.SenderId.Role === "admin").map(msg => msg.SenderId.FullName); 
@@ -227,6 +221,8 @@ const TicketDetails = () => {
     }
   };
 
+
+  // open rating popup 
   const handleOpenSurvey = async()=>{
     if(data.Status !== 'Closed') return;
 
@@ -256,10 +252,8 @@ const TicketDetails = () => {
 
   useEffect(()=>{
     if(data){
-      console.log(data)
       fetchData();
       setIsLoading(false);
-      console.log(messages)
     }
   },[data])
 
@@ -284,7 +278,7 @@ const TicketDetails = () => {
             <FontAwesomeIcon icon={faChevronLeft} />
         </button>
   
-        
+        {/* rating button */}
         <div className="flex gap-4 md:gap-6">
           {user.role==='participant' &&
           <button className={`${data.Status==='Closed'? 'bg-red-600 hover:bg-red-700 cursor-pointer' : 'bg-red-300 cursor-not-allowed'} text-white shadow-md  w-10 h-10 flex items-center justify-center rounded-full `}
@@ -307,13 +301,11 @@ const TicketDetails = () => {
             {user.role === 'admin' ? 'Resolve' : 'Close'}
           </button>
         </div>
-        
-
       </div>
-
 
       <div className="max-w-6xl mt-2 mx-auto p-6 bg-white rounded-lg shadow-lg">
       <div className="border-b pb-4 mb-4 flex flex-col md:flex-row justify-between">
+        {/* white headers */}
         <div>
           <h2 className="text-xl text-gray-500 font-kanit font-semibold">SUBJECT</h2>
           <p className="font-poppins text-md  break-all"> {data.Subject} </p>
@@ -329,7 +321,7 @@ const TicketDetails = () => {
             <p><strong>Handled by:</strong> {adminNames.join(", ") } </p>
           </div>
         </div>
-
+    
         <div className="flex flex-col items-start md:items-end mt-8 md:mt-0">
           <div className={`font-poppins border-2  py-0.5 px-3 text-md  font-medium  
             ${data.Status === 'Open' ? 'border-red-400 text-red-500' :
@@ -352,7 +344,7 @@ const TicketDetails = () => {
     </div>
     
 
-    {/* chat dengan user */}
+    {/* chat with user */}
     <div className='m-auto max-w-10/12 p-4 mt-10'>
       <div className="pr-8 max-h-[60vh] md:max-h-[70vh] overflow-y-scroll chat-container">
             {messages.map((msg, index) => (
@@ -362,7 +354,7 @@ const TicketDetails = () => {
             <div ref={messagesEndRef}></div>
         </div>
 
-
+      {/* message section */}
       <Card className="max-w-6xl mt-6 py-8 mb-8 mx-auto font-poppins">
       <form onSubmit={handleSend}>
         <CardContent>
@@ -380,6 +372,7 @@ const TicketDetails = () => {
               className="w-full mb-5 min-h-56 max-h-56 bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 pr-2 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow"
             ></textarea>
 
+            {/* upload image button */}
             <div className="flex flex-col sm:flex-row items-start justify-between w-full space-y-5 sm:space-y-0">
               <UploadImage 
                 className="max-w-[80%]" 
@@ -390,6 +383,7 @@ const TicketDetails = () => {
                 inputId={'image-upload'}
               />
               
+              {/* submit button */}
               <Button 
                 type='submit'
                 className={`${msgLoading? 'cursor-not-allowed': 'cursor-pointer'} px-6 py-5 text-md bg-white text-slate-500 border shadow-md border-slate-300 hover:bg-gray-100 sm:ml-4`}

@@ -39,6 +39,7 @@ const Dashboard = () => {
     Low: { color: "#22C55E", darkColor: "#15803D" },
   };
 
+  // mapping priority data to its count
   const transformPriorityData = (apiData) => {
     return ["Urgent", "High", "Medium", "Low"].map(priority => ({
       priority,
@@ -47,8 +48,10 @@ const Dashboard = () => {
     }));
   };
 
+
+  // update agent status in the agent table 
     useEffect(() => {
-        if (!agentTableData) return; // Guard against null/undefined
+        if (!agentTableData) return; 
         
         const newTable = updateAgentStatus(agentTableData);
         setAgentTableData(newTable);
@@ -79,6 +82,7 @@ const Dashboard = () => {
     "Closed": { color: "bg-lime-500"},
   };
 
+  // map status data to percentage
   const transformStatusData = (apiData) => {
     const total = Object.values(apiData).reduce((sum, count) => sum + count, 0);
 
@@ -103,11 +107,11 @@ const Dashboard = () => {
       if (!userData || !userData.id) return; 
 
       if (!socket) {
-          console.log("🔄 Initializing socket...");
           initializeSocket(userData.id);
       }
   }, [userData]);
   
+
   const handleDateChange = async (newDate) => {
     setLoading(true);
     setDate(newDate);
@@ -120,16 +124,19 @@ const Dashboard = () => {
     const compTypeId = userData.admin.CompTypeId;
 
     try {
+      // total ticket parameter
       const { data: dataTotalTicket } = await axios.get(`${backendUrl}api/admindashboard/totaltickets`, {
         params: { date: formattedDate, compTypeId }
       });
       setTotalTickets(dataTotalTicket.totalTickets);
       
+      // total participant parameter
       const { data: dataTotalParticipant } = await axios.get(`${backendUrl}api/admindashboard/totalparticipants`, {
         params: { date: formattedDate, compTypeId }
       });
       setTotalParticipants(dataTotalParticipant.totalParticipants);
 
+      // first response time 
       const { data: dataFirstResp } = await axios.get(`${backendUrl}api/admindashboard/firstresponsetime`, {
         params: { date: formattedDate, compTypeId }
       });
@@ -138,6 +145,7 @@ const Dashboard = () => {
       const minutesFirstResp = Math.round(totalMinsFirstResp % 60);
       setFirstRespTime([hoursFirstResp, minutesFirstResp]);
 
+      // full resolve time
       const { data: dataFullResolve } = await axios.get(`${backendUrl}api/admindashboard/fullresolvetime`, {
         params: { date: formattedDate, compTypeId }
       });
@@ -146,26 +154,31 @@ const Dashboard = () => {
       const minutes = Math.round(totalMins % 60);
       setFullResolveTime([hours, minutes]);
 
+      // customer satisfaction rate
       const { data: dataCustSat } = await axios.get(`${backendUrl}api/admindashboard/ratingmetrics`, {
         params: { date: formattedDate, compTypeId }
       });
       setCustSatisfRate(dataCustSat.avgRating);
 
+      // daily chart data
       const { data: dailyChartData } = await axios.get(`${backendUrl}api/admindashboard/receiveresolvebar`, {
         params: { date: formattedDate, compTypeId }
       });
       setVertBarChartData(dailyChartData);
 
+      // total tickets by emergency 
       const { data: emergencyChartData } = await axios.get(`${backendUrl}api/admindashboard/ticketbyemergency`, {
         params: { date: formattedDate, compTypeId }
       });
       setDonutChartData(transformPriorityData(emergencyChartData));
 
+      // agent table details
       const { data: agentData } = await axios.get(`${backendUrl}api/admindashboard/agenttickets`, {
         params: { date: formattedDate, compTypeId }
       });
       setAgentTableData(transformAgentData(agentData));
 
+      // total ticket by status
       const { data: statusChartData } = await axios.get(`${backendUrl}api/admindashboard/ticketbystatus`, {
         params: { date: formattedDate, compTypeId }
       });
@@ -173,12 +186,13 @@ const Dashboard = () => {
 
     } 
     catch (error) {
-      toast.error("Error fetching data:", error);
-      console.log(error);
+      toast.error("Error fetching data: ", error)
+      console.error(error);
     }
     setLoading(false);
   };
 
+  // download all data into one zip file
   const handleDownload = async () => {
     const zip = new JSZip();
   
@@ -201,10 +215,11 @@ const Dashboard = () => {
 
   return (
     <>
-    
     {loading? <Loading></Loading> :
     <>
       <div className="flex flex-col sm:flex-row items-center justify-between px-6 py-4 lg:ml-15 ml-12 mt-25 mb-10 mr-15 space-y-4 sm:space-y-0">
+        
+        {/* header, download button */}
         <h1 className="text-3xl lg:text-5xl font-kanit font-medium flex-grow text-center sm:text-left">
           Hello, {userData.name}!
         </h1>
@@ -215,6 +230,7 @@ const Dashboard = () => {
         </button>
       </div>
 
+      {/* calendar */}
       <div className="lg:hidden ml-12 mr-12 mb-10 p-6 bg-white shadow rounded-lg flex justify-center items-center overflow-x-auto">
         <div className="min-w-[300px]">
           <Calendar 
@@ -225,6 +241,7 @@ const Dashboard = () => {
         </div>
       </div>
 
+      {/* total participants, first response time, total tickets, full resolve time */}
       <div className="font-poppins lg:ml-18 ml-15 mr-15 grid grid-cols-1 lg:grid-cols-[0.8fr_1.0fr_1.2fr] gap-6">
         <div className="p-6   bg-white shadow rounded-lg ">
           <h2 className="font-kanit font-medium text-2xl mb-4 text-gray-500">Total Participants</h2>
@@ -251,6 +268,7 @@ const Dashboard = () => {
         </div>
       </div>
 
+      {/* daily chart data, customer satisfacction rate, total tickets by emergency */}
       <div className="font-poppins lg:ml-18 ml-15 grid grid-cols-1 lg:grid-cols-[2.0fr_1.0fr] gap-6 mr-15 mt-8">
         <div className="p-6 bg-white shadow rounded-lg lg:row-span-2 overflow-x-auto">
           <div className="min-w-[300px]">
@@ -269,6 +287,7 @@ const Dashboard = () => {
       </div>
 
 
+      {/* agent table details, total tickets by status */}
       <div className="font-poppins lg:ml-18 ml-15 grid grid-cols-1 lg:grid-cols-2 gap-6 mr-15 mt-8 mb-20">
         <AgentsTable data={agentTableData}/>
         

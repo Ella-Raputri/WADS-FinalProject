@@ -27,11 +27,15 @@ export const SecheduleList = ({competition}) => {
     return (
         <>
         <div className="flex w-[95%] lg:w-[90%] mx-auto mt-[2em] md:mt-[2em] sm:mt-[0.7em] mb-[1em] justify-center items-center lg:mt-[1em]">
+            
+            {/* competition date */}
             <div className="w-[20%] sm:flex-col sm:items-center sm:justify-center hidden sm:flex">
                 <p className="text-lg">{day}</p>
                 <p className="font-medium text-3xl">{date}</p>
                 <p className="text-lg">{month} {year}</p>
             </div>
+
+            {/* competition title, submission due, details button, status button */}
             <div className="w-[80%] sm:mr-2 md:mr-0 bg-[#F4F4F4] rounded-[10px] font-poppins  flex flex-col justify-center sm:items-center sm:flex-row pt-4 pb-4 sm:pt-3 sm:pb-3 shadow">
                 <div className="pl-[2em] w-[90%] sm:w-[70%] flex flex-col">
                     <p className="w-[100%] md:w-[80%] text-xl pb-2 font-semibold">{competition.Name}</p>
@@ -53,6 +57,7 @@ export const SecheduleList = ({competition}) => {
                 </div>
             </div>
         </div>
+        
         { competitionIsOpen && 
             <CompetitionPopUp competition={competition} isRegistered={true} isOpen={competitionIsOpen} onClose={() => {
                 setCompetitionIsOpen(false);

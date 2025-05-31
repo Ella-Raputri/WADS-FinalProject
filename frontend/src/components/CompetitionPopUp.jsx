@@ -11,12 +11,14 @@ import axios from "axios";
 
 
 export const CompetitionPopUp = ({ competition, isOpen, onClose }) => {
-    const [uploadOpen, setUploadOpen] = useState(false); 
+    const [uploadOpen, setUploadOpen] = useState(false);    // state to show whether the twibbon popup window opened
     const [isRegistered, setIsRegistered] = useState(null);
     const navigate = useNavigate();
     const {userData, isLoggedIn, backendUrl} = useContext(AppContent);
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
+
+    // fetch whether the user has registered to the competition
     const fetchRegistered = async()=>{
       try {
         const response = await axios.get(`${backendUrl}api/CompetitionRegistration/getUserRegistrationById/${userData.id}/${competition._id}`)
@@ -31,11 +33,10 @@ export const CompetitionPopUp = ({ competition, isOpen, onClose }) => {
 
     useEffect(() => {
       if (!userData?.id || !competition?._id) return;
-      console.log("userData:", userData.id);
-      console.log("competition:", competition._id);
 
       fetchRegistered();
 
+      //set up the popup window to not change the window size
         if (isOpen || uploadOpen) {
           const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
           
@@ -66,7 +67,9 @@ export const CompetitionPopUp = ({ competition, isOpen, onClose }) => {
           }
         };
       }, [isOpen, uploadOpen, competition]);
-
+    
+    
+    // user can only register to a competition if they are already logged in
     const handleRegisterCompetition = ()=>{
       if(isLoggedIn){
         setUploadOpen(true)
@@ -91,12 +94,16 @@ export const CompetitionPopUp = ({ competition, isOpen, onClose }) => {
             overlayClassName="flex justify-center items-center inset-0 fixed z-1000 bg-[rgba(0,0,0,0.5)] overflow-hidden"
         >
             <div className="h-[80vh] md:h-[70vh] overflow-y-auto" style={{scrollbarWidth:"thin", scrollbarColor:"#ccc transparent"}}>
+              
+              {/* header */}
               <div className="top-0 sticky pt-1 bg-white">
                   <p className="font-kanit font-medium text-2xl xl:text-3xl ml-11 w-[65%] md:w-auto">{competition.Name}</p>
                   <p className="ml-11 text-md xl:text-lg mt-3">Price: Rp {competition.Price} / Person</p>
                   <span className="text-[2.3rem] xl:text-[2.7rem] text-gray-500 absolute top-0 right-0 mr-[1em] md:mr-[1.5em]  hover:text-gray-600 cursor-pointer" onClick={onClose}> <FontAwesomeIcon icon={faTimes}/> </span>
                   <div className="w-[80%] h-[0.05em] bg-gray-400 ml-[3.1em] mt-[0.5em]"></div>
               </div>
+
+              {/* content */}
               <p className="ml-11 text-md xl:text-lg mt-[1.2em]"><span className="font-semibold">Venue:</span> {competition.Venue}</p>
               <p className="ml-11 text-md xl:text-lg mt-[0.7em]"><span className="font-semibold">Date:</span> {months[competitionDate.getMonth()]} {competitionDate.getDate()} - {months[competitionDateFinal.getMonth()]} {competitionDateFinal.getDate()}</p>
               <p className="ml-11 text-md xl:text-lg mt-[0.7em]"><span className="font-semibold">Final Submission for Preliminary Round:</span> {months[competitionDateEnd.getMonth()]} {competitionDateEnd.getDate()}</p>
@@ -112,6 +119,8 @@ export const CompetitionPopUp = ({ competition, isOpen, onClose }) => {
                   return <li className="ml-11 text-md xl:text-lg mt-[0.7em]" key={index}>{line}</li>
                 })}
               </ul>
+
+              {/* register button */}
               <button 
                 onClick={() => {
                   isRegistered ? toast.success("You are already registered!") : handleRegisterCompetition()

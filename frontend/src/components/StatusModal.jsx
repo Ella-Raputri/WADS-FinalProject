@@ -8,7 +8,6 @@ import { AppContent } from "@/context/AppContext";
 import { useContext } from "react";
 import axios from "axios";
 
-
 export const StatusModal = ({competition, isOpen, onClose}) => {
     const [uploadOpen, setUploadOpen] = useState(false);
     const {userData, backendUrl} = useContext(AppContent);
@@ -19,13 +18,13 @@ export const StatusModal = ({competition, isOpen, onClose}) => {
     const [data, setData] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
+    // fetch the registration details of the specific competition for the user
     const fetchRegistration = async()=>{
         axios.defaults.withCredentials =true
         try {
             const response = await axios.get(backendUrl+'api/competitionRegistration/getUserRegistrationById/'+userData.id+'/' +competition._id);
             if(response.data.success){
                 const newestRegist = response.data.newestRegistration
-                console.log(newestRegist)
                 setData(newestRegist);
                 if (newestRegist.Status === "Rejected"){
                     setIsRejected(true);
@@ -36,7 +35,6 @@ export const StatusModal = ({competition, isOpen, onClose}) => {
                 setAdminComment(newestRegist.AdminComment);
                 setIsLoading(false);
             }
-
         } catch (error) {
             console.error(error)
         }
@@ -45,6 +43,7 @@ export const StatusModal = ({competition, isOpen, onClose}) => {
     useEffect(() => {
         fetchRegistration();
 
+        // ensure the popup doesnt break the window
         if (isOpen || uploadOpen) {
           const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
           
@@ -82,13 +81,15 @@ export const StatusModal = ({competition, isOpen, onClose}) => {
         <div>
         <Modal competition={competition} isOpen={isOpen} onRequestClose={onClose} className="font-poppins md:w-[80%] w-[90%] py-6 pb-8 bg-white mx-auto shadow-xl relative rounded-[10px]" overlayClassName="flex justify-center items-center inset-0 fixed z-1000 bg-[rgba(0,0,0,0.5)] overflow-hidden">
             <div className="h-[80vh] md:h-[70vh] overflow-y-auto" style={{scrollbarWidth:"thin", scrollbarColor:"#ccc transparent"}}>
+              
+              {/* header */}
               <div className="top-0 sticky pt-1 bg-white">
                   <p className="font-kanit font-medium text-2xl xl:text-3xl ml-11 w-[65%] md:w-auto">Competition Status</p>
                   <span className="text-[2.3rem] xl:text-[2.7rem] text-gray-500 absolute top-0 right-0 mr-[1em] md:mr-[1.5em] hover:text-gray-600 cursor-pointer" onClick={onClose}> <FontAwesomeIcon icon={faTimes}/> </span>
                   <div className="w-[80%] h-[0.05em] bg-gray-400 ml-[3.1em] mt-[0.5em]"></div>
               </div>
 
-
+              {/* registration history */}
               <div className="sm:grid sm:grid-cols-[auto_1fr] sm:gap-x-[30px] ml-5 sm:gap-y-[1.5em] pl-[2em] pt-[2em] pb-[0.5em]">
                   <p className="font-semibold text-md xl:text-lg mb-1 sm:pb-0">Proof of Payment:</p>
                   <img src={data.PaymentProof} className="w-[40%] mb-5 rounded-[10px] min-w-[200px]" alt="Payment Proof Image"/>
@@ -104,6 +105,7 @@ export const StatusModal = ({competition, isOpen, onClose}) => {
               
               </div>
 
+              {/* registration status is rejected or not */}
               {
                   isRejected? (<button 
                   onClick={() => setUploadOpen(true)} 
@@ -115,13 +117,11 @@ export const StatusModal = ({competition, isOpen, onClose}) => {
               
             </div>
         </Modal>
-        
 
         {/* Upload Modal */}
         <UploadTwibbonPayment isOpen={uploadOpen} onClose={() => setUploadOpen(false)} onCloseParent={onClose} competition={competition}/>
         </div>
         }
-
 
         </>
     );

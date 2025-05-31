@@ -11,6 +11,7 @@ const Footer = () => {
           <p>© Copyright 2025 Group Raft & NMC</p>
         </div>
 
+        {/* Social Media Logo */}
         <div className="flex space-x-5 mt-3 font-semibold sm:mt-0">
           <a
             href="https://www.instagram.com/nmcbnmc/"

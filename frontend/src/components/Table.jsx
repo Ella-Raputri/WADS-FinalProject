@@ -10,6 +10,7 @@ function Table({ columns, data, isTicketTable}) {
     const {userData} = useContext(AppContent)
     const navigate = useNavigate();
 
+    // handle redirecting for each table
     const handleRowClick = (row)=>{
         if (columns.includes("SUBJECT")) {
             if(userData.role==="admin") navigate(`/adminticketdetails`, {state: {data:row,  user:userData}}); 
@@ -25,6 +26,8 @@ function Table({ columns, data, isTicketTable}) {
     return (
         <div className="overflow-x-auto max-w-11/12 lg:max-w-full mt-3 p-4">
             <table className="md:min-w-11/12 table-fixed bg-white shadow-md rounded-lg overflow-hidden">
+                
+                {/* header */}
                 <thead className="bg-gray-100 border border-gray-300">
                     <tr>
                         {columns.map((col, index) => (
@@ -40,6 +43,7 @@ function Table({ columns, data, isTicketTable}) {
                     </tr>
                 </thead>
                 <tbody>
+                    {/* ticket table */}
                     {isTicketTable && data.map((item, index) => (
                         <tr key={index} className="border-b border-gray-500 hover:bg-gray-50 ">
                             {columns.map((col, colIndex) => (
@@ -85,6 +89,7 @@ function Table({ columns, data, isTicketTable}) {
                     ))}
 
 
+                    {/* competition table */}
                     {!isTicketTable && data.map((item, index) => (
                         <tr key={index} className="border-b border-gray-500 hover:bg-gray-50 ">
                             {columns.map((col, colIndex) => (

@@ -5,9 +5,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { toast } from "react-toastify";
 import React from "react";
 
-// Modal.setAppElement("#root");
-
 const FilterModal = ({ isOpen, onClose, onApply, currFilters }) => {
+
+  //list of the filters
   const [filters, setFilters] = useState({
     createdStart: currFilters['createdStart'],
     createdEnd: currFilters['createdEnd'],
@@ -25,6 +25,7 @@ const FilterModal = ({ isOpen, onClose, onApply, currFilters }) => {
   const updatedStartRef = useRef(null);
   const updatedEndRef = useRef(null);
 
+  // ensure the popup doesnt break the window
   useEffect(() => {
     if (isOpen) {
       const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
@@ -57,10 +58,13 @@ const FilterModal = ({ isOpen, onClose, onApply, currFilters }) => {
     };
   }, [isOpen]);
 
+
+  // handle each filter input
   const handleFilterChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
   };
 
+  // apply the filter
   const handleApply = () => {
       const today = new Date();
       today.setHours(23,59,59,59); 

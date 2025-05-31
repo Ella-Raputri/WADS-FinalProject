@@ -1,16 +1,15 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Modal from "react-modal";
 import React from "react";
-import { faCalendar } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-// Modal.setAppElement("#root");
+
 
 const FilterStatusModal = ({ isOpen, onClose, onApply }) => {
   const [filters, setFilters] = useState({
     status: "",
   });
 
+  // ensure the popup doesnt break the window
   useEffect(() => {
     if (isOpen) {
       const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
@@ -43,15 +42,18 @@ const FilterStatusModal = ({ isOpen, onClose, onApply }) => {
     };
   }, [isOpen]);
 
+  // handle each filter
   const handleFilterChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
   };
 
+  // apply the filters
   const handleApply = () => {
       onApply(filters);
       onClose();
   };
 
+  // reset the filters
   const handleReset = () => {
     setFilters({
       status: "",

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CompetitionPopUp } from "./CompetitionPopUp";
 import React from 'react';
 
@@ -24,10 +24,12 @@ export const CompetitionInfo = ({competition, isFirst, userData}) => {
     return(
     <>
     <div data-aos={`${userData? "none" : "fade-up"}`} className={`w-[90%] break-words justify-self-center flex flex-col gap-8 items-center md:flex-row lg:w-[80%] ${isFirst ? "mt-[8em]" : "md:mt-[4em] mt-[5em]"} xl:max-w-[1200px] 2xl:max-w-[1800px]`}>    
+        {/* image */}
         <div className="w-[28%] bg-gray-400 rounded-[10px] shrink-0 min-w-[250px] sm:min-w-[300px] max-w-[350px] aspect-[7/5] flex items-center justify-center">
             <img className="w-[70%]" src={imageSrc} alt={competition.Name} />
         </div>
 
+        {/* content */}
         <div className="w-[90%] flex flex-col justify-center md:min-w-[200px] md:w-[72%]">
             <p className="font-medium text-2xl mb-2 font-kanit">{competition.Name}</p>
             <div className="text-md mt-1 leading-7 text-justify text-[#000000] font-poppins">{competition.Description[0]+ ' '+competition.Description[1]+' '+competition.Description[2]}</div>
@@ -37,7 +39,8 @@ export const CompetitionInfo = ({competition, isFirst, userData}) => {
             }}>Register</button>
         </div>
     </div>
-
+    
+    {/* pop up window */}
     { isOpen && 
     <CompetitionPopUp competition={competition} isOpen={isOpen} onClose={() => {
         setIsOpen(false);

@@ -16,6 +16,7 @@ function UploadTwibbonPayment({isOpen, onClose, onCloseParent, competition}) {
     const [loading, setLoading] = useState(false);
     const {userData, backendUrl, uploadImage} = useContext(AppContent);
 
+    // submit handler
     const handleSubmit=async(e)=>{
         setLoading(true);
         e.preventDefault();
@@ -67,7 +68,8 @@ function UploadTwibbonPayment({isOpen, onClose, onCloseParent, competition}) {
                     </span>
                     <div className="w-[80%] h-[0.05em] bg-gray-400 ml-[3.1em] mt-[0.5em]"></div>
                 </div>
-
+                
+                {/* buttons to upload twibbon and payment image */}
                 <div className="ml-11 mt-5">
                     <label className="block text-md xl:text-lg mb-1 font-semibold">Upload Twibbon</label>
                     <UploadImage image={twibbonImage} setImage={setTwibbonImage} imageName={twibbonImageName} setImageName={setTwibbonImageName} inputId={'twibbon-upload'}/>

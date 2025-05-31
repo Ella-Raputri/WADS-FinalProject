@@ -38,6 +38,7 @@ const HelpPage = () => {
   const totalResult = filteredData.length; 
   const totalPage = Math.ceil(totalResult / itemsPerPage);
 
+  // function to fetch updated at data
   const fetchUpdatedAt = async (ticketId) => {
       try {
           const {data} = await axios.get(`${backendUrl}api/ticket/getUpdatedAtByTicketId?ticketId=${ticketId}`);
@@ -48,6 +49,7 @@ const HelpPage = () => {
       }
   }; 
 
+  // fetch ticket details
   const fetchTickets = async () => {
     try {
         setLoading(true);
@@ -84,7 +86,6 @@ const HelpPage = () => {
   },[backendUrl]);
 
   useEffect(() => {
-      console.log("Updated currentData:", currentData);
       setTracker(Math.random);
   }, [currentData]); 
 
@@ -92,7 +93,6 @@ const HelpPage = () => {
         if (!userData || !userData.id) return; 
   
         if (!socket) {
-            console.log("🔄 Initializing socket...");
             initializeSocket(userData.id);
         }
     }, [userData]);
@@ -101,11 +101,11 @@ const HelpPage = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = Math.min(startIndex + itemsPerPage, totalResult);
     setCurrentData(filteredData.slice(startIndex, endIndex));
-    console.log(currentPage)
   }, [currentPage, filteredData]); 
 
   const navigate = useNavigate();
 
+  // handle filters
   const handleFilter = (newFilters) => {
     setOpenFilter(false);
     setCurrentFilter(newFilters);
@@ -115,25 +115,31 @@ const HelpPage = () => {
     const dateCreateEnd = createdEnd ? new Date(createdEnd) : null;
     const dateUpdateStart = updatedStart ? new Date(updatedStart) : null;
     const dateUpdateEnd = updatedEnd ? new Date(updatedEnd) : null;
-  
+    
     const filtered = data.filter(ticket => {
       const createdAt = new Date(ticket.CreatedAt);
       const updatedAt = new Date(ticket.UpdatedAt); 
-  
+      
+      // filter based on created at date
       const isWithinCreateRange =
         (!dateCreateStart || createdAt >= dateCreateStart) &&
         (!dateCreateEnd || createdAt <= dateCreateEnd);
   
+      // filter based on updated at date
       const isWithinUpdateRange =
         (!dateUpdateStart || updatedAt >= dateUpdateStart) &&
         (!dateUpdateEnd || updatedAt <= dateUpdateEnd);
   
+      // filter based on priority
       const isPriorityMatch = priority ? ticket.PriorityType.toLowerCase() === priority : true;
+
+      // filter based on status
       const isStatusMatch = status ? ticket.Status.toLowerCase() === status : true;
   
       return isWithinCreateRange && isWithinUpdateRange && isPriorityMatch && isStatusMatch;
     });
 
+    // sorts the tickets
     if (sortBy) {
       filtered.sort((a, b) => {
         const aVal = a[sortBy];
@@ -156,7 +162,7 @@ const HelpPage = () => {
         return sortMethod === "asc" ? aVal - bVal : bVal - aVal; //sort num
       });
     }
-  
+    
     setFilteredData(filtered);
     setCurrentPage(1); 
   };
@@ -164,6 +170,7 @@ const HelpPage = () => {
 
   return (
     <>
+      {/* title and accordion FAQs */}
       <h1 className='mt-20 font-medium text-center text-3xl font-kanit p-5 pb-3'>
         Frequently Asked Questions (FAQ)
       </h1>
@@ -171,12 +178,11 @@ const HelpPage = () => {
         <AccordionFAQ />
       </div>
 
+      {/* chat button for AI */}
       <div className="fixed bottom-2 right-4 lg:bottom-10 lg:right-8 flex flex-col items-end space-y-1 group">
       <div className="opacity-100 group-hover:opacity-0 transition-opacity duration-300 bg-white text-gray-700 text-sm font-medium px-3 py-1 rounded-md shadow-md mb-1 font-poppins">
         Chat me!
       </div>
-
-      {/* Chat button */}
       <button
         data-testid="btnai"
         onClick={() => setIsOpenChatAI(true)}
@@ -187,7 +193,7 @@ const HelpPage = () => {
     </div>
 
 
-
+    {/* if logged in, shows the help ticket table */}
       {isLoggedIn && 
       <div>
       <div className="flex justify-between items-center md:ml-20 mt-15 p-6 pb-0">
@@ -195,6 +201,7 @@ const HelpPage = () => {
           Help Tickets
         </h1>
 
+        {/* filter button, new ticket button */}
         <div className="sm:mr-20 md:mr-28 2xl:mr-35 flex gap-5">
           <button 
             className="border border-slate-200 transition duration-300 ease hover:border-slate-300 shadow-sm focus:shadow px-3 py-2 rounded-xl hover:bg-gray-100 hover:cursor-pointer"
@@ -212,6 +219,7 @@ const HelpPage = () => {
       </div>
 
 
+      {/* table data */}
       <div className="md:ml-20 mb-30 p-4 pt-0 pl-0" data-testid='table'>
         {loading ? (
           <div className="text-center font-semibold text-gray-500 p-5">Loading...</div>
@@ -236,11 +244,13 @@ const HelpPage = () => {
       </div>
       </div>
 
+      {/* filter popup */}
       {openFilter && <FilterModal isOpen={openFilter} onClose={()=>setOpenFilter(false)} onApply={handleFilter} currFilters={currentFilter}/>}
 
       </div>
       }
 
+      {/* chat AI popup */}
       {isOpenChatAI && <ChatModal isOpen={isOpenChatAI} onClose={()=>setIsOpenChatAI(false)} user={userData}/>}
       
       </>

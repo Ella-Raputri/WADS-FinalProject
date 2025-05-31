@@ -1,6 +1,8 @@
 import React from "react";
 
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+
+  // get page numbers based on the current maximum number
   const getPageNumbers = () => {
     const pages = [];
     const maxPagesToShow = 5; 
@@ -23,6 +25,8 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
 
   return (
     <div className="flex items-center space-x-2">
+
+      {/* previous button */}
       <button
         className={`px-3 py-1 sm:ml-40 text-gray-500 hover:text-black disabled:text-gray-300
             ${currentPage === 1 ? "hover:cursor-default" : "hover:cursor-pointer"}`}
@@ -32,6 +36,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         ← Previous
       </button>
 
+      {/* the numbers */}
       <div className="hidden lg:flex space-x-2">
         {getPageNumbers().map((page, index) => (
           <button
@@ -48,6 +53,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         ))}
       </div>
 
+      {/* next button */}
       <button
         className={`px-3 py-1 text-gray-500 hover:text-black disabled:text-gray-300
             ${currentPage === totalPages ? "hover:cursor-default" : "hover:cursor-pointer"}`}

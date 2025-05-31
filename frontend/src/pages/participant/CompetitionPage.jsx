@@ -11,6 +11,7 @@ const CompetitionPage = ({}) => {
   const [competitions, setCompetitions] = useState([]);
   const {backendUrl, userData, socket, initializeSocket} = useContext(AppContent);
 
+  // fetch competition details
   const fetchComps = async()=>{
     try {
       const response = await axios.get(backendUrl+'api/competition/getAllCompetitions');
@@ -31,7 +32,6 @@ const CompetitionPage = ({}) => {
         if (!userData || !userData.id) return; 
   
         if (!socket) {
-            console.log("🔄 Initializing socket...");
             initializeSocket(userData.id);
         }
     }, [userData]);

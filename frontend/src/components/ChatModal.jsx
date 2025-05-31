@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import ChatBox from './ChatBox'
 import Modal from "react-modal";
 import { toast } from "react-toastify";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
@@ -18,12 +17,15 @@ function ChatModal({isOpen, onClose, user}) {
     const messagesEndRef = useRef(null);
     const {backendUrl} = useContext(AppContent);
 
+    // slide the message into view after sending a new message
     useEffect(() => {
-    if (messages.length > 0) {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }
+        if (messages.length > 0) {
+            messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+        }
     }, [messages]);
 
+
+    // make sure the pop up doesnt change the screen width
     useEffect(() => {
         if (isOpen) {
           const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
@@ -31,7 +33,7 @@ function ChatModal({isOpen, onClose, user}) {
           document.body.style.overflow = "auto";
           document.body.style.paddingRight = `0px`;
       
-          const navbar = document.querySelector(".navbar"); // Ensure this class is in your Navbar
+          const navbar = document.querySelector(".navbar"); 
           if (navbar) {
             navbar.style.paddingRight = `0px`;
           }
@@ -56,6 +58,8 @@ function ChatModal({isOpen, onClose, user}) {
         };
     }, [isOpen]);
 
+
+    // fetch data when the pop up is open
     useEffect(()=>{
       if(!user) return;
 
@@ -66,10 +70,9 @@ function ChatModal({isOpen, onClose, user}) {
     const fetchData = async () => {
       const needsFetching = messages.length === 0;
       if (!needsFetching) return; // Skip if all data is available
-      if(fetchNum>=5) return;
+      if(fetchNum>=5) return;       // Stop fetching if already retry fetching for 5 times
     
       try {
-        console.log("Fetching message...");
         setFetchNum(fetchNum+1);
         
         const [messageResponse] = await Promise.all([
@@ -129,7 +132,6 @@ function ChatModal({isOpen, onClose, user}) {
     const generateBotResponse = async(latestMessage)=>{
         setLoading(true);
         try {
-            console.log("isi msg: ", latestMessage.Message);
             const response = await axios.post(`${backendUrl}api/message/generateChatbotResponse`, {lastMsg:latestMessage.Message});
             const botMsg = response.data.message.trim();
 

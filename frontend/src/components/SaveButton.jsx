@@ -2,15 +2,16 @@ import React from 'react';
 import { MdOutlineFileDownload } from "react-icons/md";
 
 function SaveButton({data, type}) {
-
+    
+    // function to save data
     const handleSaveList = () => {
         if (data.length === 0) {
-          alert("No data available to save!");
+          toast.error("No data available to save!");
           return;
         }
-      
-        const headers = Object.keys(data[0]);
-      
+        const headers = Object.keys(data[0]);   //making the column headers
+        
+        // making the content
         const csvContent = [
           headers.join(","), 
           ...data.map(row => headers.map(field => `"${row[field]}"`).join(",")) 
@@ -26,7 +27,7 @@ function SaveButton({data, type}) {
         link.click();
         document.body.removeChild(link);
 
-        URL.revokeObjectURL(url);
+        URL.revokeObjectURL(url);     //download the csv
       };
       
 

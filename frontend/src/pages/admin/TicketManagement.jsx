@@ -46,6 +46,7 @@ const TicketManagement = () => {
     setCurrentData(filteredData.slice(startIndex, endIndex));
   }, [currentPage, filteredData]); 
 
+  // filter handler function
   const handleFilter = (newFilters) => {
     setOpenFilter(false);
 
@@ -60,21 +61,27 @@ const TicketManagement = () => {
     const filtered = data.filter(ticket => {
       const createdAt = new Date(ticket.CreatedAt);
       const updatedAt = new Date(ticket.UpdatedAt); 
-  
+      
+      // filter based on date created
       const isWithinCreateRange =
         (!dateCreateStart || createdAt >= dateCreateStart) &&
         (!dateCreateEnd || createdAt <= dateCreateEnd);
   
+      // filter based on date updated
       const isWithinUpdateRange =
         (!dateUpdateStart || updatedAt >= dateUpdateStart) &&
         (!dateUpdateEnd || updatedAt <= dateUpdateEnd);
-  
+      
+      // filter based on priority
       const isPriorityMatch = priority ? ticket.PriorityType.toLowerCase() === priority : true;
+
+      // filter based on status
       const isStatusMatch = status ? ticket.Status.toLowerCase() === status : true;
   
       return isWithinCreateRange && isWithinUpdateRange && isPriorityMatch && isStatusMatch;
     });
 
+    // sort the tickets
     if (sortBy) {
       filtered.sort((a, b) => {
         const aVal = a[sortBy];
@@ -97,18 +104,21 @@ const TicketManagement = () => {
         return sortMethod === "asc" ? aVal - bVal : bVal - aVal; //sort num
       });
     }
-  
+    
+    // apply the filter function
     setFilteredData(filtered);
     setBaseFilteredData(filtered);
     setCurrentPage(1); 
   };
 
+  // search bar handler
   const handleSearch = (keywords) =>{
     if (!keywords.trim()) {
       setFilteredData(baseFilteredData); 
       return;
     }
 
+    // filter the data based on whether the keyword in the subject
     const searched = filteredData.filter(ticket => {
       const inSubject = ticket.Subject.toLowerCase().includes(keywords.toLowerCase());
       return inSubject;
@@ -118,6 +128,7 @@ const TicketManagement = () => {
     setCurrentPage(1);
   };
 
+  // fetch the updated at data
   const fetchUpdatedAt = async (ticketId) => {
       try {
           const {data} = await axios.get(`${backendUrl}api/ticket/getUpdatedAtByTicketId?ticketId=${ticketId}`);
@@ -128,6 +139,7 @@ const TicketManagement = () => {
       }
   }; 
 
+  // fetch the ticket details
   const fetchTickets = async () => {
     try {
         setLoading(true);
@@ -168,7 +180,6 @@ const TicketManagement = () => {
       if (!userData || !userData.id) return; 
 
       if (!socket) {
-          console.log("🔄 Initializing socket...");
           initializeSocket(userData.id);
       }
   }, [userData]);
@@ -181,7 +192,7 @@ const TicketManagement = () => {
         Ticket Management
       </h1>
 
-
+        {/* search bar, filter button, save button */}
       <div className="pl-5 pr-8 pt-2 pb-0 md:ml-20 flex justify-between items-center font-poppins">
         <SearchBar onApply={handleSearch} placeholderSubject={"Search subject..."}/>
         <div className="sm:mr-20 md:mr-26 2xl:mr-35 flex gap-2">
@@ -193,6 +204,7 @@ const TicketManagement = () => {
         </div>
       </div>
 
+      {/* table data */}
       <div className="md:ml-20 mb-30 p-4 pt-0 pl-0">
         {loading ? (
           <div className="text-center font-semibold text-gray-500 p-5">Loading...</div>
@@ -202,6 +214,7 @@ const TicketManagement = () => {
           <div className="text-center font-semibold text-gray-500 p-5">No data available</div>
         )}
 
+      {/* pagination */}
       <div className="flex justify-between mt-2 text-xs md:text-sm md:mr-32 md:ml-5 font-poppins">
         {currentData.length>0 ? 
         (<>
@@ -217,6 +230,7 @@ const TicketManagement = () => {
       </div>
       </div>
 
+      {/* filter popup */}
       {openFilter && <FilterModal isOpen={openFilter} onClose={()=>setOpenFilter(false)} onApply={handleFilter} currFilters={currentFilter}/>}
       </>}
       </>

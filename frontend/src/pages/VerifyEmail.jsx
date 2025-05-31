@@ -18,7 +18,7 @@ const VerifyEmailPage = () => {
   const inputRefs = useRef([]);
   const location = useLocation();
 
-
+  // resend timer functionality
   useEffect(() => {
     if (resendTimer > 0) {
       const timer = setTimeout(() => setResendTimer(resendTimer - 1), 1000);
@@ -28,6 +28,7 @@ const VerifyEmailPage = () => {
     }
   }, [resendTimer]);
 
+  // resend otp
   const sendingOtp =async()=>{
     setLoading(true);
     try {
@@ -48,14 +49,12 @@ const VerifyEmailPage = () => {
   useEffect(() => {
     if (location.state?.email) {
       setEmail(location.state.email);
-      console.log(location.state.email);
     }
     else navigate('/login')
   }, [location.state?.email]);
 
   useEffect(() => {
       if (email) {
-          console.log("Email before sending OTP: " + email);
           sendingOtp();
       }
   }, [email]);
@@ -88,6 +87,7 @@ const VerifyEmailPage = () => {
     }
   };
 
+  // paste to six inputs of otp
   const handlePaste = (e) => {
     e.preventDefault();
     const pasteData = e.clipboardData.getData('text/plain').trim();
@@ -104,6 +104,8 @@ const VerifyEmailPage = () => {
 
   const onSubmitOtp = async(e)=>{
     e.preventDefault();
+
+    // prevent otp bruteforcing
     if(wrongOtp >=3) {
       toast.error("Too many times of wrong OTP, please resend a new OTP");
       return;
@@ -113,6 +115,7 @@ const VerifyEmailPage = () => {
     axios.defaults.withCredentials = true;
     
     try {
+      // verify the email 
       const {data} =await axios.post(backendUrl+'api/auth/verify-account', {email:email, otp:inputtedOtp})
       if(data.success){
         toast.success(data.message)
@@ -140,7 +143,7 @@ const VerifyEmailPage = () => {
     >
       <div className="absolute inset-0 bg-black/30 backdrop-blur-xl"></div>
 
-
+      {/* headers */}
       <div className="relative z-10 flex w-full max-w-md flex-col overflow-hidden rounded-lg bg-white shadow-lg">
         <div className="bg-red-600 p-6 text-white text-center">
           <p className="mb-3 font-kanit text-3xl font-medium">Verify Email</p>
@@ -149,6 +152,7 @@ const VerifyEmailPage = () => {
           </p>
         </div>
 
+        {/* inputs */}
         <form className="space-y-6 p-6" onSubmit={onSubmitOtp}>
           <p className="text-center text-gray-700 font-poppins">
             Enter the 6-digit code sent to your email:
@@ -169,6 +173,7 @@ const VerifyEmailPage = () => {
             ))}
           </div>
 
+            {/* resend button */}
           <div className="flex justify-center mb-8">
             <p className="font-poppins text-md text-gray-600" >Haven't got the code? &nbsp;</p>
             <p
@@ -181,7 +186,7 @@ const VerifyEmailPage = () => {
             </p>
           </div>
 
-          
+          {/* submit button */}
           <div className="flex justify-center">
             <button
                 type="submit"
