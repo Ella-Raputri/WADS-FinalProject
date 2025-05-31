@@ -14,21 +14,23 @@ const WelcomePage = () => {
 
   const {isLoggedIn, userData} = useContext(AppContent);
 
-  useEffect(()=>{
+  useEffect(()=>{ //initialize animation on scroll
     AOS.init()
   }, [])
 
+  // if the user is logged in
   useEffect(()=>{
     if(isLoggedIn){
-      if(userData.role === 'admin') navigate('/admindashboard')
-      else if(userData.role === 'participant') navigate('/userhome')
+      if(userData.role === 'admin') navigate('/admindashboard') //redirect to dashboard if admin
+      else if(userData.role === 'participant') navigate('/userhome') //redirect to home if participant
     }
   }, [isLoggedIn, userData])
 
   useEffect(() => {
+    //observer to see whether the user already starting to view the competitions
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setAnimateCompetition(entry.isIntersecting);
+        setAnimateCompetition(entry.isIntersecting); //if yes, animate
       },
       { threshold: 0.4 } 
     );
@@ -48,6 +50,7 @@ const WelcomePage = () => {
     navigate('/usercomp');
   };
 
+  //references for the moving elements 
   const light1Ref = useRef(null);
   const light2Ref = useRef(null);
   const light3Ref = useRef(null);
@@ -56,9 +59,10 @@ const WelcomePage = () => {
   const descRef = useRef(null);
 
   useEffect(() => {
-    const handleScroll = () => {
+    const handleScroll = () => { //when user scrolls
       let value = window.scrollY;
 
+      //move/animate the text and images (parallax scrolling)
       if (descRef.current) {
         descRef.current.style.top = value * 2.1 + 'px';
       }
@@ -71,7 +75,8 @@ const WelcomePage = () => {
         rightFlowerRef.current.style.right = value * 1.0 + 'px';
       }
 
-      const fadeValue = Math.max(0, 1 - value/200);
+      //set the light to fade if user scrolls down
+      const fadeValue = Math.max(0, 1 - value/200); 
       if(light1Ref.current){
         light1Ref.current.style.opacity = fadeValue; 
       }
@@ -91,6 +96,7 @@ const WelcomePage = () => {
 
   return (
     <>
+      {/* First section: the parallax scrolling opening part */}
       <section className="relative w-full flex flex-col items-center text-center py-10 overflow-hidden pb-0 mb-0">
         {/* Background Images */}
         <div className=" relative w-full flex justify-center">
@@ -166,7 +172,8 @@ const WelcomePage = () => {
             Join and Compete
           </button>
         </div>
-        
+
+        {/* the ground, also as divider between first and second section  */}
       <img
         src="src/assets/welcome_page/ground.png"
         alt="Ground"
@@ -174,6 +181,7 @@ const WelcomePage = () => {
       /> 
       </section>
 
+      {/* Second section: about us */}
       <div className="flex items-center justify-center min-h-screen md:min-h-[80vh] color-component-cream -translate-y-4">
         <div className="max-w-5xl w-full flex flex-col md:flex-row items-center p-8 xl:p-0" data-aos="fade-up" data-aos-duration="2000">
           <div className="md:w-1/2">
@@ -196,7 +204,9 @@ const WelcomePage = () => {
         </div>
       </div>
 
+      {/* Third section: competitions carousel */}
       <div ref={competitionRef} className="relative flex flex-col items-center pt-20 md:pt-30 min-h-[80vh] md:min-h-screen w-full">
+        {/* the title that is animated with the decorations */}
         <motion.img 
           src="src/assets/welcome_page/decor.png" 
           alt="left decor" 
@@ -205,7 +215,6 @@ const WelcomePage = () => {
           transition={{ duration: 1.5, ease: "easeInOut" }}
           className="absolute left-1/2 top-[18%] sm:top-[15%] md:top-[20%] xl:top-[15%] transform -translate-x-full -translate-y-1/2 w-12 md:w-16"
         />
-
         <motion.h1 
           className="text-3xl lg:text-4xl font-bold font-kanit mb-8 lg:mb-15"
           initial={{ opacity: 0, scale: 0.8 }}
@@ -214,7 +223,6 @@ const WelcomePage = () => {
         >
           COMPETITIONS
         </motion.h1>
-
         <motion.img 
           src="src/assets/welcome_page/decor2.png" 
           alt="right decor" 
@@ -224,17 +232,23 @@ const WelcomePage = () => {
           className="absolute right-1/2 top-[18%] sm:top-[15%] md:top-[20%] xl:top-[15%] transform translate-x-full -translate-y-1/2 w-12 md:w-16"
         />
 
-        <Carousel/>
+        {/* the competition carousel */}
+        <Carousel/> 
       </div>
 
+      {/* Fourth section: contact us part */}
       <div className="flex flex-col items-center w-full mt-20 md:mt-10 mb-20" data-aos="flip-right">
         <div className="rounded-xl border-5 w-3/4 lg:w-1/2 text-center min-h-80 flex flex-col items-center justify-center p-4" style={{ borderColor: "#DD3833" }}>
           <h1 className="text-2xl md:text-3xl font-poppins text-black font-semibold mb-15">Contact us if you have any questions!</h1>
           <div className="flex gap-6">
+
+          {/* redirect to instagram if contact us is clicked  */}
           <button className="font-poppins arrow-button px-4 md:px-6 py-3 border-2 border-red-600 text-red-600 font-semibold text-md md:text-lg rounded-lg hover:bg-gray-100 transition"
           onClick={()=>{window.open('https://www.instagram.com/nmcbnmc/', '_blank')}}>
             Contact Us <span className="arrow"></span>
           </button>
+
+          {/* redirect to user help page to see FAQ */}
           <button className="font-poppins arrow-button px-4 md:px-6 py-3 bg-red-600 text-white font-semibold text-md md:text-lg rounded-lg hover:bg-red-700 transition"
           onClick={()=>(navigate('/userhelp'))}>
             See FAQ <span className="arrow"></span>
@@ -242,6 +256,7 @@ const WelcomePage = () => {
           </div>
         </div>
 
+        {/* Animated tassle (decoration) */}
         <Tassle/>
       </div>
 
