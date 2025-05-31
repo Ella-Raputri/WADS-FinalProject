@@ -51,9 +51,11 @@ export const sendParticipantAdminMessage =async(req,res)=>{
     }
 
     try {
+        // if an image is also sent in the message
         let imageLink =''
         if(request.imageUrl) imageLink=request.imageUrl
 
+        // create a new message 
         const newMessage = new adminUserChatModel({
             TicketId: request.ticketId,
             SenderId: userId,
@@ -74,6 +76,7 @@ export const sendParticipantAdminMessage =async(req,res)=>{
 export const sendParticipantSystemMessage =async(req,res)=>{
     const {request} = req.body;
     try {
+        //create a new message from the system
         const newMessage = new adminUserChatModel({
             TicketId: request.ticketId,
             SenderId: "system",
@@ -93,6 +96,7 @@ export const sendParticipantSystemMessage =async(req,res)=>{
 
 export const getAllCollabAdminMessage = async(req,res)=>{
     try {
+        //get the admin collab messages on a ticket
         const ticketId = req.query.ticketId;
         const adminCollabChat = await adminCollabChatModel.find({TicketId: ticketId});
 
@@ -111,9 +115,11 @@ export const sendCollabAdminMessage =async(req,res)=>{
     }
 
     try {
+        //if image is sent on the message
         let imageLink =''
         if(request.imageUrl) imageLink=request.imageUrl
 
+        //create the new message
         const newMessage = new adminCollabChatModel({
             TicketId: request.ticketId,
             AdminId: userId,
@@ -132,6 +138,7 @@ export const sendCollabAdminMessage =async(req,res)=>{
 
 export const getAllChatbotMessage = async(req,res)=>{
     try {
+        //get all chatbot messages based on the user id
         const userId =req.query.userId;
         const chat = await chatbotModel.find({SenderId: userId});
 
@@ -156,6 +163,7 @@ export const sendChatbotMessage = async (req, res) => {
     }
 
     try {
+        //create the new message
         const newMessage = new chatbotModel({
             SenderId: userId,
             Message: message,
@@ -177,22 +185,12 @@ export const generateBotRes = async(req,res) =>{
     const {lastMsg} = req.body;
 
     try {
+        //get the response based on RAG from the LLM
         const ragResponse = await queryRAG(lastMsg);
         res.status(200).json({
             message: ragResponse.result,
             sources: ragResponse.sources,
         });
-        // axios.defaults.withCredentials = true;
-        // const geminiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GEMINI_API_KEY}`;
-        // const response = await axios.post(geminiEndpoint, requestBody,
-        //   {
-        //     headers: {
-        //       'Content-Type': 'application/json',
-        //     }
-        //   }
-        // );
-    
-        // res.json(response.data);
       } 
       catch (err) {
         console.error('Gemini API Error:', err.response?.data || err.message);

@@ -6,6 +6,7 @@ export const getUserRegistrationById = async (req, res) => {
     try {
         const { UserId, CompetitionId } = req.params;
 
+        // get the newest registration of that user on that competition
         const newestRegistration = await competitionRegistrationModel
             .findOne({ UserId, CompTypeId: CompetitionId })
             .sort({ createdAt: -1 }); // Sort by createdAt descending
@@ -27,7 +28,7 @@ export const getUserRegistrationById = async (req, res) => {
                 break;
             }
         }
-
+        // can resubmit registration if the previous ones are all rejected
         return res.status(200).json({
             success: true,
             canRegister: all_rejected,
@@ -41,20 +42,22 @@ export const getUserRegistrationById = async (req, res) => {
 
 export const getRegisteredCompetitions = async(req, res) => {
     try{
+        // get all competitions that are registered by the user
         const {userId} = req.body;
         const competitionRegistrations = await competitionRegistrationModel.find({
             "UserId": userId
         })
-        console.log("regsist", competitionRegistrations);
 
         const result = []
         if (competitionRegistrations.length > 0){
             for (let i = 0; i < competitionRegistrations.length; i++){
+                // if the competition date is greater than now, insert that into the upcoming competition for that user
                 let competition = await competitionTypeModel.findById(competitionRegistrations[i].CompTypeId);
                 if (competition.CompetitionDate.EndDate > Date.now()){
                     result.push(competition);
                 }
             }
+            // sort based on the start date
             result.sort((a, b) => new Date(a.CompetitionDate.StartDate) - new Date(b.CompetitionDate.StartDate));
             return res.status(200).json({success:true, result:result});
         }
@@ -91,7 +94,8 @@ export const getCompetitionRegistrations = async (req, res) => {
 export const createCompetitionRegistration = async(req, res) => {
     try{
         const {UserId, CompetitionId, PaymentProofUrl, TwibbonProofUrl} = req.body;
-
+        
+        // get the last registration from that user to that competition
         const competitionRegistration = await competitionRegistrationModel.find({
             "UserId": UserId,
             "CompTypeId": CompetitionId
@@ -105,7 +109,7 @@ export const createCompetitionRegistration = async(req, res) => {
                 return res.status(200).json({message: "You are Already Registered to This Competition!"});
             } 
         }
-
+        // if they havent registered or all rejected before, they can submit the new registration
         const newRegistration = await competitionRegistrationModel.create({
             "UserId": UserId,
             "CompTypeId": CompetitionId,
@@ -121,6 +125,7 @@ export const createCompetitionRegistration = async(req, res) => {
 
 export const deleteCompetitionRegistration = async(req, res) => {
     try{ 
+        // delete competition registration based on the Id
         const {registrationId} = req.params;
         const newRegistration = await competitionRegistrationModel.findByIdAndDelete(registrationId);
         if (!newRegistration){
@@ -137,16 +142,17 @@ export const editCompetitionRegistration = async(req, res) => {
         const {registrationId} = req.params;
         const {status, adminComment} = req.body;
 
+        // find the existing competition registration
         const competitionRegistration = await competitionRegistrationModel.findById(registrationId);
         
         if (!competitionRegistration){
             return res.status(404).json({message: "Registration not found"})
         }
-
+        // if there is no change
         if (competitionRegistration.AdminComment === adminComment && competitionRegistration.Status === status){
             return res.status(500).json({message: "No changes detected. New values must be different from old ones."})
         }
-
+        // update the status and admin comment if changed
         competitionRegistration.AdminComment = adminComment;
         competitionRegistration.Status = status;
 
@@ -159,9 +165,11 @@ export const editCompetitionRegistration = async(req, res) => {
 
 export const getUpcomingCompetitions = async(req, res) => {
     try{
+        // get competitions that are upcoming (not in the past)
         const result = await competitionTypeModel.find({
             "CompetitionDate.FinalDate": {$gt: Date.now()}
         })
+        //sort based on start date
         result.sort((a, b) => new Date(a.CompetitionDate.StartDate) - new Date(b.CompetitionDate.StartDate));
         return res.status(200).json(result);
     }catch(err){

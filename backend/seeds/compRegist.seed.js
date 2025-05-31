@@ -12,12 +12,16 @@ const seedCompetitionRegistrations = async () => {
     const tickets = await ticketModel.find().lean();
     const registeredUsers = new Set();
 
+    //seed the registration data based on the already existed tickets
     const registrationData = tickets.map(ticket => {
+      //unique key for the registration based on the user id and comp type id (1 user can register more than 1 comp)
+      //and one user can send more than 1 ticket about that competition
       const key = `${ticket.SenderId.toString()}|${ticket.CompTypeId.toString()}`;
       
-      if (registeredUsers.has(key)) return null;
+      if (registeredUsers.has(key)) return null; //skip if the registration data is already exists
       registeredUsers.add(key);
 
+      //the new registration data
       return {
         UserId: ticket.SenderId,
         CompTypeId: ticket.CompTypeId, 

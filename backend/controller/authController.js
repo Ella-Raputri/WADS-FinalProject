@@ -4,21 +4,22 @@ import userModel from '../models/userModel.js';
 import transporter from '../config/nodemailer.js'
 import {EMAIL_VERIFY_TEMPLATE, PASSWORD_RESET_TEMPLATE} from '../config/emailTemplates.js'
 
+// check whether the text is mandarin
 function isMandarin(text) {
     const mandarinRegex = /[\u4e00-\u9fff\u3400-\u4dbf\uf900-\ufaff\u3300-\u33ff\ufe30-\ufe4f\uf900-\ufaff\u3200-\u32ff\u3100-\u312f\u31a0-\u31bf]/;
     return mandarinRegex.test(text);
 }
-
+//check whether it is valid email format
 function isValidEmail(email) {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailPattern.test(email);
 }
-
+//check whether it is valid phone number format
 function isValidPhoneNumber(phone) {
     const phonePattern = /^(\+\d{1,3}|0)\d{9,14}$/;
     return phonePattern.test(phone);
 }
-
+//check whether it is a valid strong password format
 function isValidPassword(password) {
     const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
     return passwordPattern.test(password);
@@ -30,6 +31,7 @@ export const register = async (req, res) => {
         return res.status(400).json({ success: false, message: "Please fill all the required fields" });
     }
 
+    // get the details of the registered data and validation
     const { fullName, mandarinName, dob, gender, address, phone, email, institution, password, studentPhotoUrl } = participantDetails;
 
     if (!fullName || !mandarinName || !dob || !gender || !address || !phone || !institution || !email || !password || !studentPhotoUrl) {
@@ -53,15 +55,18 @@ export const register = async (req, res) => {
     }
 
     try {
+        // find whether the user already exists or not
         const existingUser = await userModel.findOne({ Email: email });
         if (existingUser && existingUser.IsAccountVerified) {
             return res.status(400).json({ success: false, message: "User already exists" });
         }
+        // if it exists, but still not verified then delete that existing user
         if (existingUser && !existingUser.IsAccountVerified) {
             await userModel.findOneAndDelete({Email: email});
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(password, 10); //hash password
+        // create the new user
         const user = new userModel({
             FullName: fullName,
             PhoneNumber: phone,
@@ -79,6 +84,7 @@ export const register = async (req, res) => {
         });
         await user.save();
 
+        // create the token (expired in 7d)
         const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: '7d'});
         res.cookie('token', token,{
             httpOnly: true,
@@ -102,16 +108,19 @@ export const login = async(req,res)=>{
     }
 
     try {
+        // find user with that email
         const user = await userModel.findOne({ Email: email });
-        if(!user){
+        if(!user){ //if user not found
             return res.status(400).json({success:false, message:'Invalid credentials'})
         }
 
+        // compare password 
         const isMatch = await bcrypt.compare(password, user.Password);
         if(!isMatch){
             return res.status(400).json({success:false, message:"Invalid credentials"})
         }
 
+        // create a token 
         const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: '7d'});
         res.cookie('token', token,{
             httpOnly: true,
@@ -131,6 +140,7 @@ export const login = async(req,res)=>{
  
 export const logout = async (req, res) => {
     try {
+        //remove the token when logout
         res.cookie('token', '', { 
             httpOnly: true, 
             secure: process.env.NODE_ENV === 'production',
@@ -155,16 +165,19 @@ export const sendVerifyOtp =async(req,res) =>{
             return res.status(400).json({success:false, message:"Account already verified"});
         }
 
+        // find the existing user
         const user = await userModel.findOne({Email: email});
         if(user.IsAccountVerified){
             return  res.status(400).json({success:false, message:"Account already verified"});
         }
 
+        // generate a random otp
         const otp = String(Math.floor(100000 + Math.random() *900000));
         user.VerifyOtp = otp;
-        user.VerifyOtpExpireAt = Date.now() + 15*60*1000;
+        user.VerifyOtpExpireAt = Date.now() + 15*60*1000; //otp expired in 15mins
         await user.save();
 
+        // send otp through email
         const mailOptions ={
             from: process.env.SENDER_EMAIL,
             to: email,
@@ -190,6 +203,7 @@ export const verifyEmail = async(req,res)=>{
     }
 
     try {
+        //find existing user
         const user = await userModel.findOne({Email: email});
         if(!user){
             return res.status(400).json({success:false, message:"User not found"}) 
@@ -203,11 +217,13 @@ export const verifyEmail = async(req,res)=>{
             return res.status(400).json({success:false, message:"Expired OTP"}) 
         }
 
+        // set the account to be verified
         user.IsAccountVerified=true;
         user.VerifyOtp='';
         user.VerifyOtpExpireAt=0;
         await user.save();
 
+        // assign token
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
         res.cookie("token", token, {
             httpOnly: true,
@@ -226,6 +242,7 @@ export const verifyEmail = async(req,res)=>{
 
 
 export const isAuthenticated =async(req,res)=>{
+    // see whether the user is authenticated or not
     try {
         return res.status(200).json({success:true})   
     } catch (error) {
@@ -243,16 +260,19 @@ export const sendResetOtp = async(req,res)=>{
     }
 
     try {
+        // find existing user
         const user = await userModel.findOne({Email: email});
         if(!user){
             return res.status(400).json({success:false, message:"User not found"});
         }
-
+        
+        //generate random number as otp
         const otp = String(Math.floor(100000 + Math.random() *900000));
         user.ResetOtp = otp;
-        user.ResetOtpExpireAt = Date.now() + 15*60*1000;
+        user.ResetOtpExpireAt = Date.now() + 15*60*1000; //otp expires in 15mins
         await user.save();
 
+        //send email to reset otp
         const mailOptions ={
             from: process.env.SENDER_EMAIL,
             to: email,
@@ -260,7 +280,6 @@ export const sendResetOtp = async(req,res)=>{
             html:PASSWORD_RESET_TEMPLATE.replace("{{otp}}", otp).replace("{{email}}",user.Email)
         }
         const info = await transporter.sendMail(mailOptions);
-        console.log("Message sent: %s", info.messageId)
 
         return res.status(200).json({success:true, message:"Reset OTP has been sent"})
 
@@ -279,11 +298,13 @@ export const verifyOtpReset = async(req,res)=>{
     }
 
     try {
+        // find existing user
         const user = await userModel.findOne({Email: email});
         if(!user){
             return res.status(400).json({success:false, message:"User not found"});
         }
 
+        // if the otp is invalid or expired
         if(user.ResetOtp==='' || user.ResetOtp!==otp){
             return res.status(200).json({success:false, message:"Invalid OTP"}) 
         }
@@ -291,6 +312,7 @@ export const verifyOtpReset = async(req,res)=>{
             return res.status(400).json({success:false, message:"Expired OTP"}) 
         }
         
+        // the otp is valid
         user.ResetOtp='';
         user.ResetOtpExpireAt=0;
         await user.save();
@@ -312,6 +334,7 @@ export const resetPassword = async(req,res)=>{
     }
 
     try {
+        // find existing user
         const user = await userModel.findOne({Email: email});
         if(!user){
             return res.status(400).json({success:false, message:"User not found"});
@@ -320,7 +343,7 @@ export const resetPassword = async(req,res)=>{
         if(!isValidPassword(newPassword)){
             return res.status(400).json({ success: false, message: "Password must have at least 8 characters with at least one letter and one number" });
         }
-
+        // hash password and save to database
         const hashedPassword = await bcrypt.hash(newPassword, 10);
         user.Password=hashedPassword;
         await user.save();
@@ -343,7 +366,7 @@ export const handleGoogleCallback = (req, res) => {
     const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, {
         expiresIn: '7d',
     });
-
+    // store token in cookie
     res.cookie("token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",

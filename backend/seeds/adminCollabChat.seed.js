@@ -25,12 +25,14 @@ const seedAdminCollabChat = async () => {
 
     const chatMessages = [];
 
+    // proceed to seed the collab chat if the ticket is handled by admins
     for (const ticket of tickets) {
       if (!ticket.HandledBy || ticket.HandledBy.length === 0) continue; 
 
       for (const adminId of ticket.HandledBy) {
-        const messageCount = Math.floor(Math.random() * 2) + 2; 
+        const messageCount = Math.floor(Math.random() * 2) + 2; //even messages
 
+        //create the new messages
         for (let i = 0; i < messageCount; i++) {
           chatMessages.push({
             TicketId: ticket._id,
@@ -40,7 +42,7 @@ const seedAdminCollabChat = async () => {
         }
       }
     }
-
+    //insert the new messages to the database
     if (chatMessages.length > 0) {
       await adminCollabChatModel.insertMany(chatMessages);
       console.log(`${chatMessages.length} admin collaboration chat messages seeded successfully!`);

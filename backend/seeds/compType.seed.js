@@ -4,6 +4,7 @@ import competitionTypeModel from "../models/competitionTypeModel.js";
 
 config();
 
+// competition types based on NMC 2024
 const seedCompTypes = [
   {
     Name: "Junior Singing",
@@ -345,6 +346,7 @@ const seedCompTypes = [
 ];
 
 const seedDatabase = async () => {
+    //insert it to the database
   try {
     await connectDB();
     await competitionTypeModel.insertMany(seedCompTypes);

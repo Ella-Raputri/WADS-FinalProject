@@ -3,6 +3,7 @@ import swaggerUi from 'swagger-ui-express';
 
 const PORT = process.env.PORT || 4000;
 
+// swagger configuration
 const options = {
   definition: {
     openapi: '3.0.0',

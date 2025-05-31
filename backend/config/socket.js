@@ -9,7 +9,7 @@ const io = new Server(server, {
     cors: {
         origin: "http://localhost:5173", // Allow frontend origin
         methods: ["GET", "POST", "PUT"],
-        credentials: true, // ✅ Allow credentials (IMPORTANT)
+        credentials: true, // Allow credentials 
     },
 });
 
@@ -25,40 +25,36 @@ io.on("connection", (socket) => {
         userSocketMap[userId] = socket.id;
         socket.userId = userId; // Store in socket instance
     }
-    console.log(`A user connected: ${socket.id} (UserID: ${userId})`);
 
     io.emit("getOnlineUsers", Object.keys(userSocketMap)); // Send online users list
 
-    // ✅ Handle Room Joining (if needed)
+    // Handle Room Joining (if needed)
     socket.on("joinRoom", (roomId) => {
         socket.join(roomId);
-        console.log(`👥 User ${socket.userId} joined room ${roomId}`);
     });
 
-    // ✅ Handle Room Messages (if needed)
+    // Handle Room Messages (if needed)
     socket.on("sendRoomMessage", ({ roomId, message }) => {
-        console.log("di backend: sending room message");
         io.to(roomId).emit("newRoomMessage", message);
     });
 
+    // handle updated status
     socket.on("sendUpdatedStatus", ({roomId, stat}) =>{
-        console.log("sending updated status");
         io.to(roomId).emit("updatedStatus", stat);
     });
 
+    // handle admin join collab chat
     socket.on("joinAdminRoom", (roomId) => {
         socket.join(roomId);
-        console.log(`👥 Admin ${socket.userId} joined room ${roomId}`);
     });
 
+    // handle admin send room message
     socket.on("sendAdminRoomMessage", ({ roomId, message }) => {
-        console.log("di backend: sending admin room message");
         io.to(roomId).emit("newAdminRoomMessage", message);
     });
 
-    // ✅ Handle User Disconnect
+    // Handle User Disconnect
     socket.on("disconnect", () => {
-        console.log("❌ A user disconnected:", socket.id);
         if (socket.userId) {
             delete userSocketMap[socket.userId];
         }

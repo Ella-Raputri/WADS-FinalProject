@@ -2,9 +2,8 @@ import competitionTypeModel from "../models/competitionTypeModel.js";
 
 export const getCompetitionIdByName = async (req, res) => {
     try {
+        // get competition Id by competition name
         const compName = req.query.compName;  
-        console.log("Received compName:", compName);  // Debugging
-
         const competition = await competitionTypeModel.findOne({ Name: compName });
         
         return res.status(200).json({
@@ -21,6 +20,7 @@ export const getCompetitionIdByName = async (req, res) => {
 
 export const getCompetitionDetails = async(req,res) =>{
     try {
+        // get competition details based on competition Id
         const compId = req.query.compId;  
         const comp = await competitionTypeModel.findById(compId);
         
@@ -34,6 +34,7 @@ export const getCompetitionDetails = async(req,res) =>{
 
 export const getAllCompetitions = async(req,res) =>{
     try {
+        // get all competitions details 
         const comps = await competitionTypeModel.find({});
         return res.status(200).json({success: true, comps});      
 

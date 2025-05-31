@@ -13,6 +13,7 @@ const seedAdmins = async () => {
 
     const adminUsers = [];
 
+    // seed admins with 3 admins for each comp type
     for (const compType of compTypes) {
       for (let i = 1; i <= 3; i++) {
         const hashedPassword = await bcrypt.hash(`password123`, 10);

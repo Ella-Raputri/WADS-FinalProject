@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer';
 import fs from 'fs';
 
+// create a transporter object using SMTP with authentication and TLS
 const transporter = nodemailer.createTransport({
     host: 'smtp-relay.brevo.com',
     port: 587,
@@ -10,7 +11,7 @@ const transporter = nodemailer.createTransport({
         pass: process.env.SMTP_PASS,
     },
     tls: {
-        ca: fs.readFileSync('isrgrootx1.pem') // Load Let's Encrypt Root CA
+        ca: fs.readFileSync('isrgrootx1.pem') // Load Let's Encrypt Root CA to verify SMTP server
     }
 })
 

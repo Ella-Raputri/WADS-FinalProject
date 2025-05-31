@@ -7,15 +7,18 @@ import { config } from "dotenv";
 
 config();
 
+// embedding from OpenAI to convert text to vector embeddings
 const embedding = new OpenAIEmbeddings({
     apiKey: process.env.OPENAI_API_KEY
 });
 
+// load the FAQ pdf document
 const loadDocument = async () => {
     const loader = new PDFLoader("files/FAQ_NMC_Indonesia_2024.pdf");
     return await loader.load();
 };
 
+// split the document into several chunks
 const splitDocs = async (documents) => {
     const textSplitter = new RecursiveCharacterTextSplitter({
         chunkSize: 800,
@@ -24,11 +27,13 @@ const splitDocs = async (documents) => {
     return await textSplitter.splitDocuments(documents);
 };
 
+// calculate the chunk Ids
 const calculateChunkIds = (chunks) => {
     let lastPageId = null;
     let currentChunkIndex = 0;
 
     return chunks.map(chunk => {
+        // get the source and page of the chunk to create the id
         const source = chunk.metadata.source || "faq";
         const page = chunk.metadata.page || 0;
         const currentPageId = `${source}:${page}`;
@@ -46,6 +51,7 @@ const calculateChunkIds = (chunks) => {
     });
 };
 
+// save the vector embeddings to pinecone
 const saveToPinecone = async () => {
     const pinecone = new PineconeClient({
         apiKey: process.env.PINECONE_API_KEY,
@@ -53,10 +59,12 @@ const saveToPinecone = async () => {
 
     const pineconeIndex = pinecone.Index(process.env.PINECONE_INDEX);
 
+    // load the documents, split it into chunks
     const documents = await loadDocument();
     const splits = await splitDocs(documents);
     const chunksWithIds = calculateChunkIds(splits);
 
+    // store the vector embeddings into pinecone
     const vectorStore = await PineconeStore.fromExistingIndex(embedding, {
         pineconeIndex,
     });

@@ -2,9 +2,8 @@ import jwt from 'jsonwebtoken';
 
 const userAuth = async (req, res, next) => {
     try {
-        // ✅ Fix: Extract token correctly
+        // Extract token
         const token = req.cookies.token;
-
         if (!token) {
             return res.status(401).json({ success: false, message: "Unauthorized" });
         }

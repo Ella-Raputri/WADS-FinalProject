@@ -1,6 +1,7 @@
-import cloudinary from './cloudinary.js'; // Import your configured instance
+import cloudinary from './cloudinary.js'; 
 import fs from 'fs';
 
+// upload image to cloudinary
 export const uploadToCloudinary = async (filePath) => {
   try {
     const result = await cloudinary.uploader.upload(filePath);

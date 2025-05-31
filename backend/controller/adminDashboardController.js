@@ -11,11 +11,13 @@ export const getTotalTicketsInWeek = async (req, res) => {
             return res.status(400).json({ message: "Date parameter is required" });
         }
 
+        // set the end date to the saturday 23:59 of that week based on the selected date
         const selectedDate = new Date(date);
         const endDate = new Date(selectedDate);
         endDate.setDate(endDate.getDate() - endDate.getDay() + 6); 
         endDate.setHours(23, 59, 59, 999); 
 
+        // match based on end date and competition type
         const matchCondition = { CreatedAt: { $lte: endDate } };
         if (compTypeId) {
             if (!mongoose.isValidObjectId(compTypeId)) {
@@ -24,6 +26,7 @@ export const getTotalTicketsInWeek = async (req, res) => {
             matchCondition.CompTypeId = new mongoose.Types.ObjectId(compTypeId);
         }
 
+        // count total tickets
         const result = await ticketModel.aggregate([
             { $match: matchCondition },
             { $count: "totalTickets" }
@@ -46,11 +49,13 @@ export const getTotalParticipants = async (req, res) => {
             return res.status(400).json({ message: "Date parameter is required" });
         }
 
+        // set the end date to the saturday 23:59 of that week based on the selected date
         const selectedDate = new Date(date);
         const endDate = new Date(selectedDate);
         endDate.setDate(endDate.getDate() - endDate.getDay() + 6); 
         endDate.setHours(23, 59, 59, 999); 
 
+        // match condition based on enddate and competition type
         const matchCondition = { createdAt: { $lte: endDate } };
         if (compTypeId) {
             if (!mongoose.isValidObjectId(compTypeId)) {
@@ -59,6 +64,7 @@ export const getTotalParticipants = async (req, res) => {
             matchCondition.CompTypeId = new mongoose.Types.ObjectId(compTypeId);
         }
 
+        // count the total participants
         const result = await competitionRegistrationModel.aggregate([
             { $match: matchCondition },
             { $count: "totalParticipants" }
@@ -80,11 +86,13 @@ export const getFirstRespTime = async (req, res) => {
             return res.status(400).json({ message: "Date parameter is required" });
         }
 
+        // set the end date to the saturday 23:59 of that week based on the selected date
         const selectedDate = new Date(date);
         const endDate = new Date(selectedDate);
         endDate.setDate(endDate.getDate() - endDate.getDay() + 6); 
         endDate.setHours(23, 59, 59, 999); 
 
+        // match the condition based on end date and competition type
         const matchCondition = { CreatedAt: { $lte: endDate } };
         if (compTypeId) {
             if (!mongoose.isValidObjectId(compTypeId)) {
@@ -93,6 +101,7 @@ export const getFirstRespTime = async (req, res) => {
             matchCondition.CompTypeId = new mongoose.Types.ObjectId(compTypeId);
         }
         
+        // get first response time by querying the admin user chat and see when is the admin first reply
         const result = await ticketModel.aggregate([
             { $match: matchCondition },
             {
@@ -143,6 +152,7 @@ export const getFirstRespTime = async (req, res) => {
             }
         ]);
 
+        // convert the average first response time from ms to minute
         return res.status(200).json({
             avgFirstRespTime: result.length > 0 ? (result[0].avgFirstRespTime)/60000 : 0
         });
@@ -161,11 +171,13 @@ export const getFullResolveTime = async (req, res) => {
             return res.status(400).json({ message: "Date parameter is required" });
         }
 
+        // set the end date to the saturday 23:59 of that week based on the selected date
         const selectedDate = new Date(date);
         const endDate = new Date(selectedDate);
         endDate.setDate(endDate.getDate() - endDate.getDay() + 6); 
         endDate.setHours(23, 59, 59, 999); 
 
+        // match the condition to get ticket that is closed or resolved
         const matchCondition = {
             CreatedAt: { $lte: endDate },
             Status: { $in: ["Resolved", "Closed"] }
@@ -178,6 +190,7 @@ export const getFullResolveTime = async (req, res) => {
             matchCondition.CompTypeId = new mongoose.Types.ObjectId(compTypeId);
         }
 
+        // get the avg dull resolve time by substracting the resolved time and created time
         const result = await ticketModel.aggregate([
             { $match: matchCondition },
             {
@@ -194,6 +207,7 @@ export const getFullResolveTime = async (req, res) => {
             }
         ]);
 
+        // convert the full resolve time from ms to minute
         return res.status(200).json({
             avgFullResolveTime: result.length > 0 ? (result[0].avgFullResolveTime)/60000 : 0
         });
@@ -212,6 +226,7 @@ export const getReceivedResolvedBar = async (req, res) => {
             return res.status(400).json({ message: "Date parameter is required" });
         }
 
+        // set the start week and end week based on GMT+7
         const selectedDate = new Date(date);
         const gmtPlus7Offset = 7 * 60 * 60 * 1000;
         
@@ -223,11 +238,7 @@ export const getReceivedResolvedBar = async (req, res) => {
         weekEndUTC.setDate(weekStart.getDate() + 6);
         weekEndUTC.setHours(23, 59, 59, 999);
 
-        // console.log("Selected date:", selectedDate);
-        // console.log("Week start in GMT+7:", weekStart);
-        // console.log("Week start UTC:", weekStartUTC);
-        // console.log("Week end UTC:", weekEndUTC);
-
+        // get only data that is in range of week start to week end
         const match = {
             $and: [
                 {
@@ -246,6 +257,7 @@ export const getReceivedResolvedBar = async (req, res) => {
             match.$and.push({ CompTypeId: new mongoose.Types.ObjectId(compTypeId) });
         }
 
+        // get the chart data
         const initChartData = [];
         for (let i = 0; i < 7; i++) {
             const currentDateUTC = new Date(weekStartUTC);
@@ -254,8 +266,6 @@ export const getReceivedResolvedBar = async (req, res) => {
             const currentDateGMT7 = new Date(currentDateUTC.getTime() + gmtPlus7Offset);
             const formattedDate = currentDateGMT7.toISOString().split("T")[0].slice(5, 10);
             
-            // console.log(`Day ${i}:`, currentDateUTC, "->", currentDateGMT7, "->", formattedDate);
-            
             initChartData.push({
                 date: formattedDate,
                 received: 0,
@@ -263,6 +273,7 @@ export const getReceivedResolvedBar = async (req, res) => {
             });
         }
 
+        // count the tickets (received and resolved)
         const tickets = await ticketModel.aggregate([
             { $match: match },
             {
@@ -296,14 +307,14 @@ export const getReceivedResolvedBar = async (req, res) => {
     }
 };
   
-
 export const getTicketbyEmergency = async (req, res) => {
     try {
             const { date, compTypeId } = req.query;
             if (!date) {
                 return res.status(400).json({ message: "Date parameter is required" });
             }
-
+            
+            // set the end date to the saturday 23:59 of that week based on the selected date
             const selectedDate = new Date(date);
             const endDate = new Date(selectedDate);
             endDate.setDate(endDate.getDate() - endDate.getDay() + 6); 
@@ -319,7 +330,8 @@ export const getTicketbyEmergency = async (req, res) => {
                 }
                 matchCondition.CompTypeId = new mongoose.Types.ObjectId(compTypeId);
             }
-    
+            
+            // get the total ticket based on the priority type
             const result = await ticketModel.aggregate([
                 { $match: matchCondition },
                 {
@@ -329,7 +341,8 @@ export const getTicketbyEmergency = async (req, res) => {
                     }
                 }
             ]);
-
+            
+            // map each priority type with the total ticket
             const summary = {};
             result.forEach(item => {
                 summary[item._id] = item.count;
@@ -350,6 +363,7 @@ export const getTicketbyStatus = async (req, res) => {
             return res.status(400).json({ message: "Date parameter is required" });
         }
 
+        // set the end date to the saturday 23:59 of that week based on the selected date
         const selectedDate = new Date(date);
         const endDate = new Date(selectedDate);
         endDate.setDate(endDate.getDate() - endDate.getDay() + 6); 
@@ -366,6 +380,7 @@ export const getTicketbyStatus = async (req, res) => {
             matchCondition.CompTypeId = new mongoose.Types.ObjectId(compTypeId);
         }
 
+        // group the total tickets based on status
         const result = await ticketModel.aggregate([
             { $match: matchCondition },
             {
@@ -376,6 +391,7 @@ export const getTicketbyStatus = async (req, res) => {
             }
         ]);
 
+        // maps each status with the total tickets
         const summary = {};
         result.forEach(item => {
             summary[item._id] = item.count;
@@ -396,6 +412,7 @@ export const getAgentTickets = async (req, res) => {
             return res.status(400).json({ message: "Date parameter is required" });
         }
 
+        // set the end date to the saturday 23:59 of that week based on the selected date
         const selectedDate = new Date(date);
         const endDate = new Date(selectedDate);
         endDate.setDate(endDate.getDate() - endDate.getDay() + 6); 
@@ -412,6 +429,7 @@ export const getAgentTickets = async (req, res) => {
             matchCondition.CompTypeId = new mongoose.Types.ObjectId(compTypeId);
         }
 
+        // get the ticket count for each agent and sort them by total ticket descending
         const pipeline = [
             { $match: matchCondition },
             { $unwind: "$HandledBy" },
@@ -460,11 +478,13 @@ export const getRatingMetrics = async (req, res) => {
             return res.status(400).json({ message: "Date parameter is required" });
         }
 
+        // set the end date to the saturday 23:59 of that week based on the selected date
         const selectedDate = new Date(date);
         const endDate = new Date(selectedDate);
         endDate.setDate(endDate.getDate() - endDate.getDay() + 6); 
         endDate.setHours(23, 59, 59, 999); 
 
+        // map the the ticket model with the rating model based on the ticket id
         const pipeline = [
             { $match: {createdAt: { $lte: endDate }}},
             {
@@ -478,6 +498,7 @@ export const getRatingMetrics = async (req, res) => {
             {   $unwind: "$ticket" }
         ];
 
+        // filter based on competition type Id
         if (compTypeId) {
             if (!mongoose.isValidObjectId(compTypeId)) {
                 return res.status(400).json({ message: "Invalid compTypeId format" });
@@ -487,13 +508,15 @@ export const getRatingMetrics = async (req, res) => {
             });
         }
 
+        // group the rating based on the ticket competition type id
         pipeline.push({
             $group: {
                 _id: "$ticket.CompTypeId",
                 averageRating: { $avg: "$Rating" }
             }
         });
-      
+        
+        // there are 5 levels of rating, so to convert to percentage number, we multiply by 20
         const result = await ratingModel.aggregate(pipeline);
         return res.status(200).json({
             avgRating: result.length > 0 ? (result[0].averageRating)*20 : 0

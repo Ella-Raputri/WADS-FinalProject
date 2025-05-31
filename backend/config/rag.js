@@ -9,12 +9,14 @@ import { config } from "dotenv";
 
 config();
 
+// initialize the Gemini model
 const model = new ChatGoogleGenerativeAI({
     model: "gemini-2.0-flash", 
     apiKey: process.env.GEMINI_API_KEY,
     maxOutputTokens: 2048
 });
 
+// query to let the model classify whether the question related to NMC or not
 const classify = async (query) => {
     const systemPrompt = `
         You're a classifier. Only answer "yes" or "no".
@@ -26,6 +28,7 @@ const classify = async (query) => {
     return result.content?.toLowerCase().includes("yes");
 };
 
+// query to get polite response if the user asks unrelated questions
 const getFallbackMessage = async (query) => {
     const fallbackPrompt = `
     The user asked: "${query}"
@@ -36,8 +39,9 @@ const getFallbackMessage = async (query) => {
     return result.content;
 };
   
-
+// query the answer from the chatbot
 export const queryRAG = async (query) => {
+    // decide whether the question is related to NMC or not
     const isRelated = await classify(query);
     if(!isRelated){
         const fallback = await getFallbackMessage(query);
@@ -48,6 +52,7 @@ export const queryRAG = async (query) => {
     }
 
     try {
+        // initialize embedding and query pinecone
         const embedding = new OpenAIEmbeddings({
             apiKey: process.env.OPENAI_API_KEY,
         });
@@ -65,6 +70,7 @@ export const queryRAG = async (query) => {
             k: 10,
         });
 
+        // rag prompt for the model
         const prompt = ChatPromptTemplate.fromMessages([
             [
                 "human",
@@ -83,17 +89,20 @@ export const queryRAG = async (query) => {
             outputParser: new StringOutputParser(),
         });
 
+        // retrieve the docs related to the query
         const retrievedDocs = await retriever.invoke(query);
         const response = await ragChain.invoke({
             question: query,
             context: retrievedDocs,
         });
         
+        // get the page sources of the answer docs
         const sources= retrievedDocs.map(doc => {
             const page = doc.metadata?.['loc.pageNumber'];
             return page ? `Page ${page}` : "Unknown Page";
         })
 
+        // if the LLM doesn't know the answer
         if (typeof answer === "string" && answer.toLowerCase().includes("i don't know")) {
             return {
                 result: "Maaf, saya tidak menemukan jawabannya di dokumen. Silakan hubungi admin untuk pertanyaan ini.",
@@ -101,6 +110,7 @@ export const queryRAG = async (query) => {
             };
         } 
         else {
+            // return the result and sources if the LLM knows the answer
             return {
                 result: `${response}`,
                 sources: sources,
@@ -108,6 +118,7 @@ export const queryRAG = async (query) => {
         }
 
     } catch (error) {
+        // error handling
         console.error(error);
         return Response.json(
             { error: "Internal Server Error" },

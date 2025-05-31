@@ -1,3 +1,4 @@
+// email template for verifying account
 export const EMAIL_VERIFY_TEMPLATE = `
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -107,7 +108,7 @@ export const EMAIL_VERIFY_TEMPLATE = `
 </html>
 
 `
-
+// email template for resetting password
 export const PASSWORD_RESET_TEMPLATE = `
 
 <!DOCTYPE html>

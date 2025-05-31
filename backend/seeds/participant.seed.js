@@ -11,9 +11,11 @@ const seedParticipants = async () => {
 
     const participantUsers = [];
 
+    //seed 30 participants
     for (let i = 1; i <= 30; i++) {
       const hashedPassword = await bcrypt.hash(`password123`, 10);
 
+      //the data for the participant
       const participantUser = {
         FullName: `Participant ${i}`,
         PhoneNumber: `0812987651234${i}`, 
@@ -32,7 +34,7 @@ const seedParticipants = async () => {
       };
       participantUsers.push(participantUser);
     }
-
+    // insert it to the database
     await userModel.insertMany(participantUsers);
     console.log("Participant users seeded successfully!");
 

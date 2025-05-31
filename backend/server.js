@@ -15,39 +15,40 @@ import {app, server} from './config/socket.js'
 import { swaggerUi, swaggerSpec } from './config/swagger.js';
 import session from 'express-session';
 import passport from 'passport';
-import './config/passport.js'; // import passport config
+import './config/passport.js'; 
 
+//session configuration
 app.use(session({
     secret: process.env.SESSION_SECRET || 'secret',
     resave: false,
     saveUninitialized: false,
     cookie: {
         secure: process.env.NODE_ENV === "production", // set to true if using HTTPS
-        maxAge: 7 * 24 * 3600 * 1000, // 7 days
+        maxAge: 7 * 24 * 3600 * 1000, // cookie max age is 7 days
     }
 }));
 
+//passport for OAuth
 app.use(passport.initialize());
 app.use(passport.session());
-
 
 const PORT = process.env.PORT || 4000;
 connectDB();
 
-// ✅ Fix: Enable CORS with credentials
+// Enable CORS with credentials
 app.use(
     cors({
-        origin: "http://localhost:5173", // ✅ Allow frontend
-        credentials: true, // ✅ Allow cookies & credentials
+        origin: "http://localhost:5173", // Allow frontend
+        credentials: true, // Allow cookies & credentials
     })
 );
 
 app.use('/api/image', imageRouter)
 
-app.use(express.json());
-app.use(cookieParser());
+app.use(express.json()); //middleware to parse incoming json request
+app.use(cookieParser()); //middleware to parse Cookie header
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec)); //swagger
 
 //API Endpoints
 app.get('/', (req, res) => res.send("API get working"));

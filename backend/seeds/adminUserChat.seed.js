@@ -33,6 +33,7 @@ const seedAdminUserChat = async () => {
 
     const chatMessages = [];
 
+    //seed based on the ticket if it is already handled by admins
     for (const ticket of tickets) {
         if (!ticket.HandledBy || ticket.HandledBy.length === 0) continue; 
         const admins = ticket.HandledBy;

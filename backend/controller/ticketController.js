@@ -11,9 +11,11 @@ export const uploadNewTicket =async(req,res)=>{
     }
 
     try {
+        // if there is image in the ticket
         let imageLink =''
         if(newTicketDetails.imageUrl) imageLink=newTicketDetails.imageUrl
 
+        //create the new ticket 
         const newTicket = new ticketModel({
             Subject: newTicketDetails.subject,
             PriorityType: newTicketDetails.priorityType,
@@ -34,12 +36,11 @@ export const uploadNewTicket =async(req,res)=>{
 
 export const getAllTickets = async(req,res)=>{
     try {
+        //get all tickets sent by that user
         const {userId} = req.body;
         const tickets = await ticketModel.find({SenderId: userId});
-
         return res.status(200).json({success:true, tickets})
         
-
     } catch (error) {
         return res.status(500).json({success:false, message:error.message}) 
         
@@ -48,11 +49,10 @@ export const getAllTickets = async(req,res)=>{
 
 export const getAllTicketsByCompetitionType = async(req,res)=>{
     try {
+        //get all tickets that is related to that competition type
         const compId = req.query.compId;  
         const tickets = await ticketModel.find({CompTypeId: compId});
-
         return res.status(200).json({success:true, tickets})
-        
 
     } catch (error) {
         return res.status(500).json({success:false, message:error.message}) 
@@ -64,14 +64,15 @@ export const updateTicketStatus = async(req,res)=>{
     const {request} =req.body;
 
     try {
+        //find the ticket
         const ticket = await ticketModel.findById(request.ticketId);
-        ticket.Status = request.status;
+        ticket.Status = request.status; //change the ticket status
         
         if(request.status == "Closed"){
-            ticket.BecomeClosedAt = new Date();
+            ticket.BecomeClosedAt = new Date(); //assign current datetime to BecomeClosedAt if the ticket is closed
         }
         else if(request.status == "Resolved"){
-            ticket.BecomeResolvedAt = new Date();
+            ticket.BecomeResolvedAt = new Date(); //assign current datetime to BecomeResolvedAt if the ticket is resolved
         }
         await ticket.save();
 
@@ -88,11 +89,12 @@ export const getUpdatedAtByTicketId = async (req, res) => {
         if (!ticketId || !mongoose.isValidObjectId(ticketId)) {
             return res.status(400).json({ message: "Invalid or missing ticketId" });
         }
-      
+        // get the latest updatedAt of the ticket based on last chat time from user and admin
         const latestChat = await adminUserChatModel.findOne({ TicketId: ticketId })
         .sort({ updatedAt: -1 }).select("updatedAt");     
       
         if (!latestChat) {
+            // if there is no chat yet, use createdAt time
             const created = await ticketModel.findById(ticketId).select("CreatedAt");
             return res.status(200).json({ latestUpdatedAt: created.CreatedAt });
         }
@@ -112,6 +114,7 @@ export const updateRateTicket = async (req, res) => {
     }
 
     try {
+        //create new rating for that ticket
         const newRating = new ratingModel({
             TicketId: ticketId,
             AdminId: adminId,
@@ -130,6 +133,7 @@ export const updateRateTicket = async (req, res) => {
 export const fetchTicketRating = async(req,res) =>{
     const ticketId = req.query.ticketId;
     try {
+        //get the rating of that ticket
         const rating = await ratingModel.findOne({TicketId: ticketId});
         return res.status(200).json({success:true, rating});
 
