@@ -6,7 +6,7 @@ import { io } from "socket.io-client";
 export const AppContent = createContext();
 
 export const AppContextProvider = (props) => {
-    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+    const backendUrl = '/';
 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userData, setUserData] = useState(null);
@@ -41,9 +41,10 @@ export const AppContextProvider = (props) => {
                 socket.disconnect();
             }
 
-            const newSocket = io(backendUrl, {
-                withCredentials: true,
-                query: { userId },
+           const newSocket = io("/", {
+            path: "/socket.io",
+            withCredentials: true,
+            query: { userId },
             });
 
             newSocket.on("connect", () => {

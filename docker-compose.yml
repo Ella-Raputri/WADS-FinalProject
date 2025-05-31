@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  backend:
+    image: ellaraputri/mern-nmc-backend:latest
+    restart: always
+    environment:
+      MONGODB_URI: ${MONGODB_URI}
+      JWT_SECRET: ${JWT_SECRET}
+      NODE_ENV: ${NODE_ENV}
+      SESSION_SECRET: ${SESSION_SECRET}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
+      SENDER_EMAIL: ${SENDER_EMAIL}
+      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME}
+      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY}
+      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      PINECONE_API_KEY: ${PINECONE_API_KEY}
+      PINECONE_ENV: ${PINECONE_ENV}
+      PINECONE_INDEX: ${PINECONE_INDEX}
+      PINECONE_DATABASE: ${PINECONE_DATABASE}
+      PORT: ${PORT}
+    ports:
+      - "3004:3004"
+
+  frontend:
+    image: ellaraputri/mern-nmc-frontend:latest
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "3003:3003"

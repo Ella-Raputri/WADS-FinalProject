@@ -34,6 +34,7 @@ app.use(passport.session());
 
 const PORT = process.env.PORT || 4000;
 connectDB();
+app.set('trust proxy', true);
 
 // Enable CORS with credentials
 app.use(
