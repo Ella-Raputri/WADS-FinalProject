@@ -1,4 +1,5 @@
 import Modal from "react-modal";
+import React from 'react';
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
