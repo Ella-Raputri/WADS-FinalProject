@@ -37,7 +37,7 @@ const AdminTicketDetails = () => {
         if (!user || !user.id) return; // Ensure user data is available
   
         if (!socket) {
-            console.log("🔄 Initializing socket...");
+            // console.log("🔄 Initializing socket...");
             initializeSocket(user.id);
         }
     }, [user, socket]); // Run when userData or socket changes
@@ -45,11 +45,11 @@ const AdminTicketDetails = () => {
     useEffect(() => {
         if (!data || !data._id || !socket) return;
   
-        console.log("🔄 Joining admin Room:", "admin"+data._id);
+        // console.log("🔄 Joining admin Room:", "admin"+data._id);
         socket.emit("joinAdminRoom", "admin"+data._id);
   
         return () => {
-            console.log("⚠️ Leaving adminRoom:", "admin"+data._id);
+            // console.log("⚠️ Leaving adminRoom:", "admin"+data._id);
             socket.off("joinAdminRoom");
         };
     }, [socket, data]); // Run when socket or data changes
@@ -59,7 +59,7 @@ const AdminTicketDetails = () => {
       if(!socket) return;
   
       socket.on("newAdminRoomMessage", (newMessage) => {
-        console.log("ada new admin room message")
+        // console.log("ada new admin room message")
         setMessages((prevMessages) => [...prevMessages, newMessage]); // Update chat
       });
   
@@ -144,7 +144,7 @@ const fetchMessagesWithAdminNames = async () => {
     if(fetchNum>=5) return;
   
     try {
-      console.log("Fetching data...");
+      // console.log("Fetching data...");
       setFetchNum(fetchNum+1);
       
       const [compResponse, senderResponse, messageResponse] = await Promise.all([
@@ -171,7 +171,7 @@ const fetchMessagesWithAdminNames = async () => {
         })
       );
       
-      console.log(messagesWithAdminNames)
+      // console.log(messagesWithAdminNames)
       setMessages(messagesWithAdminNames);
       setIsLoading(false);
   
@@ -195,7 +195,7 @@ const fetchMessagesWithAdminNames = async () => {
   }, [data])
 
   useEffect(()=>{
-    console.log(data);
+    // console.log(data);
   },[data])
 
   
@@ -280,6 +280,7 @@ const fetchMessagesWithAdminNames = async () => {
             <input
                 type="text"
                 placeholder="Type your message"
+                data-testid='message-input'
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 className="w-full bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-300 rounded-md pl-3 pr-2 py-2 transition duration-300 ease focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow mb-6"

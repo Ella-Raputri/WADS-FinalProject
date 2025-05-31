@@ -9,6 +9,7 @@ import { EditAccount } from '@/components/EditAccount';
 import { AppContent } from '@/context/AppContext';
 import { convertToTimeZone } from '@/lib/utils';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const HomePage = () => {
 
@@ -38,8 +39,17 @@ const HomePage = () => {
     }
   }
 
+  const navigate = useNavigate();
+
   useEffect(() => {
       if (!userData || !userData.id) return; 
+
+      console.log("t\n ", userData)
+
+      if(!userData.phone) {
+        navigate('/completeinfo');
+        return;
+      }
 
       if (!socket) {
           console.log("🔄 Initializing socket...");

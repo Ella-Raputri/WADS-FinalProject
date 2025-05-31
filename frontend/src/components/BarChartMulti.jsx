@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Bar, BarChart, CartesianGrid, Legend, Tooltip, XAxis, YAxis, ResponsiveContainer } from "recharts";
 import { motion, useInView } from "framer-motion";
 
@@ -19,6 +19,7 @@ export function BarChartMulti({chartData}) {
   return (
     <motion.div
       ref={chartRef}
+      data-testid="chart-wrapper"
       initial={{ opacity: 0, y: 50 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 1.2, ease: "easeOut" }}

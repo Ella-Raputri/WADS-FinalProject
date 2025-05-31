@@ -157,7 +157,7 @@ const CompManagement = () => {
         <SearchBar onApply={handleSearch} placeholderSubject={"Search name or email..."}/>
         <div className="sm:mr-20 md:mr-26 2xl:mr-35 flex gap-2">
           <button className="border bg-white border-slate-200 ml-2 transition duration-300 ease hover:border-slate-300 shadow-sm focus:shadow px-3 py-2 rounded-xl hover:bg-gray-100 hover:cursor-pointer"
-          onClick={() => setOpenFilter(true)}>
+          onClick={() => setOpenFilter(true)} data-testid='filter'>
             <FontAwesomeIcon icon={faFilter} />
           </button>
           <SaveButton data={filteredData} type={"participants"}/>

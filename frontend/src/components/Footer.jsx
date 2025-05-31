@@ -1,3 +1,4 @@
+import React from "react";
 import { FaInstagram, FaYoutube, FaTiktok } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
 
@@ -14,6 +15,7 @@ const Footer = () => {
           <a
             href="https://www.instagram.com/nmcbnmc/"
             target="_blank"
+            aria-label="Instagram"
             rel="noopener noreferrer"
             className="hover:text-gray-300"
           >
@@ -22,6 +24,7 @@ const Footer = () => {
           <a
             href="mailto:ellarworkingfolder@gmail.com"
             target="_blank"
+            aria-label="Email"
             rel="noopener noreferrer"
             className="hover:text-gray-300"
           >
@@ -30,6 +33,7 @@ const Footer = () => {
           <a
             href="https://www.youtube.com/@NMCBNMC"
             target="_blank"
+            aria-label="Youtube"
             rel="noopener noreferrer"
             className="hover:text-gray-300"
           >
@@ -38,6 +42,7 @@ const Footer = () => {
           <a
             href="https://www.tiktok.com/@nmcbnmc"
             target="_blank"
+            aria-label="Tiktok"
             rel="noopener noreferrer"
             className="hover:text-gray-300"
           >

@@ -288,7 +288,7 @@ const TicketDetails = () => {
         <div className="flex gap-4 md:gap-6">
           {user.role==='participant' &&
           <button className={`${data.Status==='Closed'? 'bg-red-600 hover:bg-red-700 cursor-pointer' : 'bg-red-300 cursor-not-allowed'} text-white shadow-md  w-10 h-10 flex items-center justify-center rounded-full `}
-              onClick={handleOpenSurvey}>
+              onClick={handleOpenSurvey} data-testid='icon-file-pen'>
                 <FontAwesomeIcon icon={faFilePen} />   
             </button>
           }

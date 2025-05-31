@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { RadialBarChart, RadialBar, PolarAngleAxis } from "recharts";
 
 

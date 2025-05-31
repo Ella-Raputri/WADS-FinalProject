@@ -48,7 +48,7 @@ function Table({ columns, data, isTicketTable}) {
                                     {col ==='SUBJECT' && item['Subject']}
                                     
                                     {col === 'PRIORITY' && item['PriorityType'] === 'Urgent' && (
-                                        <div className="inline-flex mr-2 w-2.5 h-2.5 bg-red-600"></div>
+                                        <div className="inline-flex mr-2 w-2.5 h-2.5 bg-red-600" data-testid='urgent'></div>
                                     )}
                                     {col === 'PRIORITY' && item['PriorityType'] === 'High' && (
                                         <div className="inline-flex mr-2 w-2.5 h-2.5 bg-amber-600"></div>

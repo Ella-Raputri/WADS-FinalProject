@@ -1,138 +1,282 @@
-// ✅ Polyfill TextEncoder and TextDecoder at the top
-const { TextEncoder, TextDecoder } = require('util');
-global.TextEncoder = TextEncoder;
-global.TextDecoder = TextDecoder;
+import React from 'react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { BrowserRouter as Router } from 'react-router-dom';
+import Navbar from '../../src/components/Navbar';
+import { AppContent } from '@/context/AppContext';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import '@testing-library/jest-dom';
 
-// ✅ Extend Jest with DOM matchers
-require('@testing-library/jest-dom');
-
-// ✅ Mock axios module properly
+// Mock dependencies
 jest.mock('axios');
-const axios = require('axios');
-
-const React = require('react');
-const { render, screen, fireEvent, waitFor } = require('@testing-library/react');
-const { MemoryRouter, Route, Routes } = require('react-router-dom');
-const { toast } = require('react-toastify');
-const { Suspense } = React;
-
-// ✅ Lazy-load Navbar AFTER polyfill
-const Navbar = React.lazy(() => import('../../src/components/Navbar'));
-
-// ✅ Mocks
 jest.mock('react-toastify', () => ({
   toast: {
-    error: jest.fn(),
     success: jest.fn(),
   },
 }));
 
+// Mock react-router-dom
+const mockNavigate = jest.fn();
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockNavigate,
+  useLocation: () => ({ pathname: '/' }),
+}));
+
+// Mock Heroicons
+jest.mock('@heroicons/react/24/outline', () => ({
+  Bars3Icon: ({ className }) => <div className={className} data-testid="bars-icon">Bars</div>,
+  XMarkIcon: ({ className }) => <div className={className} data-testid="x-mark-icon">X</div>,
+  ChevronLeftIcon: ({ className }) => <div className={className} data-testid="chevron-left-icon">Chevron</div>,
+}));
+
+// Mock context
 jest.mock('@/context/AppContext', () => {
   const React = require('react');
   return {
-    AppContent: React.createContext({
-      backendUrl: 'http://localhost:3000/',
-      userData: null,
-      setUserData: jest.fn(),
-      setIsLoggedIn: jest.fn(),
-      cleanupSocket: jest.fn(),
-    }),
+    AppContent: React.createContext(),
   };
 });
 
-describe('Navbar', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-    axios.post.mockResolvedValue({ data: { success: true } }); // Default mock
-  });
+// Create a custom render function with different locations
+const renderWithLocation = (component, pathname = '/') => {
+  const mockUseLocation = jest.fn(() => ({ pathname }));
+  jest.doMock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useNavigate: () => mockNavigate,
+    useLocation: mockUseLocation,
+  }));
+  
+  return render(component);
+};
 
-  const renderNavbar = (route = '/') => {
-    window.history.pushState({}, 'Test page', route);
-    return render(
-      <MemoryRouter initialEntries={[route]}>
-        <Routes>
-          <Route
-            path="*"
-            element={
-              <Suspense fallback={<div>Loading...</div>}>
-                <Navbar />
-              </Suspense>
-            }
-          />
-        </Routes>
-      </MemoryRouter>
-    );
+describe('Navbar', () => {
+  const mockContextValue = {
+    backendUrl: 'http://localhost/',
+    userData: null,
+    setUserData: jest.fn(),
+    setIsLoggedIn: jest.fn(),
+    cleanupSocket: jest.fn(),
   };
 
-  it('shows login button for guest user', async () => {
-    renderNavbar();
-    await waitFor(() => {
-      expect(screen.getByText('Login')).toBeInTheDocument();
+  const participantContextValue = {
+    ...mockContextValue,
+    userData: { role: 'participant', name: 'Test User' },
+  };
+
+  const adminContextValue = {
+    ...mockContextValue,
+    userData: { role: 'admin', name: 'Admin User' },
+  };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    axios.post.mockResolvedValue({
+      data: { success: true, message: 'Logged out successfully' },
     });
   });
 
-  it('shows logout button for admin', async () => {
-    const { AppContent } = require('@/context/AppContext');
-    AppContent._currentValue.userData = { role: 'admin' };
+  describe('Guest user (not logged in)', () => {
+    it('renders navbar with guest navigation and login button', () => {
+      render(
+        <AppContent.Provider value={mockContextValue}>
+          <Router>
+            <Navbar />
+          </Router>
+        </AppContent.Provider>
+      );
 
-    renderNavbar();
-    await waitFor(() => {
-      expect(screen.getByText('Logout')).toBeInTheDocument();
-      expect(screen.getByText('Dashboard')).toBeInTheDocument();
+      // Check logo and brand
+      expect(screen.getByAltText('Logo')).toBeInTheDocument();
+      expect(screen.getByText('NMC')).toBeInTheDocument();
+
+      // Check guest navigation items
+      expect(screen.getByText('Welcome')).toBeInTheDocument();
+      expect(screen.getByText('Competition')).toBeInTheDocument();
+      expect(screen.getByText('Help')).toBeInTheDocument();
+
+      // Check login button
+      expect(screen.getByRole('link', { name: /login/i })).toBeInTheDocument();
+    });
+
+    it('applies correct styling for guest user', () => {
+      render(
+        <AppContent.Provider value={mockContextValue}>
+          <Router>
+            <Navbar />
+          </Router>
+        </AppContent.Provider>
+      );
+
+      const navbar = screen.getByRole('navigation');
+      expect(navbar).toHaveClass('bg-white');
+      expect(navbar).not.toHaveClass('red-navbar');
     });
   });
 
-  it('shows participant links for participant role', async () => {
-    const { AppContent } = require('@/context/AppContext');
-    AppContent._currentValue.userData = { role: 'participant' };
+  describe('Participant user', () => {
+    it('renders navbar with participant navigation and logout button', () => {
+      render(
+        <AppContent.Provider value={participantContextValue}>
+          <Router>
+            <Navbar />
+          </Router>
+        </AppContent.Provider>
+      );
 
-    renderNavbar();
-    await waitFor(() => {
+      // Check participant navigation items
       expect(screen.getByText('Home')).toBeInTheDocument();
       expect(screen.getByText('Competition')).toBeInTheDocument();
       expect(screen.getByText('Help')).toBeInTheDocument();
+
+      // Check logout button
+      expect(screen.getByRole('button', { name: /logout/i })).toBeInTheDocument();
+    });
+
+    it('handles logout for participant', async () => {
+      render(
+        <AppContent.Provider value={participantContextValue}>
+          <Router>
+            <Navbar />
+          </Router>
+        </AppContent.Provider>
+      );
+
+      const logoutButton = screen.getByRole('button', { name: /logout/i });
+      fireEvent.click(logoutButton);
+
+      await waitFor(() => {
+        expect(axios.post).toHaveBeenCalledWith('http://localhost/api/auth/logout');
+      });
+
+      expect(participantContextValue.setIsLoggedIn).toHaveBeenCalledWith(false);
+      expect(participantContextValue.setUserData).toHaveBeenCalledWith(null);
+      expect(participantContextValue.cleanupSocket).toHaveBeenCalled();
+      expect(toast.success).toHaveBeenCalledWith('Logged out successfully');
+      expect(mockNavigate).toHaveBeenCalledWith('/');
     });
   });
 
-  it('calls logout API and updates context on logout', async () => {
-    const { AppContent } = require('@/context/AppContext');
-    const setUserData = jest.fn();
-    const setIsLoggedIn = jest.fn();
-    const cleanupSocket = jest.fn();
+  describe('Admin user', () => {
+    it('renders navbar with admin navigation and logout button', () => {
+      render(
+        <AppContent.Provider value={adminContextValue}>
+          <Router>
+            <Navbar />
+          </Router>
+        </AppContent.Provider>
+      );
 
-    AppContent._currentValue = {
-      backendUrl: 'http://localhost:3000/',
-      userData: { role: 'participant' },
-      setUserData,
-      setIsLoggedIn,
-      cleanupSocket,
-    };
+      // Check admin navigation items
+      expect(screen.getByText('Dashboard')).toBeInTheDocument();
+      expect(screen.getByText('Competition')).toBeInTheDocument();
+      expect(screen.getByText('Ticket')).toBeInTheDocument();
 
-    // Override the default mock implementation for this test
-    axios.post.mockImplementationOnce(() =>
-      Promise.resolve({
-        data: { success: true, message: 'Logged out' }
-      })
-    );
+      // Check logout button
+      expect(screen.getByRole('button', { name: /logout/i })).toBeInTheDocument();
+    });
 
-    renderNavbar();
+    it('applies correct styling for admin user', () => {
+      render(
+        <AppContent.Provider value={adminContextValue}>
+          <Router>
+            <Navbar />
+          </Router>
+        </AppContent.Provider>
+      );
 
-    const logoutBtn = await screen.findByText('Logout');
-    fireEvent.click(logoutBtn);
+      const navbar = screen.getByRole('navigation');
+      expect(navbar).toHaveClass('red-navbar');
+      expect(navbar).not.toHaveClass('bg-white');
+    });
 
-    await waitFor(() => {
-      expect(axios.post).toHaveBeenCalledWith('http://localhost:3000/api/auth/logout');
-      expect(setUserData).toHaveBeenCalledWith(null);
-      expect(setIsLoggedIn).toHaveBeenCalledWith(false);
-      expect(cleanupSocket).toHaveBeenCalled();
-      expect(toast.success).toHaveBeenCalledWith('Logged out');
+    it('handles logout for admin', async () => {
+      render(
+        <AppContent.Provider value={adminContextValue}>
+          <Router>
+            <Navbar />
+          </Router>
+        </AppContent.Provider>
+      );
+
+      const logoutButton = screen.getByRole('button', { name: /logout/i });
+      fireEvent.click(logoutButton);
+
+      await waitFor(() => {
+        expect(axios.post).toHaveBeenCalledWith('http://localhost/api/auth/logout');
+      });
+
+      expect(adminContextValue.setIsLoggedIn).toHaveBeenCalledWith(false);
+      expect(adminContextValue.setUserData).toHaveBeenCalledWith(null);
+      expect(adminContextValue.cleanupSocket).toHaveBeenCalled();
+      expect(toast.success).toHaveBeenCalledWith('Logged out successfully');
+      expect(mockNavigate).toHaveBeenCalledWith('/');
     });
   });
 
-  it('shows back button on login page', async () => {
-    renderNavbar('/login');
-    await waitFor(() => {
-      expect(screen.getByRole('link')).toHaveAttribute('href', '/');
+  describe('Mobile menu functionality', () => {
+    it('toggles mobile menu when hamburger button is clicked', () => {
+      render(
+        <AppContent.Provider value={mockContextValue}>
+          <Router>
+            <Navbar />
+          </Router>
+        </AppContent.Provider>
+      );
+
+      // Initially shows hamburger icon
+      expect(screen.getByTestId('bars-icon')).toBeInTheDocument();
+
+      // Click to open menu
+      const menuButton = screen.getByRole('button', { name: /open main menu/i });
+      fireEvent.click(menuButton);
+
+      // Should show X icon when menu is open
+      expect(screen.getByTestId('x-mark-icon')).toBeInTheDocument();
+    });
+  });
+
+  describe('Navigation links', () => {
+    it('renders correct href attributes for guest navigation', () => {
+      render(
+        <AppContent.Provider value={mockContextValue}>
+          <Router>
+            <Navbar />
+          </Router>
+        </AppContent.Provider>
+      );
+
+      expect(screen.getByRole('link', { name: 'Welcome' })).toHaveAttribute('href', '/');
+      expect(screen.getByRole('link', { name: 'Competition' })).toHaveAttribute('href', '/usercomp');
+      expect(screen.getByRole('link', { name: 'Help' })).toHaveAttribute('href', '/userhelp');
+    });
+
+    it('renders correct href attributes for participant navigation', () => {
+      render(
+        <AppContent.Provider value={participantContextValue}>
+          <Router>
+            <Navbar />
+          </Router>
+        </AppContent.Provider>
+      );
+
+      expect(screen.getByRole('link', { name: 'Home' })).toHaveAttribute('href', '/userhome');
+      expect(screen.getByRole('link', { name: 'Competition' })).toHaveAttribute('href', '/usercomp');
+      expect(screen.getByRole('link', { name: 'Help' })).toHaveAttribute('href', '/userhelp');
+    });
+
+    it('renders correct href attributes for admin navigation', () => {
+      render(
+        <AppContent.Provider value={adminContextValue}>
+          <Router>
+            <Navbar />
+          </Router>
+        </AppContent.Provider>
+      );
+
+      expect(screen.getByRole('link', { name: 'Dashboard' })).toHaveAttribute('href', '/admindashboard');
+      expect(screen.getByRole('link', { name: 'Competition' })).toHaveAttribute('href', '/admincomp');
+      expect(screen.getByRole('link', { name: 'Ticket' })).toHaveAttribute('href', '/adminticket');
     });
   });
 });
