@@ -59,7 +59,7 @@ jest.mock('../../src/components/UploadTwibbonPayment', () => ({
 const mockCompetition = {
   _id: 'comp1',
   Name: 'Test Competition',
-  Price: '$100',
+  Price: '100',
   Venue: 'Test Venue',
   CompetitionDate: {
     StartDate: '2025-06-01',
@@ -87,7 +87,7 @@ describe('CompetitionPopUp', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Test Competition')).toBeInTheDocument();
-      expect(screen.getByText('Price: $100 / Person')).toBeInTheDocument();
+      expect(screen.getByText('Price: Rp 100 / Person')).toBeInTheDocument();
       expect(screen.getByText((content, element) => {
   return element?.textContent === 'Venue: Test Venue';
 })).toBeInTheDocument();

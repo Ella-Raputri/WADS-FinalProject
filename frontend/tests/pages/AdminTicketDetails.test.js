@@ -54,7 +54,7 @@ describe('AdminTicketDetails', () => {
       Status: 'Open',
       PriorityType: 'High',
       CreatedAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      UpdatedAt: new Date().toISOString(),
     },
     user: {
       id: 'admin123',
