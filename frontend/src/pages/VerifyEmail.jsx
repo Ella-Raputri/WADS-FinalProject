@@ -116,7 +116,7 @@ const VerifyEmailPage = () => {
       const {data} =await axios.post(backendUrl+'api/auth/verify-account', {email:email, otp:inputtedOtp})
       if(data.success){
         toast.success(data.message)
-        getUserData()
+        await getUserData()
         initializeSocket(data.userData._id);
         navigate('/userhome')
       }

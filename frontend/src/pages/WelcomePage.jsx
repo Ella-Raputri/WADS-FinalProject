@@ -232,7 +232,7 @@ const WelcomePage = () => {
           <h1 className="text-2xl md:text-3xl font-poppins text-black font-semibold mb-15">Contact us if you have any questions!</h1>
           <div className="flex gap-6">
           <button className="font-poppins arrow-button px-4 md:px-6 py-3 border-2 border-red-600 text-red-600 font-semibold text-md md:text-lg rounded-lg hover:bg-gray-100 transition"
-          onClick={()=>{window.location.href = 'https://www.instagram.com/nmcbnmc/'}}>
+          onClick={()=>{window.open('https://www.instagram.com/nmcbnmc/', '_blank')}}>
             Contact Us <span className="arrow"></span>
           </button>
           <button className="font-poppins arrow-button px-4 md:px-6 py-3 bg-red-600 text-white font-semibold text-md md:text-lg rounded-lg hover:bg-red-700 transition"

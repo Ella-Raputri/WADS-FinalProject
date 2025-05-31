@@ -234,7 +234,7 @@ const fetchMessagesWithAdminNames = async () => {
           <div className="mt-5 text-sm font-poppins leading-6 text-gray-500">
             <p><strong>Competition type:</strong> {data.compData?.Name || "Loading..."}</p>
             <p><strong>Created at:</strong> {convertToTimeZone(data.CreatedAt)}</p>
-            <p><strong>Updated at:</strong> {data.updatedAt}</p>
+            <p><strong>Updated at:</strong> {convertToTimeZone(data.UpdatedAt)}</p>
             <p><strong>Sender:</strong> {data.senderData?.name || "Loading..."}</p>
             {/* <p><strong>Handled by:</strong> Ella, Ellis, Rafael</p> */}
           </div>
