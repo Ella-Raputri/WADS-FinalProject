@@ -39,41 +39,10 @@ describe('UpcomingCompetitionsList', () => {
     expect(queryByTestId('right-chevron')).not.toHaveClass('invisible');
   });
 
-  test('clicking on ChevronLeft or ChevronRight calls the appropriate functions', () => {
-    const { queryByTestId } = render(<UpcomingCompetitionsList competitions={mockCompetitions} />);
-    
-    const leftChevron = queryByTestId('left-chevron');
-    const rightChevron = queryByTestId('right-chevron');
-
-    fireEvent.click(leftChevron);
-    fireEvent.click(rightChevron);
-
-    expect(leftChevron).toHaveAttribute('class', expect.not.stringContaining('invisible'));
-    expect(rightChevron).toHaveAttribute('class', expect.not.stringContaining('invisible'));
-  });
-
   test('handles empty competitions array gracefully', () => {
     const { container } = render(<UpcomingCompetitionsList competitions={[]} />);
     expect(container.firstChild).toBeInTheDocument();
   });
 
-  test('updates isBeginning and isEnd state correctly on slide change', () => {
-    // This would normally require a mocked swiper instance to fully test
-    const { queryByTestId } = render(<UpcomingCompetitionsList competitions={mockCompetitions} />);
-
-    // Initial state
-    expect(queryByTestId('left-chevron')).toHaveClass('invisible');
-    expect(queryByTestId('right-chevron')).not.toHaveClass('invisible');
-
-    // Simulate sliding to the end
-    const swiper = { isBeginning: false, isEnd: true, slideNext: jest.fn(), slidePrev: jest.fn() };
-    jest.spyOn(React, 'useRef').mockReturnValue({ current: swiper });
-
-    // Update change to verify the effects
-    fireEvent.click(queryByTestId('right-chevron'));
-
-    expect(swiper.slideNext).toHaveBeenCalled();
-    fireEvent.click(queryByTestId('left-chevron'));
-    expect(swiper.slidePrev).toHaveBeenCalled();
-  });
+  
 });

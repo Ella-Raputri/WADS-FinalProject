@@ -1,6 +1,7 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { UserData } from "@/components/UserData";
+import '@testing-library/jest-dom'
 
 // Mock window.open and window.alert
 global.open = jest.fn();
