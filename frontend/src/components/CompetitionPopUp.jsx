@@ -93,7 +93,7 @@ export const CompetitionPopUp = ({ competition, isOpen, onClose }) => {
             <div className="h-[80vh] md:h-[70vh] overflow-y-auto" style={{scrollbarWidth:"thin", scrollbarColor:"#ccc transparent"}}>
               <div className="top-0 sticky pt-1 bg-white">
                   <p className="font-kanit font-medium text-2xl xl:text-3xl ml-11 w-[65%] md:w-auto">{competition.Name}</p>
-                  <p className="ml-11 text-md xl:text-lg mt-3">Price: {competition.Price} / Person</p>
+                  <p className="ml-11 text-md xl:text-lg mt-3">Price: Rp {competition.Price} / Person</p>
                   <span className="text-[2.3rem] xl:text-[2.7rem] text-gray-500 absolute top-0 right-0 mr-[1em] md:mr-[1.5em]  hover:text-gray-600 cursor-pointer" onClick={onClose}> <FontAwesomeIcon icon={faTimes}/> </span>
                   <div className="w-[80%] h-[0.05em] bg-gray-400 ml-[3.1em] mt-[0.5em]"></div>
               </div>
