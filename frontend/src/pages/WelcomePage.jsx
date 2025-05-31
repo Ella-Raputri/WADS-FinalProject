@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Carousel from '../components/Carousel';
 import Tassle from '../components/Tassle';
 import { AppContent } from '@/context/AppContext';
+import ferris from '../assets/welcome_page/tower.png'
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
@@ -141,7 +142,7 @@ const WelcomePage = () => {
             className="absolute z-10 top-92 -left-15 w-65 sm:w-70 sm:top-78 sm:-left-20 md:w-78 md:-left-22 md:top-80 lg:w-90 lg:-left-26 xl:w-110 xl:-left-30 xl:top-88 2xl:w-130 2xl:-left-35 2xl:top-95"
           />
           <img
-            src="src/assets/welcome_page/ferris.png"
+            src={ferris}
             alt="Ferris Wheel"
             className="absolute z-10 top-60 left-3/4 w-70 sm:w-73 sm:top-54 md:w-83 md:left-140 lg:left-3/4 lg:w-92 xl:w-110 2xl:w-130 2xl:top-55"
           />
