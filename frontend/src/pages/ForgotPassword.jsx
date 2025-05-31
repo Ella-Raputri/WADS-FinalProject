@@ -7,6 +7,7 @@ import InputField from "@/components/InputField";
 import { toast } from "react-toastify";
 import { AppContent } from "@/context/AppContext";
 import axios from "axios";
+import bgImage from '../assets/Bg.webp'
 
 
 const ForgotPasswordPage = () => {
@@ -156,7 +157,7 @@ const ForgotPasswordPage = () => {
   return (
     <div
       className="relative z-1000 flex min-h-screen w-full items-center justify-center bg-cover bg-center px-4 py-8"
-      style={{ backgroundImage: "url('/src/assets/Bg.webp')" }}
+      style={{ backgroundImage: `url(${bgImage})` }}
     >
       <div className="absolute inset-0 bg-black/30 backdrop-blur-xl"></div>
 
