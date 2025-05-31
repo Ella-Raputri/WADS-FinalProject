@@ -1,17 +1,23 @@
 import { useState } from "react";
 import { CompetitionPopUp } from "./CompetitionPopUp";
 import React from 'react';
+import junior_singing from '../assets/junior_singing.png';
+import senior_singing from '../assets/senior_singing.png';
+import storytelling from '../assets/storytelling.png';
+import speech from '../assets/speech.png';
+import poster_design from '../assets/poster_design.png';
+import dubbing from '../assets/dubbing.png';
 
 export const CompetitionInfo = ({competition, isFirst, userData}) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const slides = [
-        { title: "Junior Singing", image: "src/assets/junior_singing.png" },
-        { title: "Senior Singing", image: "src/assets/senior_singing.png" },
-        { title: "Storytelling", image: "src/assets/storytelling.png" },
-        { title: "Speech", image: "src/assets/speech.png" },
-        { title: "Poster Design", image: "src/assets/poster_design.png" },
-        { title: "Dubbing", image: "src/assets/dubbing.png" },
+        { title: "Junior Singing", image: junior_singing },
+        { title: "Senior Singing", image: senior_singing },
+        { title: "Storytelling", image: storytelling },
+        { title: "Speech", image: speech },
+        { title: "Poster Design", image: poster_design },
+        { title: "Dubbing", image: dubbing },
     ];
     const matchedSlide = slides.find(slide => slide.title === competition.Name);
     const imageSrc = matchedSlide.image;

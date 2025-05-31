@@ -4,9 +4,22 @@ import { useNavigate } from 'react-router-dom';
 import Carousel from '../components/Carousel';
 import Tassle from '../components/Tassle';
 import { AppContent } from '@/context/AppContext';
-import ferris from '../assets/welcome_page/tower.png'
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import light1 from '../assets/welcome_page/light1.png';
+import light2 from '../assets/welcome_page/light2.png';
+import light3 from '../assets/welcome_page/light3.png';
+import flower from '../assets/welcome_page/flower.png';
+import flower2 from '../assets/welcome_page/flower2.png';
+import tower from '../assets/welcome_page/tower.png';
+import temple from '../assets/welcome_page/temple.png';
+import ferris from '../assets/welcome_page/ferris.png';
+import buildings from '../assets/welcome_page/buildings.png';
+import palace from '../assets/welcome_page/palace.png';
+import ground from '../assets/welcome_page/ground.png';
+import architecture from '../assets/welcome_page/architecture.png';
+import decor from '../assets/welcome_page/decor.png';
+import decor2 from '../assets/welcome_page/decor2.png';
 
 const WelcomePage = () => {
   const navigate = useNavigate();
@@ -102,42 +115,42 @@ const WelcomePage = () => {
         {/* Background Images */}
         <div className=" relative w-full flex justify-center">
         <img 
-            src="src/assets/welcome_page/light3.png" 
+            src={light3}
             alt="Light3" 
             ref={light3Ref}
             className="absolute z-2 top-30 left-[50%] h-80 sm:left-[55%] md:h-100 xl:top-45 xl:h-120 xl:left-[58%]" 
           />
           <img 
-            src="src/assets/welcome_page/light2.png" 
+            src={light2}
             alt="Light2" 
             ref={light2Ref}
             className="absolute z-2 top-30 left-[36%] h-80 sm:left-[40%] md:h-100 lg:left-[44%] xl:top-45 xl:h-120" 
           />
           <img 
-            src="src/assets/welcome_page/light1.png" 
+            src={light1}
             alt="Light1" 
             ref={light1Ref}
             className="absolute z-2 top-30 -left-[10%] h-80 sm:left-[8%] md:h-100 lg:left-[15%] xl:top-45 xl:h-120 xl:left-[18%] 2xl:left-[20%]" 
           />
           <img
-            src="src/assets/welcome_page/flower.png"
+            src={flower}
             alt="Flower Left"
             ref={leftFlowerRef}
             className="absolute z-10 top-3 left-0 w-35 sm:w-50 md:w-60 lg:w-70 xl:w-80 2xl:w-90"
           />
           <img
-            src="src/assets/welcome_page/flower2.png"
+            src={flower2}
             alt="Flower Right"
             ref={rightFlowerRef}
             className="absolute z-10 top-3 right-0 w-35 sm:w-50 md:w-60 lg:w-70 xl:w-80 2xl:w-90"
           />
           <img
-            src="src/assets/welcome_page/tower.png"
+            src={tower}
             alt="Tower"
             className="absolute z-10 top-80 left-30 w-14 sm:w-16 sm:top-80 md:w-18 lg:w-21 lg:left-35 lg:top-55 xl:w-25 xl:top-60 xl:left-45 2xl:w-30 2xl:top-65 2xl:left-55"
           />
           <img
-            src="src/assets/welcome_page/temple.png"
+            src={temple}
             alt="Temple"
             className="absolute z-10 top-92 -left-15 w-65 sm:w-70 sm:top-78 sm:-left-20 md:w-78 md:-left-22 md:top-80 lg:w-90 lg:-left-26 xl:w-110 xl:-left-30 xl:top-88 2xl:w-130 2xl:-left-35 2xl:top-95"
           />
@@ -147,12 +160,12 @@ const WelcomePage = () => {
             className="absolute z-10 top-60 left-3/4 w-70 sm:w-73 sm:top-54 md:w-83 md:left-140 lg:left-3/4 lg:w-92 xl:w-110 2xl:w-130 2xl:top-55"
           />
           <img
-            src="src/assets/welcome_page/buildings.png"
+            src={buildings}
             alt="Buildings"
             className="absolute z-10 top-83 left-3/5 w-130 sm:w-135 sm:top-80 md:w-160 md:top-81 md:left-105 lg:w-180 lg:left-1/3 xl:w-215 xl:left-5/12 xl:top-94 2xl:w-260 2xl:left-[42%] 2xl:top-100 object-cover"
           />
           <img
-            src="src/assets/welcome_page/palace.png"
+            src={palace}
             alt="Palace"
             className="absolute z-10 top-98 left-30 w-82 sm:w-88 sm:top-94 md:w-110 md:top-95 md:left-20 lg:w-122 lg:left-30 lg:top-98 xl:w-145 xl:left-35 xl:top-113 2xl:w-170 2xl:left-50 2xl:top-120"
           />     
@@ -176,7 +189,7 @@ const WelcomePage = () => {
 
         {/* the ground, also as divider between first and second section  */}
       <img
-        src="src/assets/welcome_page/ground.png"
+        src={ground}
         alt="Ground"
         className='w-full z-20 h-10 mt-47 sm:mt-55 lg:mt-65 lg:h-16 xl:h-18 xl:mt-75 2xl:mt-90'
       /> 
@@ -200,7 +213,7 @@ const WelcomePage = () => {
             </p>
           </div>
           <div className="md:w-2/5 md:pl-8 mt-6 md:mt-0">
-            <img src="src/assets/welcome_page/architecture.png" alt="Chinese Architecture" className="w-full rounded-lg shadow-md" />
+            <img src={architecture} alt="Chinese Architecture" className="w-full rounded-lg shadow-md" />
           </div>
         </div>
       </div>
@@ -209,7 +222,7 @@ const WelcomePage = () => {
       <div ref={competitionRef} className="relative flex flex-col items-center pt-20 md:pt-30 min-h-[80vh] md:min-h-screen w-full">
         {/* the title that is animated with the decorations */}
         <motion.img 
-          src="src/assets/welcome_page/decor.png" 
+          src={decor}
           alt="left decor" 
           initial={{ x: "50%", opacity: 1 }}
           animate={animateCompetition ? { x: "-100%", opacity: 0 } : { x: "50%", opacity: 1 }}
@@ -225,7 +238,7 @@ const WelcomePage = () => {
           COMPETITIONS
         </motion.h1>
         <motion.img 
-          src="src/assets/welcome_page/decor2.png" 
+          src={decor2}
           alt="right decor" 
           initial={{ x: "-50%", opacity: 1 }}
           animate={animateCompetition ? { x: "100%", opacity: 0 } : {}}
