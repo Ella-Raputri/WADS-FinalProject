@@ -1,14 +1,9 @@
-import { TextEncoder, TextDecoder } from 'util';
-import '@testing-library/jest-dom';
-global.TextEncoder = TextEncoder;
-global.TextDecoder = TextDecoder;
-
 import React from 'react';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { CompetitionPopUp } from '../../src/components/CompetitionPopUp';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-
+import '@testing-library/jest-dom';
 
 // Mock AppContext
 jest.mock('@/context/AppContext', () => ({

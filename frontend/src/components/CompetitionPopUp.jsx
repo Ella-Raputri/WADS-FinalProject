@@ -8,7 +8,6 @@ import UploadTwibbonPayment from "./UploadTwibbonPayment";
 import { AppContent } from "@/context/AppContext";
 import { toast } from "react-toastify";
 import axios from "axios";
-import React from "react";
 
 
 export const CompetitionPopUp = ({ competition, isOpen, onClose }) => {
