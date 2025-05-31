@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import React, { useState, useEffect, useRef } from "react";
+import tassle2 from '../assets/welcome_page/tassle2.png';
 
 export default function Tassle() {
   const [isSwinging, setIsSwinging] = useState(false);
@@ -48,7 +49,7 @@ export default function Tassle() {
         }}
         style={{ transformOrigin: "top center" }}
       >
-        <img src="src/assets/welcome_page/tassle2.png" alt="decoration" />
+        <img src={tassle2} alt="decoration" />
       </motion.div>
     </div>
   );

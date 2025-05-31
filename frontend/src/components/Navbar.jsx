@@ -6,6 +6,7 @@ import { Bars3Icon, ChevronLeftIcon, XMarkIcon } from '@heroicons/react/24/outli
 import { AppContent } from '@/context/AppContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import logo_nmc from '../assets/logo_nmc.png';
 
 const Navbar = () => {
   const location = useLocation();
@@ -89,7 +90,7 @@ const Navbar = () => {
                 {/* Logo */}
                 <div className="absolute inset-x-0 flex justify-center sm:static sm:justify-start">
                   <div className="flex items-center space-x-1">
-                    <img src="src/assets/logo_nmc.png" alt="Logo" className="h-8 w-8" />
+                    <img src={logo_nmc} alt="Logo" className="h-8 w-8" />
                     <span className={`${userRole === 'admin' ? 'text-white' : 'text-black'}
                                         mt-1 font-raleway text-2xl font-extrabold ml-0.5`}>NMC</span>
                   </div>
