@@ -39,7 +39,7 @@ app.set('trust proxy', true);
 // Enable CORS with credentials
 app.use(
     cors({
-        origin: "http://localhost:5173", // Allow frontend
+        origin: "*", // Allow frontend
         credentials: true, // Allow cookies & credentials
     })
 );
