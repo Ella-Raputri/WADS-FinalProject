@@ -34,6 +34,8 @@ const WelcomePage = () => {
 
   // if the user is logged in
   useEffect(()=>{
+    if(!isLoggedIn && !userData) return;
+
     if(isLoggedIn){
       if(userData.role === 'admin') navigate('/admindashboard') //redirect to dashboard if admin
       else if(userData.role === 'participant') navigate('/userhome') //redirect to home if participant
