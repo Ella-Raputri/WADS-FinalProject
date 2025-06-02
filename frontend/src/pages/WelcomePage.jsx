@@ -30,6 +30,7 @@ const WelcomePage = () => {
 
   useEffect(()=>{ //initialize animation on scroll
     AOS.init()
+    console.log("welcomepage")
   }, [])
 
   // if the user is logged in
