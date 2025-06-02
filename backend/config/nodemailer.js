@@ -34,6 +34,7 @@ export const sendMail = async(template, emailSubject, otp, userEmail) => {
     console.log('recip ', userEmail)
     console.log(process.env.SMTP_USER)
     console.log(process.env.SMTP_PASS)
+    console.log('tes')
 
     let transporter = nodemailer.createTransport(config)
     let mailOptions = {
