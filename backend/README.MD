@@ -1,27 +1,67 @@
 # WADS Final Project Backend - NMC Website
 
+<img src="../docs_images/logo_nmc.png" alt="NMC Logo" width="300">
+
+## Prerequisites
+Before you begin, ensure you have the following installed:
+- [Node.js](https://nodejs.org/) (LTS version recommended)
+- [Git](https://git-scm.com/)
+
+<br>
 
 ## Setup Process (Local)
 
-- Clone the repository and change directory to the respective repository.
-    ```text
-    git clone https://github.com/Ella-Raputri/WADS-FinalProject
-    cd WADS-FinalProject/backend
-    ```
+### 1. Clone the repository and change directory to the respective repository.
+```sh
+git clone https://github.com/Ella-Raputri/WADS-FinalProject
+cd WADS-FinalProject/backend
+```
 
-- Installing all dependencies in backend.
-    ```text
-    npm install
-    ```
+### 2. Installing all dependencies in backend.
+```sh
+npm install
+```
 
-- Create a .env file, then copy the content of the backend.txt file that is located in the backend folder. Fill in the content based on your configurations. 
+### 3. Create a .env file, then copy the content of the backend.txt file that is located in the backend folder. Fill in the content based on your configurations. 
 
-- Run the backend
-    ```text
-    npm run dev
-    ```
+### 4. Run the backend
+```sh
+npm run dev
+```
 
-- Access the application at localhost:3004.
+### 5. Access the Application
+```sh
+http://localhost:3004/
+```
+
+<br>
+
+## Docker Setup
+You can view the Docker image in the Docker Hub: [ellaraputri/mern-nmc-backend:latest](https://hub.docker.com/repository/docker/ellaraputri/mern-nmc-backend). 
+### 1. Pull the Docker Image
+```sh
+docker pull ellaraputri/mern-nmc-backend:latest
+```
+
+### 2. Run the Container
+```sh
+docker run -p 3004:3004 -d ellaraputri/mern-nmc-backend:latest
+```
+
+### 3. Access the Application
+```sh
+http://localhost:3004/
+```
+
+### 4. Stop the Docker Container
+First, find the container ID
+```sh
+docker ps
+```
+Then, stop the container using its ID
+```sh
+docker stop <container_id>
+```
 
 <br>
 
