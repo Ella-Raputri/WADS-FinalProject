@@ -14,7 +14,7 @@ const options = {
     },
     servers: [
       {
-        url: `http://localhost:${PORT}`,
+        url: `https://e2425-wads-l4acg2-server.csbihub.id`,
       },
     ],
     components: {
