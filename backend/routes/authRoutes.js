@@ -540,11 +540,36 @@ authRouter.post('/verify-otp-reset', verifyOtpReset);
 authRouter.post('/reset-password', resetPassword);
 
 
-
+/**
+ * @swagger
+ * /api/auth/google:
+ *   get:
+ *     summary: Initiates Google OAuth2 login
+ *     tags:
+ *       - Authentication
+ *     description: Redirects the user to Google for authentication using OAuth2.
+ *     responses:
+ *       302:
+ *         description: Redirect to Google's OAuth consent screen.
+ */
 authRouter.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 const url = (process.env.NODE_ENV === 'development')? process.env.CLIENT_DEVELOPMENT_URL : process.env.CLIENT_PRODUCTION_URL;
 
+/**
+ * @swagger
+ * /api/auth/google/callback:
+ *   get:
+ *     summary: Google OAuth2 callback
+ *     tags:
+ *       - Authentication
+ *     description: Handles Google OAuth2 callback. On success, issues a JWT token and redirects to frontend.
+ *     responses:
+ *       302:
+ *         description: Redirects to frontend with cookie token if successful.
+ *       401:
+ *         description: Unauthorized - no user data returned from Google.
+ */
 // Google OAuth callback
 authRouter.get(
     '/google/callback',

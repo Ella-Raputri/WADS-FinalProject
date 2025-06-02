@@ -74,7 +74,7 @@ competitionRegistrationRouter.get("/userRegistrations", userAuth, getRegisteredC
 
 /**
  * @swagger
- * /api/competitionRegistration:
+ * /api/competitionRegistration/registerCompetition:
  *   post:
  *     summary: Register for a competition
  *     tags: [CompetitionRegistration]

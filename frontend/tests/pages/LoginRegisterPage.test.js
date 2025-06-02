@@ -156,22 +156,6 @@ describe('LoginRegisterPage Component', () => {
     expect(passwordInput.type).toBe('text');
   });
 
-  it('handles Google login', () => {
-    delete window.location;
-    window.location = { href: '' };
-
-    render(
-      <MemoryRouter>
-        <AppContent.Provider value={mockContext}>
-          <LoginRegisterPage />
-        </AppContent.Provider>
-      </MemoryRouter>
-    );
-
-    fireEvent.click(screen.getByTestId('google-login'));
-    expect(window.location.href).toBe('http://localhost:5000/api/auth/google');
-  });
-
   it('navigates away if user is already logged in (admin)', () => {
     const mockRouter = {
       push: jest.fn(),

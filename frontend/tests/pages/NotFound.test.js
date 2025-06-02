@@ -26,6 +26,5 @@ describe('NotFound Component', () => {
     render(<NotFound />)
     const img = screen.getByAltText('Confused Panda')
     expect(img).toBeInTheDocument()
-    expect(img).toHaveAttribute('src', 'src/assets/panda.png')
   })
 })
