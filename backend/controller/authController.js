@@ -84,16 +84,6 @@ export const register = async (req, res) => {
         });
         await user.save();
 
-        // create the token (expired in 7d)
-        const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: '7d'});
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: process.env.NODE_ENV === "production"? "None" : "strict", // force explicit
-            domain: process.env.NODE_ENV === 'production' ? '.csbihub.id' : undefined,
-            maxAge: 7 * 24 * 60 * 60 * 1000,
-        });
-
         return res.status(200).json({ success: true, message: "Account created successfully", user });
 
     } catch (error) {
@@ -219,12 +209,13 @@ export const verifyEmail = async(req,res)=>{
         user.VerifyOtpExpireAt=0;
         await user.save();
 
-        // assign token
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+        // create the token (expired in 7d)
+        const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: '7d'});
         res.cookie("token", token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+            sameSite: process.env.NODE_ENV === "production"? "None" : "strict", // force explicit
+            domain: process.env.NODE_ENV === 'production' ? '.csbihub.id' : undefined,
             maxAge: 7 * 24 * 60 * 60 * 1000,
         });
 

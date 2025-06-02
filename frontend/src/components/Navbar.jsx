@@ -16,6 +16,7 @@ const Navbar = () => {
 
   // Derive userRole directly from userData
   const userRole = userData?.role || null;
+  const isVerified = userData?.isAccountVerified || false;
 
   // Link to welcome page from login
   if (location.pathname === '/login') {
@@ -47,11 +48,11 @@ const Navbar = () => {
   };
 
   // navigation lists based on userRole
-  const navigation = userRole === 'admin' ? [
+  const navigation = (userRole === 'admin' && isVerified) ? [
     { name: 'Dashboard', href: '/admindashboard' },
     { name: 'Competition', href: '/admincomp' },
     { name: 'Ticket', href: '/adminticket' },
-  ] : userRole === 'participant' ? [
+  ] : (userRole === 'participant' && isVerified) ? [
     { name: 'Home', href: '/userhome' },
     { name: 'Competition', href: '/usercomp' },
     { name: 'Help', href: '/userhelp' },
@@ -118,7 +119,7 @@ const Navbar = () => {
               </div>
 
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto">
-                {userRole ? (
+                {userRole && isVerified ? (
                   <button
                     onClick={logOut}
                     className={`px-4 py-2 font-poppins transition duration-200 ease text-sm shadow-sm font-semibold cursor-pointer rounded-md ${userRole === 'admin' ? 'bg-white text-red-700 hover:bg-neutral-100' 

@@ -8,8 +8,11 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
 
   // guest can only access the public view
   if(!userData){
-    console.log("ketendang ")
     return (<Navigate to="/" />);
+  }
+
+  if(!userData.isAccountVerified){
+    return (<Navigate to="/" />);  
   }
 
   // redirect to each role's main page if they try to access unallowed link
