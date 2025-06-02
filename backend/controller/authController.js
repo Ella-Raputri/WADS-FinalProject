@@ -365,5 +365,7 @@ export const handleGoogleCallback = (req, res) => {
     const url = (process.env.NODE_ENV === 'development')? process.env.CLIENT_DEVELOPMENT_URL : process.env.CLIENT_PRODUCTION_URL;
 
     // Redirect to frontend after successful login
-    return res.redirect(url + '/userhome');
+    return res.redirect(url + '/authloading');
+
+
 };

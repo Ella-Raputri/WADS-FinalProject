@@ -24,6 +24,7 @@ import ForgotPasswordPage from './pages/ForgotPassword.jsx';
 import { AppContent } from './context/AppContext';
 import ProtectedRoute from './lib/protectedRoute';
 import CompleteInfoPage from './pages/participant/CompleteInfoPage';
+import AuthLoading from './pages/AuthLoading';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -163,6 +164,8 @@ function MainLayout() {
 
           {/* Catch-all for 404 */}
           <Route path="/*" element={<NotFound />} />
+
+          <Route path="/authloading" element={<AuthLoading />} />
         </Routes>
       </main>
 

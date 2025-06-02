@@ -45,7 +45,7 @@ const HomePage = () => {
 
       if (!userData || !userData.id){
         console.log("udah masuk home tapi invalid userdata");
-        navigate("/notfound")
+        navigate("/notfound2")
         return;
       }
 
