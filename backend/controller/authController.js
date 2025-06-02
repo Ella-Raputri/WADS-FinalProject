@@ -143,12 +143,11 @@ export const login = async(req,res)=>{
 export const logout = async (req, res) => {
     try {
         //remove the token when logout
-        res.cookie('token', '', { 
-            httpOnly: true, 
+        res.clearCookie('token', {
+            httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'strict',
             domain: process.env.NODE_ENV === 'production' ? '.csbihub.id' : undefined,
-            expires: new Date(0) // Set expiry to remove the cookie
         });
 
         return res.status(200).json({ success: true, message: "Logged out successfully" });
