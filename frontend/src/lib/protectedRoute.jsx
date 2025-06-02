@@ -8,6 +8,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
 
   // guest can only access the public view
   if(!userData){
+    console.log("ketendang ")
     return (<Navigate to="/" />);
   }
 
