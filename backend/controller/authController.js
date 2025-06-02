@@ -179,15 +179,6 @@ export const sendVerifyOtp =async(req,res) =>{
 
         // send otp through email
         const info = await sendMail(EMAIL_VERIFY_TEMPLATE, 'Account Verification OTP', otp, user.Email);
-        console.log('Email sent:', info)
-
-        // const mailOptions ={
-        //     from: process.env.SENDER_EMAIL,
-        //     to: email,
-        //     subject: 'Account verification OTP',
-        //     html: EMAIL_VERIFY_TEMPLATE.replace("{{otp}}", otp).replace("{{email}}",user.Email)
-        // }
-        // const info = await transporter.sendMail(mailOptions);
 
         return  res.status(200).json({success:true, message:"Verification OTP has been sent"})
 
@@ -277,16 +268,6 @@ export const sendResetOtp = async(req,res)=>{
 
         //send email to reset otp
         const info = await sendMail(PASSWORD_RESET_TEMPLATE, 'Account Reset OTP', otp, user.Email);
-        console.log('Email sent:', info);
-
-
-        // const mailOptions ={
-        //     from: process.env.SENDER_EMAIL,
-        //     to: email,
-        //     subject: 'Account Reset OTP',
-        //     html:PASSWORD_RESET_TEMPLATE.replace("{{otp}}", otp).replace("{{email}}",user.Email)
-        // }
-        // const info = await transporter.sendMail(mailOptions);
 
         return res.status(200).json({success:true, message:"Reset OTP has been sent"})
 
@@ -381,6 +362,8 @@ export const handleGoogleCallback = (req, res) => {
         maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
+    const url = (process.env.NODE_ENV === 'development')? process.env.CLIENT_DEVELOPMENT_URL : process.env.CLIENT_PRODUCTION_URL;
+
     // Redirect to frontend after successful login
-    res.redirect('http://localhost:5173/userhome');
+    res.redirect(url + '/userhome');
 };

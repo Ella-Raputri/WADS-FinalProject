@@ -2,12 +2,14 @@ import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import userModel from '../models/userModel.js';
 
+const url = (process.env.NODE_ENV === 'development')? process.env.SERVER_DEVELOPMENT_URL : process.env.SERVER_PRODUCTION_URL;
+
 // Configure Passport to use Google OAuth 2.0 strategy
 passport.use(
   new GoogleStrategy({
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "/api/auth/google/callback",
+      callbackURL: url + "/api/auth/google/callback",
   },
   // Callback function after Google authenticates the user
   async (accessToken, refreshToken, profile, done) => {

@@ -79,3 +79,5 @@ jobs:
           PINECONE_INDEX: ${{ secrets.PINECONE_INDEX }}
           PINECONE_DATABASE: ${{ secrets.PINECONE_DATABASE }}
           PORT: ${{ secrets.PORT }}
+          SERVER_PRODUCTION_URL: ${{ secrets.SERVER_PRODUCTION_URL }}
+          CLIENT_PRODUCTION_URL: ${{ secrets.CLIENT_PRODUCTION_URL }}
