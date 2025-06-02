@@ -2,6 +2,7 @@ import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 
 const PORT = process.env.PORT || 4000;
+const url = (process.env.NODE_ENV === 'development')? process.env.SERVER_DEVELOPMENT_URL : process.env.SERVER_PRODUCTION_URL;
 
 // swagger configuration
 const options = {
@@ -14,7 +15,7 @@ const options = {
     },
     servers: [
       {
-        url: `https://e2425-wads-l4acg2-server.csbihub.id`,
+        url: url,
       },
     ],
     components: {

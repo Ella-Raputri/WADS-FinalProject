@@ -130,7 +130,7 @@ const LoginRegisterPage = () => {
 
   // login handler for Google
   const handleLoginGoogle = () =>{
-    window.location.href = backendUrl+'api/auth/google'
+    window.location.href = 'https://e2425-wads-l4acg2-client.csbihub.id/api/auth/google'
   }
 
 
