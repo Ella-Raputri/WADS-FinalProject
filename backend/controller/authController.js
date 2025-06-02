@@ -358,9 +358,11 @@ export const handleGoogleCallback = (req, res) => {
     res.cookie("token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+        sameSite: "None", // force explicit
+        domain: ".csbihub.id", // <- allows cookie to work across both subdomains
         maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+        });
+
 
     const url = (process.env.NODE_ENV === 'development')? process.env.CLIENT_DEVELOPMENT_URL : process.env.CLIENT_PRODUCTION_URL;
 
