@@ -543,10 +543,12 @@ authRouter.post('/reset-password', resetPassword);
 
 authRouter.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
+const url = (process.env.NODE_ENV === 'development')? process.env.CLIENT_DEVELOPMENT_URL : process.env.CLIENT_PRODUCTION_URL;
+
 // Google OAuth callback
 authRouter.get(
     '/google/callback',
-    passport.authenticate('google', { failureRedirect: '/' }),
+    passport.authenticate('google', { failureRedirect: `${url}/`}),
     handleGoogleCallback
 );
 
