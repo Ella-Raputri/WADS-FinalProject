@@ -41,7 +41,10 @@ const HomePage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-      if (!userData || !userData.id) return; 
+      if (!userData || !userData.id){
+        console.log("udah masuk home tapi invalid userdata");
+        return;
+      }
 
       if(!userData.phone) {
         navigate('/completeinfo');
