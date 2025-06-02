@@ -7,6 +7,8 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 import { AppContent } from '@/context/AppContext';
 import { useNavigate } from 'react-router-dom';
+import bgImage from '../../assets/Bg.webp'
+
 
 function CompleteInfoPage() {
     const [formData, setFormData] = useState({
@@ -105,7 +107,7 @@ function CompleteInfoPage() {
   return (
     <div
       className="relative z-1000 flex min-h-screen w-full items-center justify-center bg-cover bg-center px-4 py-8 font-poppins"
-      style={{ backgroundImage: "url('/src/assets/Bg.webp')" }}
+      style={{ backgroundImage: `url(${bgImage})` }}
     >
       <div className="absolute inset-0 bg-black/30 backdrop-blur-xl"></div>
 

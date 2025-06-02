@@ -86,11 +86,12 @@ export const register = async (req, res) => {
 
         // create the token (expired in 7d)
         const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: '7d'});
-        res.cookie('token', token,{
+        res.cookie("token", token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production'? 'none':'strict',
-            maxAge: 7 *24 *60 *60 *1000
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production"? "None" : "strict", // force explicit
+            domain: process.env.NODE_ENV === 'production' ? '.csbihub.id' : undefined,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
         });
 
         return res.status(200).json({ success: true, message: "Account created successfully", user });
@@ -122,11 +123,12 @@ export const login = async(req,res)=>{
 
         // create a token 
         const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: '7d'});
-        res.cookie('token', token,{
+        res.cookie("token", token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production'? 'none':'strict',
-            maxAge: 7 *24 *60 *60 *1000
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production"? "None" : "strict", // force explicit
+            domain: process.env.NODE_ENV === 'production' ? '.csbihub.id' : undefined,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
         });
 
         return res.status(200).json({success:true, message:"Logged in successfully", userData:user});
@@ -144,7 +146,8 @@ export const logout = async (req, res) => {
         res.cookie('token', '', { 
             httpOnly: true, 
             secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+            sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'strict',
+            domain: process.env.NODE_ENV === 'production' ? '.csbihub.id' : undefined,
             expires: new Date(0) // Set expiry to remove the cookie
         });
 
@@ -358,10 +361,10 @@ export const handleGoogleCallback = (req, res) => {
     res.cookie("token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "None", // force explicit
-        domain: ".csbihub.id", // <- allows cookie to work across both subdomains
+        sameSite: process.env.NODE_ENV === "production"? "None" : "strict", // force explicit
+        domain: process.env.NODE_ENV === 'production' ? '.csbihub.id' : undefined,
         maxAge: 7 * 24 * 60 * 60 * 1000,
-        });
+    });
 
 
     const url = (process.env.NODE_ENV === 'development')? process.env.CLIENT_DEVELOPMENT_URL : process.env.CLIENT_PRODUCTION_URL;
