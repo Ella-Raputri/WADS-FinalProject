@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import userModel from '../models/userModel.js';
-import transporter from '../config/nodemailer.js'
+import { sendMail } from '../config/nodemailer.js'
 import {EMAIL_VERIFY_TEMPLATE, PASSWORD_RESET_TEMPLATE} from '../config/emailTemplates.js'
 
 // check whether the text is mandarin
@@ -178,13 +178,16 @@ export const sendVerifyOtp =async(req,res) =>{
         await user.save();
 
         // send otp through email
-        const mailOptions ={
-            from: process.env.SENDER_EMAIL,
-            to: email,
-            subject: 'Account verification OTP',
-            html: EMAIL_VERIFY_TEMPLATE.replace("{{otp}}", otp).replace("{{email}}",user.Email)
-        }
-        const info = await transporter.sendMail(mailOptions);
+        const info = await sendMail(EMAIL_VERIFY_TEMPLATE, 'Account Verification OTP', otp, user.Email);
+        console.log('Email sent:', info)
+
+        // const mailOptions ={
+        //     from: process.env.SENDER_EMAIL,
+        //     to: email,
+        //     subject: 'Account verification OTP',
+        //     html: EMAIL_VERIFY_TEMPLATE.replace("{{otp}}", otp).replace("{{email}}",user.Email)
+        // }
+        // const info = await transporter.sendMail(mailOptions);
 
         return  res.status(200).json({success:true, message:"Verification OTP has been sent"})
 
@@ -273,13 +276,17 @@ export const sendResetOtp = async(req,res)=>{
         await user.save();
 
         //send email to reset otp
-        const mailOptions ={
-            from: process.env.SENDER_EMAIL,
-            to: email,
-            subject: 'Account Reset OTP',
-            html:PASSWORD_RESET_TEMPLATE.replace("{{otp}}", otp).replace("{{email}}",user.Email)
-        }
-        const info = await transporter.sendMail(mailOptions);
+        const info = await sendMail(PASSWORD_RESET_TEMPLATE, 'Account Reset OTP', otp, user.Email);
+        console.log('Email sent:', info);
+
+
+        // const mailOptions ={
+        //     from: process.env.SENDER_EMAIL,
+        //     to: email,
+        //     subject: 'Account Reset OTP',
+        //     html:PASSWORD_RESET_TEMPLATE.replace("{{otp}}", otp).replace("{{email}}",user.Email)
+        // }
+        // const info = await transporter.sendMail(mailOptions);
 
         return res.status(200).json({success:true, message:"Reset OTP has been sent"})
 
