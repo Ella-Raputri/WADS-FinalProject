@@ -573,7 +573,7 @@ const url = (process.env.NODE_ENV === 'development')? process.env.CLIENT_DEVELOP
 // Google OAuth callback
 authRouter.get(
     '/google/callback',
-    passport.authenticate('google', { failureRedirect: `${url}/notfound`}),
+    passport.authenticate('google', { failureRedirect: `${url}/`}),
     handleGoogleCallback
 );
 

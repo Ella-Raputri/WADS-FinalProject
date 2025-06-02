@@ -11,10 +11,8 @@ const AuthLoading = () => {
     const fetchUser = async () => {
       try {
         const success = await getUserData();
-        console.log('data success',success)
 
         if(success){
-            console.log("lesgo ke userhome")
             navigate('/userhome');
         } 
 

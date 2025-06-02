@@ -41,11 +41,7 @@ const HomePage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-      console.log("hey")
-
-      if (!userData || !userData.id){
-        console.log("udah masuk home tapi invalid userdata");
-        navigate("/notfound2")
+      if (!userData || !userData.id || !userData.isAccountVerified){
         return;
       }
 

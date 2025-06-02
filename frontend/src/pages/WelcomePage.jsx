@@ -30,12 +30,13 @@ const WelcomePage = () => {
 
   useEffect(()=>{ //initialize animation on scroll
     AOS.init()
-    console.log("welcomepage")
   }, [])
 
   // if the user is logged in
   useEffect(()=>{
     if(!isLoggedIn && !userData) return;
+
+    if(!userData.isAccountVerified) return;
 
     if(isLoggedIn){
       if(userData.role === 'admin') navigate('/admindashboard') //redirect to dashboard if admin
