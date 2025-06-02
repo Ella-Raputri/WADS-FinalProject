@@ -8,7 +8,7 @@ export default function ChatBox({ msg, index, user, page }) {
 
   //if true, then it is the user message
   const isUserMessage = (page==='adminticketdetails' && user.role==='admin' && msg.AdminId===user.id) || 
-  (page==='ticketdetails' && msg.SenderId.Role==='admin') ||
+  (page==='ticketdetails' && user.role==='admin' && msg.SenderId.Role==='admin') ||
   (page==='ticketdetails' && msg.SenderId._id === user.id) || 
   (page==='chatbot' && msg.Role==='user');    
 
