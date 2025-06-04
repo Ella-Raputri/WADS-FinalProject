@@ -103,13 +103,17 @@ const TicketDetails = () => {
             };
         }
 
-        const { data } = await axios.post(backendUrl + 'api/message/sendParticipantAdminMessage', {request: newMessage});
-        if(data.success) {
+        const response = await axios.post(backendUrl + 'api/message/sendParticipantAdminMessage', {request: newMessage});
+        if(response.data.success) {
             fetchMessages()
             setSubject("");
             setMessage("");
             setImageUploaded(null);
             setImageName("");
+
+            if(data.Status === 'Resolved' && user.role === 'participant'){
+              await openStatusInProgress();
+            }
         } 
 
     } catch (error) {
@@ -125,6 +129,38 @@ const TicketDetails = () => {
     e.preventDefault();
     if(user.role==='participant')navigate('/userhelp');
     else navigate('/adminticketdetails', { state: { data: data, user: user } });
+  }
+
+  // open the status when the user chats after in resolved ticket
+  const openStatusInProgress = async(e) =>{
+    const systemMessage = {
+      ticketId: data._id,
+      compTypeId: data.CompTypeId,
+      subject: "Ticket Status Updated",
+      message: `The ticket status has been changed to in progress.`,
+    };
+
+    // send system message that the ticket status has been updated
+    const response = await axios.post(backendUrl + 'api/message/sendParticipantSystemMessage', {request: systemMessage});    
+    if(response.data.success) {
+        fetchMessages()   
+    } else {
+        toast.error(response.data.message);
+    }
+
+    // update ticket status
+    const response2 = await axios.put(backendUrl + 'api/ticket/updateTicketStatus', {request: {ticketId: data._id, status: 'In Progress'}});    
+    if(response2.data.success) {
+        toast.success(response2.data.message);
+        const updatedData = { ...data, Status: 'In Progress' };
+        setData(updatedData);
+
+        socket.emit("sendUpdatedStatus", {roomId: data._id, stat:'In Progress'});
+        navigate(location.pathname, { state: { data: updatedData, user } });
+
+    } else {
+        toast.error(response2.data.message);
+    }
   }
 
   // click resolve or close 
@@ -174,6 +210,10 @@ const TicketDetails = () => {
       if (latestMessages.length > 0) {
           const lastMessage = latestMessages[latestMessages.length - 1]; 
           socket.emit("sendRoomMessage", { roomId: data._id, message: lastMessage });
+
+          if(data.Status === 'Open' && lastMessage.SenderId.Role ==='admin'){
+            await openStatusInProgress();
+          }
       }   
 
     } catch (error) {
