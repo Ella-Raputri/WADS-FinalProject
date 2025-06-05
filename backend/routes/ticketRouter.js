@@ -207,7 +207,7 @@ ticketRouter.get('/getRatingTicket', userAuth, fetchTicketRating);
 
 /**
  * @swagger
- * /api/tickets/updateHandledBy:
+ * /api/ticket/updateTicketHandledBy:
  *   put:
  *     tags: [Ticket]
  *     summary: Update handlers assigned to a ticket

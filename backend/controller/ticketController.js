@@ -85,6 +85,9 @@ export const updateTicketStatus = async(req,res)=>{
             }
             ticket.BecomeResolvedAt = now; //assign current datetime to BecomeResolvedAt if the ticket is resolved
         }
+        else if(request.status == "In Progress"){
+            ticket.BecomeInProgressAt = now; //assign current datetime to BecomeInProgressAt if the ticket is in progress
+        }
         await ticket.save();
 
         return res.status(200).json({success:true, message:"Ticket status updated successfully"})

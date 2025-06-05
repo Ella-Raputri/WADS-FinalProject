@@ -250,7 +250,7 @@ const TicketDetails = () => {
       setAdminNames([...new Set(admins)]);
 
       const adminIds = messageResponse.data.adminUserChat.filter(msg => msg.SenderId && msg.SenderId.Role === "admin").map(msg => msg.SenderId._id);
-      await axios.put(`${backendUrl}api/ticket/updateHandledBy`, {
+      await axios.put(`${backendUrl}api/ticket/updateTicketHandledBy`, {
         request: {
           ticketId: data._id,
           handledBy: adminIds
