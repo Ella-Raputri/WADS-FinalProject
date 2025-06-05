@@ -249,6 +249,14 @@ const TicketDetails = () => {
       const admins = messageResponse.data.adminUserChat.filter(msg => msg.SenderId && msg.SenderId.Role === "admin").map(msg => msg.SenderId.FullName); 
       setAdminNames([...new Set(admins)]);
 
+      const adminIds = messageResponse.data.adminUserChat.filter(msg => msg.SenderId && msg.SenderId.Role === "admin").map(msg => msg.SenderId._id);
+      await axios.put(`${backendUrl}api/ticket/updateHandledBy`, {
+        request: {
+          ticketId: data._id,
+          handledBy: adminIds
+        }
+      });
+
       if(ratingResponse.data.rating){
         setIsDone(true);
         setRatingResult(ratingResponse.data.rating);

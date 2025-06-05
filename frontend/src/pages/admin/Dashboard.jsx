@@ -161,10 +161,11 @@ const Dashboard = () => {
       setCustSatisfRate(dataCustSat.avgRating);
 
       // daily chart data
-      const { data: dailyChartData } = await axios.get(`${backendUrl}api/admindashboard/receiveresolvebar`, {
+      const { data } = await axios.get(`${backendUrl}api/admindashboard/receiveresolvebar`, {
         params: { date: formattedDate, compTypeId }
       });
-      setVertBarChartData(dailyChartData);
+      setVertBarChartData(data.data);
+      console.log(data.debug);
 
       // total tickets by emergency 
       const { data: emergencyChartData } = await axios.get(`${backendUrl}api/admindashboard/ticketbyemergency`, {

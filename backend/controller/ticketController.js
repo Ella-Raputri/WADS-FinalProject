@@ -67,12 +67,23 @@ export const updateTicketStatus = async(req,res)=>{
         //find the ticket
         const ticket = await ticketModel.findById(request.ticketId);
         ticket.Status = request.status; //change the ticket status
+
+        const now = new Date();
         
         if(request.status == "Closed"){
-            ticket.BecomeClosedAt = new Date(); //assign current datetime to BecomeClosedAt if the ticket is closed
+            if (!ticket.BecomeInProgressAt) {
+                ticket.BecomeInProgressAt = now;
+            }
+            if (!ticket.BecomeResolvedAt) {
+                ticket.BecomeResolvedAt = now;
+            }
+            ticket.BecomeClosedAt = now; //assign current datetime to BecomeClosedAt if the ticket is closed
         }
         else if(request.status == "Resolved"){
-            ticket.BecomeResolvedAt = new Date(); //assign current datetime to BecomeResolvedAt if the ticket is resolved
+            if (!ticket.BecomeInProgressAt) {
+                ticket.BecomeInProgressAt = now;
+            }
+            ticket.BecomeResolvedAt = now; //assign current datetime to BecomeResolvedAt if the ticket is resolved
         }
         await ticket.save();
 
@@ -141,3 +152,22 @@ export const fetchTicketRating = async(req,res) =>{
         return res.status(500).json({success:false, message:error.message}) 
     }
 }
+
+export const updateHandledBy = async (req, res) => {
+  const { request } = req.body;
+
+  try {
+    const ticket = await ticketModel.findById(request.ticketId);
+    if (!ticket) return res.status(404).json({ success: false, message: "Ticket not found" });
+
+    if (Array.isArray(request.handledBy)) {
+      ticket.HandledBy = request.handledBy; 
+    }
+
+    await ticket.save();
+
+    return res.status(200).json({ success: true, message: "Ticket handlers updated successfully" });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
