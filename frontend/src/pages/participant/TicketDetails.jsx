@@ -355,7 +355,15 @@ const TicketDetails = () => {
         </div>
 
       {/* message section */}
-      <Card className="max-w-6xl mt-6 py-8 mb-8 mx-auto font-poppins">
+      {data.Status === 'Closed' && 
+        <div className="mb-8 mt-8 font-poppins">
+          <Card className={'bg-gray-400'}>
+            <CardContent className={'font-bold text-center text-white'}>Ticket is already closed</CardContent>
+          </Card>
+        </div>
+      }
+
+      <Card className={`${data.Status==='Closed' && 'hidden'} max-w-6xl mt-6 py-8 mb-8 mx-auto font-poppins`}>
       <form onSubmit={handleSend}>
         <CardContent>
             <input
