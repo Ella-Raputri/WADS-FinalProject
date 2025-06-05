@@ -239,8 +239,9 @@ export const getReceivedResolvedBar = async (req, res) => {
         const weekStartUTC = new Date(weekStart.getTime() - gmtPlus7Offset);
         
         const weekEndUTC = new Date(weekStartUTC);
-        weekEndUTC.setDate(weekStartUTC.getDate() + 6);
+        weekEndUTC.setDate(weekStartUTC.getDate() + 7);
         weekEndUTC.setHours(23, 59, 59, 999);
+        weekEndUTC.setTime(weekEndUTC.getTime() - gmtPlus7Offset);
 
         if (weekEndUTC < weekStartUTC) {
             weekEndUTC.setMonth(weekEndUTC.getMonth() + 1);

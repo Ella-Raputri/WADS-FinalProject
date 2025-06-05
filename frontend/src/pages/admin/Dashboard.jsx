@@ -165,7 +165,6 @@ const Dashboard = () => {
         params: { date: formattedDate, compTypeId }
       });
       setVertBarChartData(data.data);
-      console.log(data.debug);
 
       // total tickets by emergency 
       const { data: emergencyChartData } = await axios.get(`${backendUrl}api/admindashboard/ticketbyemergency`, {
