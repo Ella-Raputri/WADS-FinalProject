@@ -221,6 +221,10 @@ export const getFullResolveTime = async (req, res) => {
 
 export const getReceivedResolvedBar = async (req, res) => {
     try {
+        res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+        res.setHeader("Pragma", "no-cache");
+        res.setHeader("Expires", "0");
+
         const { date, compTypeId } = req.query;
         if (!date) {
             return res.status(400).json({ message: "Date parameter is required" });
@@ -235,8 +239,21 @@ export const getReceivedResolvedBar = async (req, res) => {
         const weekStartUTC = new Date(weekStart.getTime() - gmtPlus7Offset);
         
         const weekEndUTC = new Date(weekStartUTC);
-        weekEndUTC.setDate(weekStart.getDate() + 6);
+        weekEndUTC.setDate(weekStartUTC.getDate() + 7);
         weekEndUTC.setHours(23, 59, 59, 999);
+        weekEndUTC.setTime(weekEndUTC.getTime() - gmtPlus7Offset);
+
+        if (weekEndUTC < weekStartUTC) {
+            weekEndUTC.setMonth(weekEndUTC.getMonth() + 1);
+        }
+
+        const debugInfo = []
+        debugInfo.push({
+            inputDate1: date,
+            parsedSelectedDate: selectedDate.toISOString(),
+            weekStartUTC: weekStartUTC.toISOString(),
+            weekEndUTC: weekEndUTC.toISOString(),
+        });
 
         // get only data that is in range of week start to week end
         const match = {
@@ -298,8 +315,9 @@ export const getReceivedResolvedBar = async (req, res) => {
                 if (found) found.resolved += 1;
             }
         }
-
-        return res.status(200).json(initChartData);
+        
+        const response = { data: initChartData, debug: debugInfo };
+        return res.status(200).json(response);
     } 
     catch (error) {
         console.error("Error fetching weekly ticket chart:", error);

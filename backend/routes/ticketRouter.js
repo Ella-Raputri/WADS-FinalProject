@@ -1,6 +1,6 @@
 import express from 'express';
 import userAuth from '../middleware/userAuth.js';
-import { fetchTicketRating, getAllTickets, getAllTicketsByCompetitionType, getUpdatedAtByTicketId, updateRateTicket, updateTicketStatus, uploadNewTicket } from '../controller/ticketController.js';
+import { fetchTicketRating, getAllTickets, getAllTicketsByCompetitionType, getUpdatedAtByTicketId, updateHandledBy, updateRateTicket, updateTicketStatus, uploadNewTicket } from '../controller/ticketController.js';
 
 const ticketRouter = express.Router();
 /**
@@ -204,5 +204,42 @@ ticketRouter.post('/rateTicket', userAuth, updateRateTicket);
  *         description: Server error
  */
 ticketRouter.get('/getRatingTicket', userAuth, fetchTicketRating);
+
+/**
+ * @swagger
+ * /api/ticket/updateTicketHandledBy:
+ *   put:
+ *     tags: [Ticket]
+ *     summary: Update handlers assigned to a ticket
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               request:
+ *                 type: object
+ *                 required:
+ *                   - ticketId
+ *                   - handledBy
+ *                 properties:
+ *                   ticketId:
+ *                     type: string
+ *                     description: Ticket ID
+ *                   handledBy:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                     description: Array of handler user IDs
+ *     responses:
+ *       200:
+ *         description: Ticket handlers updated successfully
+ *       404:
+ *         description: Ticket not found
+ *       500:
+ *         description: Server error
+ */
+ticketRouter.put('/updateTicketHandledBy', userAuth, updateHandledBy);
 
 export default ticketRouter
