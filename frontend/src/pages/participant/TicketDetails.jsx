@@ -359,7 +359,10 @@ const TicketDetails = () => {
             <p><strong>Updated at:</strong> {data.UpdatedAt? convertToTimeZone(data.UpdatedAt) : "Loading..."} </p>
             <p><strong>Sender:</strong> {data.senderData?.name || "Loading..."} </p>
             <p><strong>Handled by:</strong> {adminNames.join(", ") } </p>
+
+            <p><strong>Image:</strong> {data.Image? <a href={data.Image} className="text-gray-500 hover:text-gray-900 underline font-poppins" target="_blank">Click here</a> : 'None'} </p>
           </div>
+
         </div>
     
         <div className="flex flex-col items-start md:items-end mt-8 md:mt-0">
